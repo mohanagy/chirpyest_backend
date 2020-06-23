@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 app.use(logger('dev'));
 app.use(express.json());
 
-app.use('/', indexRouter);
+app.use('/hello-world', indexRouter);
 // catch 404
 app.use((req, res) => {
   return httpResponse.notFound(res, 'Not found');
