@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import express, { Request, Response } from 'express';
 import logger from 'morgan';
 import path from 'path';
+import { httpResponse } from './helpers';
 import { ErrnoException } from './interfaces';
 import indexRouter from './routes';
 
@@ -31,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  next('err');
+  next(httpResponse.notFound(res, 'Not found'));
 });
 
 // error handler
