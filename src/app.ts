@@ -1,7 +1,6 @@
 import cookieParser from 'cookie-parser';
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import logger from 'morgan';
-import path from 'path';
 import { httpResponse } from './helpers';
 import { ErrnoException } from './interfaces';
 import indexRouter from './routes';
@@ -22,23 +21,19 @@ app.use((req, res, next) => {
   return next();
 });
 
-// view engine setup
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  next(httpResponse.notFound(res, 'Not found'));
+// catch 404
+app.use((req, res) => {
+  return httpResponse.notFound(res, 'Not found');
 });
 
 // error handler
 app.use(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (err: ErrnoException, req: Request, res: Response) => {
+  (err: ErrnoException, req: Request, res: Response, next: NextFunction) => {
     // render the error page
     res.status(err.status || 500);
     return res.json({

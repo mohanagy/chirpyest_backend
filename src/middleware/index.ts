@@ -1,2 +1,2 @@
 export { default as asyncHandler } from './asyncHandler';
-export * as validate from './validate';
+export { default as validate } from './validate';
