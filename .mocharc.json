@@ -1,0 +1,13 @@
+{
+  "require": "ts-node/register",
+  "extension": [
+    "js",
+    "ts"
+  ],
+  "spec": "src/**/*.spec.ts",
+  "timeout": 2000,
+  "watch-files": [
+    "src/**/*.spec.ts",
+    "src/**/*.spec.js"
+  ]
+}
