@@ -1,7 +1,9 @@
 #!/usr/bin/env node
+
 /**
  * Module dependencies.
  */
+
 import debug from 'debug';
 import http from 'http';
 import app from '../app';
@@ -9,12 +11,11 @@ import logger from '../helpers/logger';
 import { ErrnoException } from '../interfaces';
 
 debug('chirpyest:server');
-/**
- * Get port from environment and store in Express.
- */
+
 /**
  * Normalize a port into a number, string, or false.
  */
+
 const normalizePort = (val: string): number | string | boolean => {
   // eslint-disable-next-line radix
   const serverPort = parseInt(val, 10);
@@ -28,15 +29,24 @@ const normalizePort = (val: string): number | string | boolean => {
   }
   return false;
 };
+
+/**
+ * Get port from environment and store in Express.
+ */
+
 const port = normalizePort(process.env.PORT || '4000');
 app.set('port', port);
+
 /**
  * Create HTTP server.
  */
+
 const server = http.createServer(app);
+
 /**
  * Event listener for HTTP server "error" event.
  */
+
 const onError = (error: ErrnoException): void => {
   if (error.syscall !== 'listen') throw error;
   const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
@@ -52,9 +62,11 @@ const onError = (error: ErrnoException): void => {
       throw error;
   }
 };
+
 /**
  * Event listener for HTTP server "listening" event.
  */
+
 const onListening = (): void => {
   const addr = server.address() || {
     port,

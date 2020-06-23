@@ -34,7 +34,6 @@ app.use((req, res) => {
 app.use(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (err: ErrnoException, req: Request, res: Response, next: NextFunction) => {
-    // render the error page
     res.status(err.status || 500);
     return res.json({
       success: false,
