@@ -1,3 +1,4 @@
+image: node:12.18.1
 clone:
   depth: full
 pipelines:
@@ -8,7 +9,7 @@ pipelines:
         script:
           # This gets executed on every push by a developer
           - npm install
-          - npm test
+          # - npm run test
   branches:
     development:
       - step:
@@ -18,7 +19,7 @@ pipelines:
             # This gets executed when merging a PR to dev branch
             - npm run init
             - npm run tsc
-            - npm run test
+            # - npm run test
             # We need to commit build in the image before pushing
             - git add -A
             - git config --global user.email "naji@kiitos-tech.com"
@@ -34,7 +35,7 @@ pipelines:
             # This gets executed when merging a PR to master branch
             - npm run init
             - npm run tsc
-            - npm run test
+            # - npm run test
             - git add -A
             - git config --global user.email "naji@kiitos-tech.com"
             - git config --global user.name "Mohammed Naji"
