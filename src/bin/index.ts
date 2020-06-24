@@ -7,6 +7,7 @@
 import debug from 'debug';
 import http from 'http';
 import app from '../app';
+import db from '../database';
 import logger from '../helpers/logger';
 import { ErrnoException } from '../interfaces';
 
@@ -76,6 +77,14 @@ const onListening = (): void => {
   logger.info(`Listening on ${bind}`);
 };
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+db.sequelize
+  .sync()
+  .then(() => {
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  })
+  .catch((err: ErrnoException) => {
+    debug(`error can't access the database : ${err}`);
+    logger.error(`can't access the database :${err}`);
+  });
