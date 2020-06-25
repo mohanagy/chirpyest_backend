@@ -1,3 +1,4 @@
+# this file is meant to be used for backend local development
 version: "3.7"
 services:
   db:
