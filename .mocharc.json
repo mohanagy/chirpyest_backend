@@ -5,7 +5,7 @@
     "ts"
   ],
   "spec": [
-    "src/**/*.spec.ts",
+    "**/*.spec.ts",
     "**/__test__/**/*.ts"
   ],
   "timeout": 2000
