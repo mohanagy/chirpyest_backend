@@ -1,5 +1,5 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { UserStatic } from '../../types/rest-api';
+import { UserStatic } from '../../types/sequelize';
 
 export function UserFactory(sequelize: Sequelize): UserStatic {
   return sequelize.define('users', {

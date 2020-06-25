@@ -8,10 +8,10 @@ export interface UserAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
-export interface UserModel extends Model<UserAttributes>, UserAttributes { }
-export class User extends Model<UserModel, UserAttributes> { }
+export interface UserModel extends Model<UserAttributes>, UserAttributes {}
+export class User extends Model<UserModel, UserAttributes> {}
 export type UserStatic = typeof Model & {
-  new(values?: object, options?: BuildOptions): UserModel;
+  new (values?: object, options?: BuildOptions): UserModel;
 };
 export interface SkillsAttributes {
   id: number;
@@ -19,8 +19,8 @@ export interface SkillsAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
-export interface SkillsModel extends Model<SkillsAttributes>, SkillsAttributes { }
-export class Skills extends Model<SkillsModel, SkillsAttributes> { }
+export interface SkillsModel extends Model<SkillsAttributes>, SkillsAttributes {}
+export class Skills extends Model<SkillsModel, SkillsAttributes> {}
 export type SkillsStatic = typeof Model & {
-  new(values?: object, options?: BuildOptions): SkillsModel;
+  new (values?: object, options?: BuildOptions): SkillsModel;
 };
