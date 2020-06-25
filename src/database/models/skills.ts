@@ -1,19 +1,14 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { UserStatic } from '../../types/rest-api';
+import { SkillsStatic } from '../../types/rest-api/index';
 
-export function UserFactory(sequelize: Sequelize): UserStatic {
-  return sequelize.define('users', {
+export function SkillsFactory(sequelize: Sequelize): SkillsStatic {
+  return <SkillsStatic>sequelize.define('skills', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    name: {
+    skill: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -27,5 +22,5 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-  }) as UserStatic;
+  });
 }

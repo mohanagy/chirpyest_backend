@@ -1,6 +1,9 @@
 import { Sequelize } from 'sequelize';
-import { models } from './models';
+import { SkillsFactory } from './models/skills';
+import { UserFactory } from './models/user';
 
-const sequelize = new Sequelize('postgres://abd:123@localhost:5432/chirpyest');
+export const dbConfig = new Sequelize('postgres://abd:123@localhost:5432/chirpyest');
 
-export { sequelize, models };
+// THIS ONES ARE THE ONES YOU NEED TO USE ON YOUR CONTROLLERS
+export const User = UserFactory(dbConfig);
+export const Skills = SkillsFactory(dbConfig);

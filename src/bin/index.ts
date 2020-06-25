@@ -7,7 +7,7 @@
 import debug from 'debug';
 import http from 'http';
 import app from '../app';
-import { sequelize } from '../database';
+import { dbConfig } from '../database';
 import logger from '../helpers/logger';
 import { ErrnoException } from '../interfaces';
 
@@ -77,7 +77,7 @@ const onListening = (): void => {
   logger.info(`Listening on ${bind}`);
 };
 
-sequelize
+dbConfig
   .sync()
   .then(() => {
     server.listen(port);
