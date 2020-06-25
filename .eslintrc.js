@@ -9,6 +9,7 @@ module.exports = {
   "plugins": ["@typescript-eslint"],
   rules: {
     'import/prefer-default-export': 'off',
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/__test__/**/*.ts", "**/*.spec.ts"] }]
   },
   settings: {
     "import/resolver": {
