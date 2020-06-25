@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 app.use(logger('dev'));
 app.use(express.json());
 
-app.use('/hello-world', indexRouter);
+app.use('/', indexRouter);
 
 // catch 404
 app.use((req, res) => {
