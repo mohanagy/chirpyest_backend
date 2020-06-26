@@ -2,10 +2,10 @@ import joi from '@hapi/joi';
 
 const envVarsSchema = joi
   .object({
-    DATABASE_URL: joi.string().when('NODE_ENV', {
+    DATABASE_URL: joi.string().required(),
+    DATABASE_URL_TEST: joi.string().when('NODE_ENV', {
       is: 'test',
-      then: joi.string(),
-      otherwise: joi.string().required(),
+      then: joi.string().required(),
     }),
   })
   .unknown()
@@ -22,7 +22,7 @@ const config = (): DatabaseConfigs => {
   }
 
   return {
-    url: envVars.DATABASE_URL,
+    url: envVars.NODE_ENV === 'test' ? envVars.DATABASE_URL_TEST : envVars.DATABASE_URL,
   };
 };
 

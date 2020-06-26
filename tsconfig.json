@@ -9,11 +9,6 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "*": [
-        "src/*"
-      ],
-    },
     "lib": [
       "es5",
       "es6",

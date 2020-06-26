@@ -15,12 +15,12 @@
     "tsc-lint": "tsc --noEmit",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "test": "mocha",
-    "test:watch": "mocha -w"
+    "test": "cross-env NODE_ENV=test mocha",
+    "test:watch": "cross-env NODE_ENV=test mocha -w"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run tsc-lint && lint-staged"
+      "pre-push": "npm run tsc-lint && lint-staged"
     }
   },
   "lint-staged": {
