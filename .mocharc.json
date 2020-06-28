@@ -4,10 +4,9 @@
     "js",
     "ts"
   ],
-  "spec": "src/**/*.spec.ts",
-  "timeout": 2000,
-  "watch-files": [
-    "src/**/*.spec.ts",
-    "src/**/*.spec.js"
-  ]
+  "spec": [
+    "**/*.spec.ts",
+    "**/__test__/**/*.ts"
+  ],
+  "timeout": 2000
 }

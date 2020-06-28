@@ -9,7 +9,11 @@ pipelines:
         script:
           # This gets executed on every push by a developer
           - npm run init
+          - npm run lint
           - npm run tsc-lint
+          - npm run test
+        services: 
+          - postgres
   branches:
     development:
       - step:
@@ -18,9 +22,13 @@ pipelines:
           script:
             # This gets executed when merging a PR to dev branch
             - npm run init
+            - npm run lint
             - npm run tsc-lint
+            - npm run test
             # Finally, we push to Heroku
             - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_STAGING_APP_NAME.git development:master
+          services: 
+            - postgres
     master:
       - step:
           caches:
@@ -28,5 +36,18 @@ pipelines:
           script:
             # This gets executed when merging a PR to master branch
             - npm run init
+            - npm run lint
             - npm run tsc-lint
+            - npm run test
             - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_PRODUCTION_APP_NAME.git master
+          services: 
+            - postgres
+
+definitions: 
+  services: 
+    postgres: 
+      image: postgres 
+      variables: 
+        POSTGRES_DB: 'pipelines' 
+        POSTGRES_USER: 'test_user'
+        POSTGRES_PASSWORD: 'test_user_password'

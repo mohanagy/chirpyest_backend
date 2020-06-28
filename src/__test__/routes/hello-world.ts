@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import request from 'supertest';
-import app from './app';
+import app from '../../app';
 
 describe('GET /hello-world endpoint', () => {
   it('responds with hello-world text', (done) => {
@@ -8,7 +8,7 @@ describe('GET /hello-world endpoint', () => {
       .get('/hello-world')
       .expect(200)
       .end((err, res) => {
-        expect(res.text).to.equal('Hello, World!');
+        expect(res.text).to.include('Hello, World!');
         done();
       });
   });
