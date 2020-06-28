@@ -9,6 +9,7 @@ pipelines:
         script:
           # This gets executed on every push by a developer
           - npm run init
+          - npm run lint
           - npm run tsc-lint
           - npm run test
         services: 
@@ -21,6 +22,7 @@ pipelines:
           script:
             # This gets executed when merging a PR to dev branch
             - npm run init
+            - npm run lint
             - npm run tsc-lint
             - npm run test
             # Finally, we push to Heroku
@@ -34,6 +36,7 @@ pipelines:
           script:
             # This gets executed when merging a PR to master branch
             - npm run init
+            - npm run lint
             - npm run tsc-lint
             - npm run test
             - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_PRODUCTION_APP_NAME.git master
