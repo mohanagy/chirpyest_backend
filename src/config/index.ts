@@ -1,19 +1,18 @@
 import dotenv from 'dotenv';
+import path from 'path';
 import database from './database';
+import server from './server';
 
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
-// load .env in local development
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config();
+if (!process.env.NODE_ENV) {
+  throw new Error('You have to set NODE_ENV');
 }
 
-try {
-  database();
-} catch (error) {
-  throw new Error(`Error in config validation: ${error.message}`);
+// load the right .env.APP_ENV in local development
+if (process.env.NODE_ENV === 'development') {
+  dotenv.config({ path: path.resolve(process.cwd(), `.env.${process.env.APP_ENV}`) });
 }
 
 export default {
   database: database(),
+  server: server(),
 };

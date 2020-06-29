@@ -7,6 +7,7 @@
 import debug from 'debug';
 import http from 'http';
 import app from '../app';
+import config from '../config';
 import { dbConfig } from '../database';
 import logger from '../helpers/logger';
 import { ErrnoException } from '../interfaces';
@@ -35,7 +36,7 @@ const normalizePort = (val: string): number | string | boolean => {
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '4000');
+const port = normalizePort(config.server.port);
 app.set('port', port);
 
 /**
