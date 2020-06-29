@@ -8,15 +8,17 @@
   "license": "ISC",
   "scripts": {
     "init": "npm install",
-    "start": "node ./dist/bin/index.js",
-    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --transpileOnly ./src/bin/index.ts",
+    "start": "cross-env NODE_ENV=production node ./dist/bin/index.js",
+    "dev": "cross-env NODE_ENV=development APP_ENV=development ts-node-dev --respawn --transpileOnly ./src/bin/index.ts",
     "heroku-postbuild": "npm run init && npm run tsc",
     "tsc": "tsc",
     "tsc-lint": "tsc --noEmit",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "cross-env NODE_ENV=test mocha",
-    "test:watch": "cross-env NODE_ENV=test mocha -w"
+    "test:watch": "cross-env NODE_ENV=test mocha -w",
+    "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha",
+    "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w"
   },
   "husky": {
     "hooks": {
