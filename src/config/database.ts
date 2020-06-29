@@ -4,10 +4,6 @@ import { DatabaseConfigs } from '../interfaces';
 const envVarsSchema = joi
   .object({
     DATABASE_URL: joi.string().required(),
-    DATABASE_URL_TEST: joi.string().when('NODE_ENV', {
-      is: 'test',
-      then: joi.string().required(),
-    }),
   })
   .unknown()
   .required();
