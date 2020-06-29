@@ -16,7 +16,6 @@
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "cross-env NODE_ENV=test mocha",
-    "test:watch": "cross-env NODE_ENV=test mocha -w",
     "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha",
     "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w"
   },
