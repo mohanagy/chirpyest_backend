@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import logger from 'morgan';
 import { httpResponse } from './helpers';
 import { ErrnoException } from './interfaces';
-import indexRouter from './routes';
+import apiRouter from './routes';
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
 app.use(logger('dev'));
 app.use(express.json());
 
-app.use('/', indexRouter);
+app.use('/api/v1', apiRouter);
 
 // catch 404
 app.use((req, res) => {

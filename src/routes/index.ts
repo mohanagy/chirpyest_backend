@@ -1,16 +1,9 @@
 import express from 'express';
-import { QueryTypes } from 'sequelize';
-import { dbConfig } from '../database';
+import affiliateNetworks from './affiliateNetworks';
 
 const router = express.Router();
 
-interface TimeNow {
-  now: Date;
-}
-
-router.get('/hello-world', async (req, res) => {
-  const [timeNow]: Array<TimeNow> = await dbConfig.query('SELECT NOW();', { type: QueryTypes.SELECT });
-  res.send(`Hello, World! ${timeNow.now.toLocaleString()}`);
-});
+// /api/v1/affiliate-networks
+router.use('/affiliate-networks', affiliateNetworks);
 
 export default router;
