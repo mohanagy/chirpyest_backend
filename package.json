@@ -8,7 +8,7 @@
   "license": "ISC",
   "scripts": {
     "init": "npm install",
-    "start": "cross-env NODE_ENV=production node ./dist/bin/index.js",
+    "start": "node ./dist/bin/index.js",
     "dev": "cross-env NODE_ENV=development APP_ENV=development ts-node-dev --respawn --transpileOnly ./src/bin/index.ts",
     "heroku-postbuild": "npm run init && npm run tsc",
     "tsc": "tsc",
