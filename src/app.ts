@@ -1,13 +1,19 @@
 import cookieParser from 'cookie-parser';
 import express, { NextFunction, Request, Response } from 'express';
 import logger from 'morgan';
+import fetch from 'node-fetch';
 import { httpResponse } from './helpers';
+import cognito from './helpers/cognito';
 import { ErrnoException } from './interfaces';
 import indexRouter from './routes';
 
 const app = express();
 
 app.use(cookieParser());
+
+cognito(app);
+
+(global as any).fetch = fetch;
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
