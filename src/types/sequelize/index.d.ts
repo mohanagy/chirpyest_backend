@@ -1,15 +1,9 @@
 /* eslint-disable max-classes-per-file */
 import { BuildOptions, Model } from 'sequelize';
+import { UserAttributes } from '../../interfaces';
 
-export interface UserAttributes {
-  id: number;
-  name: string;
-  email: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
 export interface UserModel extends Model<UserAttributes>, UserAttributes {}
 export class User extends Model<UserModel, UserAttributes> {}
 export type UserStatic = typeof Model & {
-  new (values?: object, options?: BuildOptions): UserModel;
+  new (values?: Record<string, unknown>, options?: BuildOptions): UserModel;
 };
