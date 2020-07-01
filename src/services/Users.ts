@@ -38,7 +38,7 @@ export const isEmailExists = async (email: string, transaction: Transaction): Pr
  * @param {Transaction} transaction transaction
  * @returns {Promise<UserModel | null>}
  */
-export const createUser = async (data: UserAttributes, transaction: Transaction): Promise<UserModel | null> => {
+export const createUser = async (data: UserAttributes, transaction: Transaction): Promise<UserModel> => {
   const userUserModel = await Users.create(data, { transaction });
   return userUserModel;
 };
