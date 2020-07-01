@@ -31,6 +31,7 @@ export interface CognitoAttributes {
   name: string;
   email: string;
   'custom:user_id': string;
+  picture: string;
 }
 
 export interface CognitoUser {

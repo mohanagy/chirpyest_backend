@@ -20,6 +20,7 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
     const body = dto.generalDTO.bodyData(request);
 
     const { password, ...userData } = dto.usersDTO.userData(body);
+    let responseData = {};
 
     const emailExists = await usersServices.isEmailExists(userData.email, transaction);
     if (emailExists) {
@@ -29,12 +30,11 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
     const data = await usersServices.createUser(userData, transaction);
 
     const attributes = dto.authDTO.cognitoAttributes({ ...userData, id: data.id });
-
     const attributeList = Object.keys(attributes).map(
       (key: string) =>
         new AmazonCognitoIdentity.CognitoUserAttribute({
           Name: key,
-          Value: (attributes as any)[key].toString(),
+          Value: (attributes as any)[key] ? (attributes as any)[key].toString() : '',
         }),
     );
 
@@ -49,10 +49,10 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
 
     const filter = dto.generalDTO.filterData({ id: data.id });
 
-    await usersServices.updateUser(filter, { cognito_id: userSub }, transaction);
+    const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognito_id: userSub }, transaction);
 
     transaction.commit();
-    const responseData = {};
+    if (userUpdatedData) responseData = userUpdatedData;
     return httpResponse.created(response, responseData, 'User has been created');
   } catch (error) {
     transaction.rollback();

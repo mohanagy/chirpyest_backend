@@ -8,6 +8,7 @@ export interface UserAttributes {
   newsletter_subscription: boolean;
   terms_conds_accepted: boolean;
   paypal_account?: string;
+  image?: string;
   is_active?: boolean;
   cognito_id?: string;
   createdAt?: Date;
