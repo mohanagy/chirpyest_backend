@@ -4,6 +4,7 @@ import helloWorld from './helloWorld';
 
 const router = express.Router();
 
-router.use('/', [auth, helloWorld]);
+router.use('/', [helloWorld]);
+router.use('/api/v1/', [auth]);
 
 export default router;

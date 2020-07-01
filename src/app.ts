@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import { httpResponse } from './helpers';
 import cognito from './helpers/cognito';
 import { ErrnoException } from './interfaces';
-import indexRouter from './routes';
+import routes from './routes';
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 app.use(logger('dev'));
 app.use(express.json());
 
-app.use('/', indexRouter);
+app.use('/', routes);
 
 // catch 404
 app.use((req, res) => {
@@ -44,7 +44,7 @@ app.use(
     res.status(err.status || 500);
     return res.json({
       success: false,
-      message: err.message,
+      message: err.message || (err.error ? err.error.details : null),
     });
   },
 );
