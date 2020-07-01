@@ -66,6 +66,7 @@
   "dependencies": {
     "@hapi/boom": "^9.1.0",
     "@hapi/joi": "^17.1.1",
+    "@types/joi-password-complexity": "^3.1.0",
     "amazon-cognito-identity-js": "^4.3.2",
     "aws-sdk": "^2.708.0",
     "config": "^3.3.1",
@@ -76,6 +77,7 @@
     "express": "^4.17.1",
     "express-joi-validation": "^4.0.3",
     "http-status-codes": "^1.4.0",
+    "joi-password-complexity": "^4.1.0",
     "logger": "0.0.1",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
