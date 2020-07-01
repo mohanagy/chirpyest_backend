@@ -1,5 +1,7 @@
 import joi from '@hapi/joi';
-import passwordComplexity from 'joi-password-complexity';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const passwordComplexity = require('joi-password-complexity');
 
 export const signUpValidation = joi.object({
   email: joi.string().email().required(),

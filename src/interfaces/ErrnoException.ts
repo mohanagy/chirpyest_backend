@@ -5,5 +5,9 @@ export interface ErrnoException extends Error {
   syscall?: string;
   stack?: string;
   status?: number;
-  error?: Error | { details: { [key: string]: string } };
+  error?: ErrorDetails;
+}
+
+interface ErrorDetails extends Error {
+  details: string;
 }
