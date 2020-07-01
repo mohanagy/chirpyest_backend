@@ -1,12 +1,10 @@
 import { UserData } from '../../interfaces/Users';
 
-interface Generic {
-  [key: string]: string;
-}
-
-export const userData = (data: Generic): UserData => ({
+export const userData = (data: any): UserData => ({
   email: data.email,
   password: data.password,
-  cognitoId: data.cognitoId,
+  cognito_id: data.cognitoId,
   name: data.name,
+  newsletter_subscription: data.newsletter_subscription,
+  terms_conds_accepted: data.terms_conds_accepted,
 });
