@@ -6,7 +6,7 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
   return sequelize.define('users', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
