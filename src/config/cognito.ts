@@ -29,6 +29,7 @@ const config = (): CognitoConfigs => {
       UserPoolId: envVars.COGNITO_USER_POOL_ID,
       ClientId: envVars.COGNITO_CLIENT_ID,
     },
+    // as a reference for understanding the variables check:  https://docs.aws.amazon.com/cognito/latest/developerguide/amazon-cognito-user-pools-using-tokens-verifying-a-jwt.html
     jwt: {
       alg: envVars.JWT_ALG,
       e: envVars.JWT_E,

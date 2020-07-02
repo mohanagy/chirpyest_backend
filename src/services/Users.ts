@@ -69,7 +69,7 @@ export const findAllUsers = async (transaction: Transaction): Promise<UserModel[
 };
 
 /**
- * @description findUser is a service to get user by sub
+ * @description findUser is a service to get user by conditions
  * @param {Filter} filter filtration
  * @param {Transaction} transaction
  * @return {Promise<UserModel | null>} user object

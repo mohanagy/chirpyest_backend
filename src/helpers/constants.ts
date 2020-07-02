@@ -5,7 +5,7 @@ export enum UserTypes {
 
 export const messages = {
   auth: {
-    userIsAlreadyExists: 'User is Already exists',
+    userAlreadyExists: 'User already exists',
     userHasBeenCreated: 'User has been created',
   },
   general: {

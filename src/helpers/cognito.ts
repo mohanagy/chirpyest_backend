@@ -3,7 +3,7 @@ import aws from 'aws-sdk';
 import { Application } from 'express';
 import config from '../config';
 
-/** cognito is a function used for initialize the cognito service
+/** cognito is a function used to initialize the cognito service
  *  @param {object} app - server
  *  @return {void} doesn't return anything
  */
