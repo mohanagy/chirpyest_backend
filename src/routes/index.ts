@@ -1,16 +1,10 @@
 import express from 'express';
-import { QueryTypes } from 'sequelize';
-import { dbConfig } from '../database';
+import auth from './auth';
+import helloWorld from './helloWorld';
 
 const router = express.Router();
 
-interface TimeNow {
-  now: Date;
-}
-
-router.get('/hello-world', async (req, res) => {
-  const [timeNow]: Array<TimeNow> = await dbConfig.query('SELECT NOW();', { type: QueryTypes.SELECT });
-  res.send(`Hello, World! ${timeNow.now.toLocaleString()}`);
-});
+router.use('/', [helloWorld]);
+router.use('/api/v1/', [auth]);
 
 export default router;

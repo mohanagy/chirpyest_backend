@@ -17,7 +17,8 @@
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
     "test": "cross-env NODE_ENV=test mocha",
     "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha",
-    "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w"
+    "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w",
+    "test:local:report": "tsc && nyc npm run test:local"
   },
   "husky": {
     "hooks": {
@@ -30,42 +31,48 @@
     ]
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/bluebird": "^3.5.32",
     "@types/chai": "^4.2.11",
     "@types/config": "0.0.36",
     "@types/cookie-parser": "^1.4.2",
     "@types/debug": "^4.1.5",
-    "@types/express": "^4.17.3",
-    "@types/hapi__joi": "^17.1.2",
-    "@types/jest": "^26.0.0",
+    "@types/express": "^4.17.6",
+    "@types/hapi__joi": "^17.1.3",
+    "@types/jest": "^26.0.3",
     "@types/logger": "0.0.0",
     "@types/morgan": "^1.9.1",
-    "@types/node": "^14.0.13",
+    "@types/node": "^14.0.14",
     "@types/node-fetch": "^2.5.7",
-    "@types/validator": "^13.1.0",
     "@types/supertest": "^2.0.9",
-    "@typescript-eslint/eslint-plugin": "^2.25.0",
-    "@typescript-eslint/parser": "^2.25.0",
+    "@types/validator": "^13.1.0",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/parser": "^3.4.0",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-typescript": "^7.2.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-import": "^2.21.2",
-    "eslint-plugin-prettier": "^3.1.2",
-    "husky": "^4.2.3",
-    "lint-staged": "^10.0.9",
+    "eslint": "^7.3.1",
+    "eslint-config-airbnb-typescript": "^8.0.2",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
     "mocha": "^8.0.1",
-    "prettier": "^2.0.2",
+    "nyc": "^15.1.0",
+    "prettier": "^2.0.5",
     "prettier-plugin-organize-imports": "^1.1.0",
-    "sequelize-cli": "^6.0.0",
+    "sequelize-cli": "^6.1.0",
+    "source-map-support": "^0.5.19",
     "supertest": "^4.0.2",
     "ts-node": "^8.10.2",
-    "ts-node-dev": "^1.0.0-pre.47"
+    "ts-node-dev": "^1.0.0-pre.49"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.0",
     "@hapi/joi": "^17.1.1",
+    "@types/joi-password-complexity": "^3.1.0",
+    "amazon-cognito-identity-js": "^4.3.2",
+    "aws-sdk": "^2.708.0",
     "config": "^3.3.1",
     "cookie-parser": "^1.4.5",
     "debug": "^4.1.1",
@@ -74,13 +81,22 @@
     "express": "^4.17.1",
     "express-joi-validation": "^4.0.3",
     "http-status-codes": "^1.4.0",
+    "joi-password-complexity": "^4.1.0",
     "logger": "0.0.1",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.1.0",
-    "typescript": "^3.8.3",
-    "winston": "^3.3.1"
+    "sequelize": "^6.2.3",
+    "typescript": "^3.9.5",
+    "winston": "^3.3.3"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "reporter": [
+      "text",
+      "lcov"
+    ]
   }
 }

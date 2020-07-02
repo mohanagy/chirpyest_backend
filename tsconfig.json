@@ -23,6 +23,8 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    ".nyc_output",
+    ".coverage",
   ],
 }

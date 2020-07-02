@@ -5,5 +5,10 @@ export interface ErrnoException extends Error {
   syscall?: string;
   stack?: string;
   status?: number;
-  error?: Error;
+  error?: ErrorDetails;
+  value?: any;
+}
+
+interface ErrorDetails extends Error {
+  details: string;
 }

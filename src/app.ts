@@ -1,13 +1,20 @@
 import cookieParser from 'cookie-parser';
 import express, { NextFunction, Request, Response } from 'express';
 import logger from 'morgan';
+import fetch from 'node-fetch';
 import { httpResponse } from './helpers';
+import cognito from './helpers/cognito';
+import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
-import indexRouter from './routes';
+import routes from './routes';
 
 const app = express();
 
 app.use(cookieParser());
+
+cognito(app);
+
+(global as any).fetch = fetch;
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -24,21 +31,21 @@ app.use((req, res, next) => {
 app.use(logger('dev'));
 app.use(express.json());
 
-app.use('/', indexRouter);
+app.use('/', routes);
 
 // catch 404
 app.use((req, res) => {
-  return httpResponse.notFound(res, 'Not found');
+  return httpResponse.notFound(res, messages.general.notFound);
 });
 
 // error handler
 app.use(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (err: ErrnoException, req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status || 500);
+    res.status(err.status || err.value ? 400 : 500);
     return res.json({
       success: false,
-      message: err.message,
+      message: err.message || (err.error ? err.error.details : null),
     });
   },
 );
