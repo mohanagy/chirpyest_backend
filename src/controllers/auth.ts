@@ -2,9 +2,9 @@ import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { NextFunction, Request, Response } from 'express';
 import database from '../database';
 import { authHelpers, dto, httpResponse } from '../helpers';
+import { messages } from '../helpers/constants';
 import { CognitoUser } from '../interfaces';
 import { usersServices } from '../services';
-
 /**
  * @description signUp is a controller used to sign up new users
  * @param {Request} request request object
@@ -24,7 +24,7 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
 
     const emailExists = await usersServices.isEmailExists(userData.email, transaction);
     if (emailExists) {
-      throw new Error('User is Already exists');
+      throw new Error(messages.auth.userIsAlreadyExists);
     }
 
     const data = await usersServices.createUser(userData, transaction);
@@ -53,7 +53,7 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
 
     transaction.commit();
     if (userUpdatedData) responseData = userUpdatedData;
-    return httpResponse.created(response, responseData, 'User has been created');
+    return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {
     transaction.rollback();
     if (userSub) authHelpers.removeCognitoUser(request.app, userSub);

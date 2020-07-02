@@ -4,6 +4,7 @@ import logger from 'morgan';
 import fetch from 'node-fetch';
 import { httpResponse } from './helpers';
 import cognito from './helpers/cognito';
+import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
 import routes from './routes';
 
@@ -34,14 +35,14 @@ app.use('/', routes);
 
 // catch 404
 app.use((req, res) => {
-  return httpResponse.notFound(res, 'Not found');
+  return httpResponse.notFound(res, messages.general.notFound);
 });
 
 // error handler
 app.use(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (err: ErrnoException, req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status || 500);
+    res.status(err.status || err.value ? 400 : 500);
     return res.json({
       success: false,
       message: err.message || (err.error ? err.error.details : null),

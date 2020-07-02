@@ -54,7 +54,7 @@ export const updateUser = async (
   filter: Filter,
   data: EditUserAttributes,
   transaction: Transaction,
-): Promise<[number, UserModel[]]> => Users.update(data, { ...filter, transaction });
+): Promise<[number, UserModel[]]> => Users.update(data, { ...filter, transaction, returning: true });
 
 /**
  * @description findAllUsers service used to get all users
@@ -78,9 +78,10 @@ export const findUser = async (filter: Filter, transaction: Transaction): Promis
   Users.findOne({ ...filter, transaction });
 
 /**
- *
- * @param filter
+ * @description deleteUser is a service to  delete a user
+ * @param {Filter} filter filtration
  * @param {Transaction} transaction
+ * @return {Promise<number>}
  */
 export const deleteUser = async (filter: Filter, transaction: Transaction): Promise<number> => {
   const user = await Users.destroy({ ...filter, transaction });
