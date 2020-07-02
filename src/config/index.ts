@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import cognito from './cognito';
 import database from './database';
 import server from './server';
 
@@ -15,4 +16,5 @@ if (process.env.NODE_ENV === 'development') {
 export default {
   database: database(),
   server: server(),
+  cognito: cognito(),
 };
