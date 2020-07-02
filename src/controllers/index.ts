@@ -1,1 +1,3 @@
-export * as affiliateNetworksController from './affiliateNetworks';
+import * as affiliateNetworks from './affiliateNetworks';
+
+export const affiliateNetworksController = affiliateNetworks;
