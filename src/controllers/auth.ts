@@ -49,14 +49,16 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
 
     const filter = dto.generalDTO.filterData({ id: data.id });
 
-    const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognito_id: userSub }, transaction);
-
-    transaction.commit();
+    const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognitoId: userSub }, transaction);
+    await transaction.commit();
     if (userUpdatedData) responseData = userUpdatedData;
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {
-    transaction.rollback();
-    if (userSub) authHelpers.removeCognitoUser(request.app, userSub);
+    await transaction.rollback();
+    if (userSub) {
+      await authHelpers.removeCognitoUser(request.app, userSub);
+    }
+
     return httpResponse.forbidden(response, error.message);
   }
 };
