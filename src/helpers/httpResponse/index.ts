@@ -26,5 +26,5 @@ export default {
       ),
   payLoadTooLarge: (response: Response, message: string): Response =>
     response.status(httpStatus.REQUEST_TOO_LONG).json(new FailureResponse(message || 'Request payload too large.')),
-  internalServerError: (next: NextFunction, error: Error): void => next(error),
+  internalServerError: (next: NextFunction, error: Error): any => next(error),
 };

@@ -2,21 +2,25 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { UserTransactionsHistoryStatic } from '../../types/sequelize';
 
 export function UserTransactionsHistoryFactory(sequelize: Sequelize): UserTransactionsHistoryStatic {
-  return sequelize.define('UserTransactionsHistory', {
-    user_id: {
-      type: DataTypes.INTEGER,
+  return sequelize.define(
+    'userTransactionsHistory',
+    {
+      userId: {
+        type: DataTypes.INTEGER,
+      },
+      closedOut: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        unique: true,
+      },
+      chirpyestCurrentBalance: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      paypalAccount: {
+        type: DataTypes.STRING,
+      },
     },
-    closed_out: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    paypal_account: {
-      type: DataTypes.STRING,
-    },
-    chirpyest_current_balance: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-  }) as UserTransactionsHistoryStatic;
+    { underscored: true, timestamps: true },
+  ) as UserTransactionsHistoryStatic;
 }

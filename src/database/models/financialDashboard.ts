@@ -2,21 +2,25 @@ import { DataTypes, Sequelize } from 'sequelize';
 import { FinancialDashboardStatic } from '../../types/sequelize';
 
 export function FinancialDashboardFactory(sequelize: Sequelize): FinancialDashboardStatic {
-  return sequelize.define('FinancialDashboard', {
-    user_id: {
-      type: DataTypes.INTEGER,
+  return sequelize.define(
+    'financialDashboard',
+    {
+      userId: {
+        type: DataTypes.INTEGER,
+      },
+      pending: {
+        type: DataTypes.INTEGER,
+      },
+      receivableMilestone: {
+        type: DataTypes.INTEGER,
+      },
+      earnings: {
+        type: DataTypes.INTEGER,
+      },
+      lastClosedOut: {
+        type: DataTypes.INTEGER,
+      },
     },
-    pending: {
-      type: DataTypes.FLOAT,
-    },
-    receivable_milestone: {
-      type: DataTypes.FLOAT,
-    },
-    earnings: {
-      type: DataTypes.FLOAT,
-    },
-    last_closed_out: {
-      type: DataTypes.FLOAT,
-    },
-  }) as FinancialDashboardStatic;
+    { underscored: true, timestamps: true },
+  ) as FinancialDashboardStatic;
 }

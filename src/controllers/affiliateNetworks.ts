@@ -1,63 +1,81 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
 import database from '../database';
-import { rakutenServices } from '../services';
-import { RakutenTransactionsAttributes } from '../types/sequelize';
+import { convertToCents, httpResponse, keysToCamel } from '../helpers';
+import { rakutenServices, usersServices } from '../services';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const getRakutenWebhookData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  console.log('req.body', req.body);
-  console.log('req.headers', req.headers);
-  // validate the data ??
+export const getRakutenWebhookData = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  const transaction = await database.sequelize.transaction();
   try {
-    const {
-      etransaction_id,
-      advertiser_id,
-      order_id,
-      offer_id,
-      sku_number,
-      sale_amount,
-      quantity,
-      commissions,
-      process_date,
-      transaction_date,
-      transaction_type,
-      product_name,
-      u1,
-      currency,
-      is_event,
-    } = req.body;
+    const camelizedResponse = keysToCamel(req.query);
 
-    const data: RakutenTransactionsAttributes = {
-      user_id: 1,
-      transaction_id: etransaction_id,
-      advertiser_id,
-      order_id,
-      offer_id,
-      sku_number,
-      sale_amount,
+    const {
+      etransactionId,
+      orderId,
+      offerId,
+      skuNumber,
       quantity,
+      saleAmount,
       commissions,
-      process_date,
-      transaction_date,
-      transaction_type,
-      product_name,
+      processDate,
+      transactionDate,
+      transactionType,
+      productName,
       u1,
       currency,
-      is_event,
+      isEvent,
+    } = camelizedResponse;
+    const userId = u1;
+
+    const cleanRakutenTransactionData: any = {
+      userId,
+      etransactionId,
+      orderId,
+      offerId,
+      skuNumber,
+      quantity,
+      saleAmount: convertToCents(saleAmount),
+      commissions: convertToCents(commissions),
+      processDate,
+      transactionDate,
+      transactionType,
+      productName,
+      u1,
+      currency,
+      isEvent,
     };
 
-    // start transaction
-    const transaction = await database.sequelize.transaction();
-    // dto stuff
+    // check if u1 doesn't match any users log the err
+    if (!userId || !Number.isInteger(+userId)) {
+      // TODO: log this as it could be useful to investigate any broken urls
+      cleanRakutenTransactionData.userId = null;
+      await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
+      await transaction.commit();
+      return res.status(200).json({ success: true });
+    }
+
+    const user = await usersServices.findUser({ where: { id: userId } }, transaction);
+
+    if (!user) {
+      // TODO: log this as it could be useful to investigate any broken urls
+      cleanRakutenTransactionData.userId = null;
+      await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
+      await transaction.commit();
+      return res.status(200).json({ success: true });
+    }
 
     // save to db
-    await rakutenServices.createRakutenTransaction(data, transaction);
-
-    // update the pending money
+    await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
+    await rakutenServices.updatePendingCash(
+      userId,
+      { commissions: cleanRakutenTransactionData.commissions, saleAmount: cleanRakutenTransactionData.saleAmount },
+      transaction,
+    );
+    await transaction.commit();
+    return res.status(200).json({ success: true });
   } catch (error) {
-    console.log('error', error);
+    await transaction.rollback();
+    return httpResponse.internalServerError(next, error.message);
   }
-
-  res.status(200).send('ok');
 };
