@@ -8,15 +8,15 @@ import { UserTransactionsHistoryFactory } from './models/userTransactionsHistory
 
 export const dbConfig = new Sequelize(config.database.url, { define: { underscored: true, timestamps: true } });
 
-export const User = UserFactory(dbConfig);
+export const Users = UserFactory(dbConfig);
 export const FinancialDashboard = FinancialDashboardFactory(dbConfig);
 export const RakutenTransactions = RakutenTransactionsFactory(dbConfig);
 export const UserTransactionsHistory = UserTransactionsHistoryFactory(dbConfig);
 
 // relations
-User.hasOne(FinancialDashboard);
-User.hasMany(RakutenTransactions);
-User.hasMany(UserTransactionsHistory);
+Users.hasOne(FinancialDashboard);
+Users.hasMany(RakutenTransactions);
+Users.hasMany(UserTransactionsHistory);
 
 const database: Database = {};
 

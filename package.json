@@ -18,7 +18,8 @@
     "test": "cross-env NODE_ENV=test mocha",
     "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha",
     "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w",
-    "test:local:report": "tsc && nyc npm run test:local"
+    "test:local:report": "tsc && nyc npm run test:local",
+    "seed:database": "cross-env NODE_ENV=development APP_ENV=test ts-node-dev ./src/database/build.script.ts"
   },
   "husky": {
     "hooks": {
@@ -41,6 +42,7 @@
     "@types/hapi__joi": "^17.1.3",
     "@types/jest": "^26.0.3",
     "@types/logger": "0.0.0",
+    "@types/mocha": "^7.0.2",
     "@types/morgan": "^1.9.1",
     "@types/node": "^14.0.14",
     "@types/node-fetch": "^2.5.7",

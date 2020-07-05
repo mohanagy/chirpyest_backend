@@ -2,12 +2,13 @@ import { expect } from 'chai';
 import request from 'supertest';
 import app from '../../app';
 import * as db from '../../database';
+import buildDb from '../../database/build';
 import { calculateCommission } from '../../services/affiliateNetworks/utils';
 
 const transactionId1 = '11F79TL62R1GA54DAB3F3E6BADA181C8F';
 const transactionId2 = '32F72NL19EFEB54CEFB3C3E6BADA181C8F';
 const transactionId3 = '43F72NL19EFEB54CEFB3C3E6BADA181C8F';
-const userId1 = '2';
+const userId1 = '1';
 
 const rakutenHookResponse = (transactionId: string, userId?: string) => {
   const data = {
@@ -33,6 +34,10 @@ const rakutenHookResponse = (transactionId: string, userId?: string) => {
 };
 
 describe('Test Rakuten webhook controller', () => {
+  before(async () => {
+    await buildDb();
+  });
+
   it('Should create a new rakuten transaction and update related user credit', async () => {
     const hookData = rakutenHookResponse(transactionId1, userId1);
     const rakutenTransactions = await db.RakutenTransactions.findAll();
