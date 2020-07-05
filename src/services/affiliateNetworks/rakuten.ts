@@ -5,7 +5,7 @@ import { calculateCommission } from './utils';
 
 /**
  * @description createRakutenTransaction is a service used to save rekuten webhook data to the db
- * @param {RakutenTransactionsAttributes} data represent the api data
+ * @param {RakutenTransactionsAttributes} data represents the api data
  * @param {Transaction} transaction transaction
  * @returns {Promise<RakutenTransactionsModel | null>}
  */
