@@ -17,23 +17,23 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       type: DataTypes.ENUM(...Object.values(UserTypes)),
       allowNull: false,
     },
-    cognito_id: {
+    cognitoId: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    newsletter_subscription: {
+    newsletterSubscription: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    terms_conds_accepted: {
+    termsCondsAccepted: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    is_active: {
+    isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    paypal_account: {
+    paypalAccount: {
       type: DataTypes.STRING,
       allowNull: true,
     },

@@ -5,12 +5,12 @@ export interface UserAttributes {
   name: string;
   email: string;
   type?: UserTypes;
-  newsletter_subscription: boolean;
-  terms_conds_accepted: boolean;
-  paypal_account?: string;
+  newsletterSubscription: boolean;
+  termsCondsAccepted: boolean;
+  paypalAccount?: string;
   image?: string;
-  is_active?: boolean;
-  cognito_id?: string;
+  isActive?: boolean;
+  cognitoId?: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -18,10 +18,10 @@ export interface UserAttributes {
 export interface EditUserAttributes {
   name?: string;
   type?: UserTypes;
-  newsletter_subscription?: boolean;
-  paypal_account?: string;
-  is_active?: boolean;
-  cognito_id?: string;
+  newsletterSubscription?: boolean;
+  paypalAccount?: string;
+  isActive?: boolean;
+  cognitoId?: string;
 }
 
 export interface UserData extends UserAttributes {
