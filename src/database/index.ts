@@ -3,7 +3,7 @@ import config from '../config';
 import { Database } from '../interfaces';
 import { UserFactory } from './models/users';
 
-export const dbConfig = new Sequelize(config.database.url);
+export const dbConfig = new Sequelize(config.database.url, { define: { underscored: true, timestamps: true } });
 
 export const Users = UserFactory(dbConfig);
 

@@ -49,7 +49,7 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
 
     const filter = dto.generalDTO.filterData({ id: data.id });
 
-    const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognito_id: userSub }, transaction);
+    const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognitoId: userSub }, transaction);
 
     transaction.commit();
     if (userUpdatedData) responseData = userUpdatedData;
