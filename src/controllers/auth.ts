@@ -1,7 +1,7 @@
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { NextFunction, Request, Response } from 'express';
 import database from '../database';
-import { authHelpers, dto, httpResponse, logger } from '../helpers';
+import { authHelpers, dto, httpResponse } from '../helpers';
 import { messages } from '../helpers/constants';
 import { CognitoUser } from '../interfaces';
 import { usersServices } from '../services';
@@ -54,12 +54,9 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
     if (userUpdatedData) responseData = userUpdatedData;
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {
-    console.log('err', error);
-    logger.error(error);
     await transaction.rollback();
     if (userSub) {
-      const repsonsesss = await authHelpers.removeCognitoUser(request.app, userSub);
-      console.log(repsonsesss);
+      await authHelpers.removeCognitoUser(request.app, userSub);
     }
 
     return httpResponse.forbidden(response, error.message);

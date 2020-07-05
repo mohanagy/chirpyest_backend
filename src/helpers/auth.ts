@@ -43,7 +43,6 @@ export const removeCognitoUser = (app: Application, cognitoId: string): Promise<
 
   return new Promise((resolve, reject) => {
     cognitoProvider.adminDeleteUser(params, (err: Error, data: any) => {
-      console.log({ data, err });
       if (err) return reject(err);
       return resolve(data);
     });
