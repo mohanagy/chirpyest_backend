@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { dbConfig } from 'src/database';
 import request from 'supertest';
 import app from '../../app';
+import { dbConfig } from '../../database';
 import { authHelpers, dto } from '../../helpers';
 import { usersServices } from '../../services';
 
