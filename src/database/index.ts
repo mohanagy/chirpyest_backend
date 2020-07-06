@@ -6,7 +6,10 @@ import { RakutenTransactionsFactory } from './models/rakutenTransactions';
 import { UserFactory } from './models/users';
 import { UserTransactionsHistoryFactory } from './models/userTransactionsHistory';
 
-export const dbConfig = new Sequelize(config.database.url, { define: { underscored: true, timestamps: true } });
+export const dbConfig = new Sequelize(config.database.url, {
+  define: { underscored: true, timestamps: true },
+  logging: false,
+});
 
 export const Users = UserFactory(dbConfig);
 export const FinancialDashboard = FinancialDashboardFactory(dbConfig);

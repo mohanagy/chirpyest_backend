@@ -79,7 +79,7 @@ const onListening = (): void => {
 };
 
 dbConfig
-  .sync({ logging: false })
+  .sync()
   .then(() => {
     server.listen(port);
     server.on('error', onError);
