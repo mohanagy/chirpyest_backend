@@ -1,4 +1,5 @@
 import { ICognitoUserPoolData } from 'amazon-cognito-identity-js';
+import jwkToPem from 'jwk-to-pem';
 
 export interface DatabaseConfigs {
   url: string;
@@ -23,7 +24,7 @@ export interface AwsConfigs {
 }
 export interface CognitoConfigs {
   cognitoPoolConfig: ICognitoUserPoolData;
-  jwt: JWT;
+  jwt: jwkToPem.JWK;
   awsConfigs: AwsConfigs;
 }
 
