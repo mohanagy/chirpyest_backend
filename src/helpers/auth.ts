@@ -1,7 +1,14 @@
 import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { Application } from 'express';
+import { verify, VerifyErrors } from 'jsonwebtoken';
+import jwkToPem from 'jwk-to-pem';
 import config from '../config';
-import { CognitoUser } from '../interfaces';
+import { CognitoAttributes, CognitoUser } from '../interfaces';
+
+const {
+  cognito: { jwt },
+} = config;
+const pem = jwkToPem(jwt);
 
 /**
  * @description createCognitoUser is a function  used to create an account in User Pool
@@ -48,3 +55,90 @@ export const removeCognitoUser = (app: Application, cognitoId: string): Promise<
     });
   });
 };
+/**
+ * @description verifyJWTToken is a function used to verify the Auth token if
+ * it has the  same signature or is not expired
+ * @param  {string} token
+ * @returns Promise
+ */
+export const verifyJWTToken = (token: string): Promise<any> =>
+  new Promise((resolve, reject) => {
+    verify(token, pem, { algorithms: ['RS256'] }, (err: VerifyErrors | null, decodedToken) => {
+      if (err || !decodedToken) return reject(err);
+      return resolve(decodedToken);
+    });
+  });
+/**
+ * @description generateCognitoAttributes is a function used to generate
+ * cognito attributes
+ * @param  {CognitoAttributes} attributes
+ * @returns {Array<CognitoUserAttribute>}
+ */
+export const generateCognitoAttributes = (
+  attributes: CognitoAttributes,
+): AmazonCognitoIdentity.CognitoUserAttribute[] => {
+  return Object.keys(attributes).map(
+    (key: string) =>
+      new AmazonCognitoIdentity.CognitoUserAttribute({
+        Name: key,
+        Value: (attributes as any)[key] ? (attributes as any)[key].toString() : '',
+      }),
+  );
+};
+/**
+ * @description authenticateUser is a function used to authenticate the user and generate access token
+ * @param  {Application} app represents express.js
+ * @param  {AmazonCognitoIdentity.IAuthenticationDetailsData} authenticationData represents username and password
+ * @param  {string} cognitoId represents user id in cognito
+ * @returns {Promise} represents access token
+ */
+export const authenticateUser = (
+  app: Application,
+  authenticationData: AmazonCognitoIdentity.IAuthenticationDetailsData,
+  cognitoId: string,
+): Promise<string> => {
+  const cognitoPool = app.get('cognito');
+  const authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+  const userData = {
+    Username: cognitoId,
+    Pool: cognitoPool,
+  };
+
+  const cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+  return new Promise((resolve, reject) => {
+    cognitoUser.authenticateUser(authenticationDetails, {
+      onSuccess(result) {
+        resolve(result.getIdToken().getJwtToken());
+      },
+      onFailure(err) {
+        reject(err);
+      },
+    });
+  });
+};
+/**
+ * @description confirmCognitoUser is a function used to confirm cognito user
+ * @param  {Application} app represents express app
+ * @param  {string} email represents user email
+ * @returns {Promise<string>}
+ */
+export const confirmCognitoUser = async (app: Application, email: string): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const cognitoProvider = app.get('cognitoProvider');
+
+    const {
+      cognito: {
+        cognitoPoolConfig: { UserPoolId },
+      },
+    } = config;
+
+    const confirmParams = {
+      UserPoolId,
+      Username: email,
+    };
+    cognitoProvider.adminConfirmSignUp(confirmParams, (error: any, data: any) => {
+      if (error) reject(error.message);
+      resolve(data);
+    });
+  });

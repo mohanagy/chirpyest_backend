@@ -5,10 +5,16 @@ export enum UserTypes {
 
 export const messages = {
   auth: {
-    userAlreadyExists: 'User already exists',
-    userHasBeenCreated: 'User has been created',
+    userAlreadyExists: 'User Already Exists',
+    userHasBeenCreated: 'User Has Been Created',
+    notAuthorized: 'Not Authorized',
   },
   general: {
-    notFound: 'Not found',
+    notFound: 'Not Found',
+    internalServerError: 'Internal Server Error',
+  },
+  users: {
+    userProfile: 'User Profile',
+    updateUserProfileSuccess: 'User Profile Updated Successfully',
   },
 };
