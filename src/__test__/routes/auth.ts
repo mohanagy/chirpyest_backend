@@ -1,3 +1,4 @@
+import { dbConfig } from 'src/database';
 import request from 'supertest';
 import app from '../../app';
 import { dto } from '../../helpers';
@@ -8,6 +9,9 @@ const email = `${Math.random().toString(36).substring(7)}@gmail.com`;
 describe('POST /api/v1/auth/signup endpoint', () => {
   let cognitoId = '';
   const filter = dto.generalDTO.filterData({ email });
+  before(async () => {
+    await dbConfig.sync({ force: true });
+  });
   after(async () => {
     if (cognitoId) {
       await usersServices.deleteUser(filter);

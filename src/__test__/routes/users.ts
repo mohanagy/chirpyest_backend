@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { dbConfig } from 'src/database';
 import request from 'supertest';
 import app from '../../app';
 import { authHelpers, dto } from '../../helpers';
@@ -11,6 +12,7 @@ describe('GET /api/v1/users/:id/profile endpoint', () => {
   let token: string;
   const filter = dto.generalDTO.filterData({ email });
   before(async () => {
+    await dbConfig.sync({ force: true });
     const response = await request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true });
@@ -103,7 +105,7 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
       .expect(400, done);
   });
 
-  it('user cannot access other profiles', () => {
-    request(app).get(`/api/v1/users/9999/profile`).set('Authorization', `Bearer ${token}`).expect(401);
+  it('user cannot access other profiles', (done) => {
+    request(app).get(`/api/v1/users/9999/profile`).set('Authorization', `Bearer ${token}`).expect(401, done);
   });
 });
