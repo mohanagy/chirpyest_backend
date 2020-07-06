@@ -46,32 +46,27 @@ export const getRakutenWebhookData = async (req: Request, res: Response, next: N
       isEvent,
     };
 
-    // check if u1 doesn't match any users log the err
-    if (!userId || !Number.isInteger(+userId)) {
-      // TODO: log this as it could be useful to investigate any broken urls
-      cleanRakutenTransactionData.userId = null;
+    let user;
+
+    if (userId && Number.isInteger(+userId)) {
+      user = await usersServices.findUser({ where: { id: userId } }, transaction);
+    }
+
+    if (user) {
       await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
+      await rakutenServices.updatePendingCash(
+        userId,
+        { commissions: cleanRakutenTransactionData.commissions, saleAmount: cleanRakutenTransactionData.saleAmount },
+        transaction,
+      );
       await transaction.commit();
       return res.status(200).json({ success: true });
     }
 
-    const user = await usersServices.findUser({ where: { id: userId } }, transaction);
-
-    if (!user) {
-      // TODO: log this as it could be useful to investigate any broken urls
-      cleanRakutenTransactionData.userId = null;
-      await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
-      await transaction.commit();
-      return res.status(200).json({ success: true });
-    }
-
-    // save to db
+    // The record is not linked to a current user
+    // TODO: log this as it could be useful to investigate any broken urls
+    cleanRakutenTransactionData.userId = null;
     await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
-    await rakutenServices.updatePendingCash(
-      userId,
-      { commissions: cleanRakutenTransactionData.commissions, saleAmount: cleanRakutenTransactionData.saleAmount },
-      transaction,
-    );
     await transaction.commit();
     return res.status(200).json({ success: true });
   } catch (error) {
