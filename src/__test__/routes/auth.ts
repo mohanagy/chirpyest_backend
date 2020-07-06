@@ -31,7 +31,7 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       .expect((res) => {
         const {
           body: {
-            data: { cognito_id: cognitoIdResult },
+            data: { cognitoId: cognitoIdResult },
           },
         } = res;
         cognitoId = cognitoIdResult;

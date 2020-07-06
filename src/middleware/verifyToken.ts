@@ -33,7 +33,7 @@ export const verifyToken = async (
 
     if (user) {
       const { sub } = user;
-      const filter = dto.generalDTO.filterData({ cognito_id: sub });
+      const filter = dto.generalDTO.filterData({ cognitoId: sub });
       const userData = await usersServices.getUser(filter, transaction);
       if (!userData) {
         transaction.rollback();
