@@ -1,6 +1,6 @@
-import { dbConfig } from 'src/database';
 import request from 'supertest';
 import app from '../../app';
+import { dbConfig } from '../../database';
 import { dto } from '../../helpers';
 import { removeCognitoUser } from '../../helpers/auth';
 import { usersServices } from '../../services';
