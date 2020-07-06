@@ -6,7 +6,6 @@ import helloWorld from './helloWorld';
 const router = express.Router();
 
 router.use('/', [helloWorld]);
-router.use('/api/v1', affiliateNetworks);
-router.use('/api/v1/', [auth]);
+router.use('/api/v1/', [auth, affiliateNetworks]);
 
 export default router;
