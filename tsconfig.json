@@ -9,6 +9,7 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "types":["node","mocha"],
     "lib": [
       "es5",
       "es6",
