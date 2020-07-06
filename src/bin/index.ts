@@ -79,7 +79,7 @@ const onListening = (): void => {
 };
 
 dbConfig
-  .sync({ force: process.env.NODE_ENV === 'test' ? false : undefined })
+  .sync({ force: process.env.NODE_ENV === 'test' ? true : undefined })
   .then(() => {
     server.listen(port);
     server.on('error', onError);
