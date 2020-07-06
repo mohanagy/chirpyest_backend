@@ -13,7 +13,7 @@ const { Users } = database;
  * @param {Transaction} transaction  transaction object
  * @return {Promise<UserModel | null>} User data
  */
-export const getUser = async (filter: Filter, transaction: Transaction): Promise<UserModel | null> => {
+export const getUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> => {
   return Users.findOne({ ...filter, transaction });
 };
 
@@ -23,7 +23,7 @@ export const getUser = async (filter: Filter, transaction: Transaction): Promise
  * @param {Transaction} transaction transaction
  * @return {Promise<boolean>} result of checking process
  */
-export const isEmailExists = async (email: string, transaction: Transaction): Promise<boolean> => {
+export const isEmailExists = async (email: string, transaction?: Transaction): Promise<boolean> => {
   const User = await Users.findOne({
     where: { email },
     transaction,
@@ -38,7 +38,7 @@ export const isEmailExists = async (email: string, transaction: Transaction): Pr
  * @param {Transaction} transaction transaction
  * @returns {Promise<UserModel | null>}
  */
-export const createUser = async (data: UserAttributes, transaction: Transaction): Promise<UserModel> => {
+export const createUser = async (data: UserAttributes, transaction?: Transaction): Promise<UserModel> => {
   const userUserModel = await Users.create(data, { transaction });
   return userUserModel;
 };
@@ -53,7 +53,7 @@ export const createUser = async (data: UserAttributes, transaction: Transaction)
 export const updateUser = async (
   filter: Filter,
   data: EditUserAttributes,
-  transaction: Transaction,
+  transaction?: Transaction,
 ): Promise<[number, UserModel[]]> => Users.update(data, { ...filter, transaction, returning: true });
 
 /**
@@ -61,7 +61,7 @@ export const updateUser = async (
  * @param {Transaction} transaction
  * @return {Promise<UserModel[]>} list of all users
  */
-export const findAllUsers = async (transaction: Transaction): Promise<UserModel[]> => {
+export const findAllUsers = async (transaction?: Transaction): Promise<UserModel[]> => {
   const data = await Users.findAll({
     transaction,
   });
@@ -74,7 +74,7 @@ export const findAllUsers = async (transaction: Transaction): Promise<UserModel[
  * @param {Transaction} transaction
  * @return {Promise<UserModel | null>} user object
  */
-export const findUser = async (filter: Filter, transaction: Transaction): Promise<UserModel | null> =>
+export const findUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> =>
   Users.findOne({ ...filter, transaction });
 
 /**
@@ -83,7 +83,7 @@ export const findUser = async (filter: Filter, transaction: Transaction): Promis
  * @param {Transaction} transaction
  * @return {Promise<number>}
  */
-export const deleteUser = async (filter: Filter, transaction: Transaction): Promise<number> => {
+export const deleteUser = async (filter: Filter, transaction?: Transaction): Promise<number> => {
   const user = await Users.destroy({ ...filter, transaction });
   return user;
 };
