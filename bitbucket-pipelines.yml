@@ -11,7 +11,6 @@ pipelines:
           - npm run init
           - npm run lint
           - npm run tsc-lint
-          - npm run pretest
           - npm run test
         services: 
           - postgres
@@ -25,8 +24,7 @@ pipelines:
             - npm run init
             - npm run lint
             - npm run tsc-lint
-            - npm run pretest
-            - npm run test
+              - npm run test
             # Finally, we push to Heroku
             - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_STAGING_APP_NAME.git development:master
           services: 
@@ -40,8 +38,7 @@ pipelines:
             - npm run init
             - npm run lint
             - npm run tsc-lint
-            - npm run pretest
-            - npm run test
+              - npm run test
             - git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_PRODUCTION_APP_NAME.git master
           services: 
             - postgres
