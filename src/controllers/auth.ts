@@ -1,4 +1,3 @@
-import * as AmazonCognitoIdentity from 'amazon-cognito-identity-js';
 import { NextFunction, Request, Response } from 'express';
 import database from '../database';
 import { authHelpers, dto, httpResponse } from '../helpers';
@@ -6,9 +5,10 @@ import { messages } from '../helpers/constants';
 import { CognitoUser } from '../interfaces';
 import { usersServices } from '../services';
 /**
+import { generateCognitoAttributes } from 'src/helpers/auth';
  * @description signUp is a controller used to sign up new users
- * @param {Request} request request object
- * @param {Response} response response object
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
  * @param {NextFunction} _next middleware function
  * @return {Promise<Response>} object contains success status
  */
@@ -30,13 +30,7 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
     const data = await usersServices.createUser(userData, transaction);
 
     const attributes = dto.authDTO.cognitoAttributes({ ...userData, id: data.id });
-    const attributeList = Object.keys(attributes).map(
-      (key: string) =>
-        new AmazonCognitoIdentity.CognitoUserAttribute({
-          Name: key,
-          Value: (attributes as any)[key] ? (attributes as any)[key].toString() : '',
-        }),
-    );
+    const attributeList = authHelpers.generateCognitoAttributes(attributes);
 
     const cognitoUser: CognitoUser = await authHelpers.createCognitoUser(
       request.app,
