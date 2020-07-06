@@ -44,6 +44,7 @@ export const updateUserProfile = async (
   const userData = dto.usersDTO.userProfileUpdatableFields(bodyData);
 
   if (!user || Number(user.id) !== Number(userId.id)) {
+    await transaction.rollback();
     return httpResponse.unAuthorized(response, constants.messages.auth.notAuthorized);
   }
 
@@ -51,7 +52,7 @@ export const updateUserProfile = async (
 
   const [, [updateUserDataResult]] = await usersServices.updateUser(filter, userData, transaction);
 
-  transaction.commit();
+  await transaction.commit();
   return httpResponse.ok(
     response,
     dto.usersDTO.userProfileResponse(updateUserDataResult),

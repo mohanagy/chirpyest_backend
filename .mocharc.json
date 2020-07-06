@@ -8,5 +8,6 @@
     "**/*.spec.ts",
     "**/__test__/**/*.ts"
   ],
-  "timeout": 5000
+  "timeout": 10000,
+  "exclude": ["/dist/__test__/config/*.ts","src/__test__/config/*.ts"]
 }

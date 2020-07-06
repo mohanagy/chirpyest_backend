@@ -10,6 +10,7 @@ import database from '../database';
 // eslint-disable-next-line @typescript-eslint/ban-types
 export default (fn: Function) => async (request: Request, response: Response, next: NextFunction): Promise<void> => {
   const transaction = await database.sequelize.transaction();
+  request.app.set('transaction', transaction);
   try {
     return await fn(request, response, next, transaction);
   } catch (error) {

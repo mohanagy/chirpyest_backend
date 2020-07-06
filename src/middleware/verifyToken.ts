@@ -24,7 +24,7 @@ export const verifyToken = async (
   if (authorization) {
     const token = authorization.slice(7, authorization.length);
     if (token === 'undefined') {
-      transaction.rollback();
+      await transaction.rollback();
       return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
     }
     const user = await verifyJWTToken(token).catch(() => {
@@ -35,11 +35,13 @@ export const verifyToken = async (
       const { sub } = user;
       const filter = dto.generalDTO.filterData({ cognitoId: sub });
       const userData = await usersServices.getUser(filter, transaction);
+
       if (!userData) {
-        transaction.rollback();
+        await transaction.rollback();
         return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
       }
       request.app.set('user', userData);
+      await transaction.commit();
       return next();
     }
   }
