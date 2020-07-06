@@ -1,5 +1,5 @@
 
-# configuration
+# Configuration
 
 1. .env.example is a blueprint for all configration  needed for the project
 2. copy .env.example and replace .example depends on your environment
