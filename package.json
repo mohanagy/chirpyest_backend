@@ -15,10 +15,8 @@
     "tsc-lint": "tsc --noEmit",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "lint:fix": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "test": "cross-env NODE_ENV=test mocha",
-    "pretest":"cross-env NODE_ENV=test npm run tsc && node ./dist/__test__/config/initDatabase.js",
-    "posttest":"node ./dist/__test__/config/closeDatabase.js",
-    "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha --exit",
+    "test": "cross-env NODE_ENV=test mocha --exist",
+    "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha --exist",
     "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w",
     "test:local:report": "tsc && nyc npm run test:local"
   },

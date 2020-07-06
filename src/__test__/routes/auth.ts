@@ -1,10 +1,14 @@
 import request from 'supertest';
 import app from '../../app';
+import { dbConfig } from '../../database';
 import { dto } from '../../helpers';
 import { removeCognitoUser } from '../../helpers/auth';
 import { usersServices } from '../../services';
 
 const email = `${Math.random().toString(36).substring(7)}@gmail.com`;
+before(async () => {
+  await dbConfig.sync({ force: true });
+});
 describe('POST /api/v1/auth/signup endpoint', () => {
   let cognitoId = '';
   const filter = dto.generalDTO.filterData({ email });
