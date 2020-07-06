@@ -20,10 +20,10 @@ describe('POST /api/v1/auth/signup endpoint', () => {
     }
   });
 
-  it('validation should fails the request since no data', (done) => {
+  it('Validation should fail because the request body has no data', (done) => {
     request(app).post('/api/v1/auth/signup').expect(400, done);
   });
-  it('validation should fail because the password does not match required rules', (done) => {
+  it('Validation should fail because the password does not match required rules', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '1234', termsCondsAccepted: true })

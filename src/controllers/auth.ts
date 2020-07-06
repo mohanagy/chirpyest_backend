@@ -5,7 +5,6 @@ import { messages } from '../helpers/constants';
 import { CognitoUser } from '../interfaces';
 import { usersServices } from '../services';
 /**
-import { generateCognitoAttributes } from 'src/helpers/auth';
  * @description signUp is a controller used to sign up new users
  * @param {Request} request represents request object
  * @param {Response} response represents response object
