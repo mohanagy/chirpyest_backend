@@ -23,7 +23,7 @@ export const verifyToken = async (
 
   if (authorization) {
     const token = authorization.slice(7, authorization.length);
-    if (token === 'undefined') {
+    if (token === '') {
       await transaction.rollback();
       return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
     }

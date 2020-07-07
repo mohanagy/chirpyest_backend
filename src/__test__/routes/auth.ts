@@ -47,7 +47,7 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       })
       .expect(201, done);
   });
-  it('Should fail because it doesn’t allow creating two accounts with the same email', (done) => {
+  it('Create user should fail because the email is already in use', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })
