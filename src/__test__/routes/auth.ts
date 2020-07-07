@@ -1,6 +1,7 @@
 import request from 'supertest';
 import app from '../../app';
 import { dbConfig } from '../../database';
+import buildDb from '../../database/build';
 import { dto } from '../../helpers';
 import { removeCognitoUser } from '../../helpers/auth';
 import { usersServices } from '../../services';
@@ -18,6 +19,9 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       await usersServices.deleteUser(filter);
       await removeCognitoUser(app, cognitoId);
     }
+  });
+  before(async () => {
+    await buildDb();
   });
 
   it('Validation should fail because the request body has no data', (done) => {

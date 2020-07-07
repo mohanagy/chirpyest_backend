@@ -12,6 +12,7 @@ export const messages = {
   general: {
     notFound: 'Not Found',
     internalServerError: 'Internal Server Error',
+    commissionTypeError: 'TypeError: commission must be a number',
   },
   users: {
     userProfile: 'User Profile',

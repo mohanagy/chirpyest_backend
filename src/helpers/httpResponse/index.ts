@@ -6,7 +6,7 @@ import SuccessResponse from './SuccessResponse';
 export default {
   created: (response: Response, data: any, message: string): Response =>
     response.status(httpStatus.CREATED).json(new SuccessResponse(data, message)),
-  ok: (response: Response, data: any, message: string): Response =>
+  ok: (response: Response, data?: any, message?: string): Response =>
     response.status(httpStatus.OK).json(new SuccessResponse(data, message)),
   badRequest: (response: Response, message: string): Response =>
     response.status(httpStatus.BAD_REQUEST).json(new FailureResponse(message)),
