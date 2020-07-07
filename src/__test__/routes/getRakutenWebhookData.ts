@@ -49,7 +49,7 @@ describe('Test Rakuten webhook controller', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(result.body).to.haveOwnProperty('success');
+    expect(result.body.success).to.equal(true);
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
     const financialDashboardAfter = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
@@ -69,7 +69,7 @@ describe('Test Rakuten webhook controller', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(result.body).to.haveOwnProperty('success');
+    expect(result.body.success).to.equal(true);
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
     const financialDashboardAfter = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
@@ -89,7 +89,7 @@ describe('Test Rakuten webhook controller', () => {
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
 
-    expect(result.body).to.haveOwnProperty('success');
+    expect(result.body.success).to.equal(true);
     expect(rakutenTransactionsAfter.length).to.equal(rakutenTransactions.length + 1);
   });
 
@@ -104,7 +104,7 @@ describe('Test Rakuten webhook controller', () => {
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
 
-    expect(result.body).to.haveOwnProperty('success');
+    expect(result.body.success).to.equal(true);
     expect(rakutenTransactionsAfter.length).to.equal(rakutenTransactions.length + 1);
   });
 });

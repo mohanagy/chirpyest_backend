@@ -6,7 +6,7 @@ import SuccessResponse from './SuccessResponse';
 export default {
   created: (response: Response, data: any, message: string): Response =>
     response.status(httpStatus.CREATED).json(new SuccessResponse(data, message)),
-  ok: (response: Response, data: any, message: string): Response =>
+  ok: (response: Response, data?: any, message?: string): Response =>
     response.status(httpStatus.OK).json(new SuccessResponse(data, message)),
   badRequest: (response: Response, message: string): Response =>
     response.status(httpStatus.BAD_REQUEST).json(new FailureResponse(message)),
@@ -26,5 +26,5 @@ export default {
       ),
   payLoadTooLarge: (response: Response, message: string): Response =>
     response.status(httpStatus.REQUEST_TOO_LONG).json(new FailureResponse(message || 'Request payload too large.')),
-  internalServerError: (next: NextFunction, error: Error): any => next(error),
+  internalServerError: (next: NextFunction, error: Error): void => next(error),
 };
