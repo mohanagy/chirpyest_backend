@@ -42,6 +42,6 @@ export const getRakutenWebhookData = async (
     return httpResponse.ok(res);
   } catch (error) {
     await transaction.rollback();
-    httpResponse.internalServerError(next, new Error(messages.general.internalServerError));
+    return httpResponse.internalServerError(next, new Error(messages.general.internalServerError));
   }
 };
