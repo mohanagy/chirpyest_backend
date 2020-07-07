@@ -8,8 +8,6 @@ import { calculateCommission } from '../../services/affiliateNetworks/utils';
 const transactionId1 = '11F79TL62R1GA54DAB3F3E6BADA181C8F';
 const transactionId2 = '32F72NL19EFEB54CEFB3C3E6BADA181C8F';
 const transactionId3 = '43F72NL19EFEB54CEFB3C3E6BADA181C8F';
-const userId1 = '1';
-const userId2 = '2';
 
 const rakutenHookResponse = (transactionId: string, userId?: string) => {
   const data = {
@@ -35,12 +33,15 @@ const rakutenHookResponse = (transactionId: string, userId?: string) => {
 };
 
 describe('Test Rakuten webhook controller', () => {
+  let dummyData: any = null;
+
   before(async () => {
-    await buildDb();
+    dummyData = await buildDb();
   });
 
   it('Should create a new rakuten transaction and update related user credit', async () => {
-    const hookData = rakutenHookResponse(transactionId1, userId1);
+    const { user1 } = dummyData.users;
+    const hookData = rakutenHookResponse(transactionId1, user1.id);
     const rakutenTransactions = await db.RakutenTransactions.findAll();
     const financialDashboard = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
     const result = await request(app)
@@ -60,7 +61,8 @@ describe('Test Rakuten webhook controller', () => {
   });
 
   it('Should create a new rakuten transaction and if user first it should create new dashboard record and store the correct value', async () => {
-    const hookData = rakutenHookResponse(transactionId1, userId2);
+    const { user2 } = dummyData.users;
+    const hookData = rakutenHookResponse(transactionId1, user2.id);
     const rakutenTransactions = await db.RakutenTransactions.findAll();
     const financialDashboard = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
     const result = await request(app)

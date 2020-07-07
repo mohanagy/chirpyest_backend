@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
 import database from '../database';
-import { convertToCents, httpResponse, keysToCamel } from '../helpers';
+import { dto, httpResponse } from '../helpers';
 import { messages } from '../helpers/constants';
+import { RakutenTransactionsAttributes } from '../interfaces/Networks';
 import { rakutenServices, usersServices } from '../services';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,43 +14,8 @@ export const getRakutenWebhookData = async (
 ): Promise<Response | void> => {
   const transaction = await database.sequelize.transaction();
   try {
-    const camelizedResponse = keysToCamel(req.query);
-
-    const {
-      etransactionId,
-      orderId,
-      offerId,
-      skuNumber,
-      quantity,
-      saleAmount,
-      commissions,
-      processDate,
-      transactionDate,
-      transactionType,
-      productName,
-      u1,
-      currency,
-      isEvent,
-    } = camelizedResponse;
-    const userId = u1;
-
-    const cleanRakutenTransactionData: any = {
-      userId,
-      etransactionId,
-      orderId,
-      offerId,
-      skuNumber,
-      quantity,
-      saleAmount: convertToCents(saleAmount),
-      commissions: convertToCents(commissions),
-      processDate,
-      transactionDate,
-      transactionType,
-      productName,
-      u1,
-      currency,
-      isEvent,
-    };
+    const rakutenTransactionData: RakutenTransactionsAttributes = dto.rakutenDTO.rakutenData(req.query);
+    const { userId } = rakutenTransactionData;
 
     let user;
 
@@ -57,11 +23,11 @@ export const getRakutenWebhookData = async (
       user = await usersServices.findUser({ where: { id: userId } }, transaction);
     }
 
-    if (user) {
-      await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
+    if (userId && user) {
+      await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
       await rakutenServices.updatePendingCash(
         userId,
-        { commissions: cleanRakutenTransactionData.commissions, saleAmount: cleanRakutenTransactionData.saleAmount },
+        { commissions: rakutenTransactionData.commissions, saleAmount: rakutenTransactionData.saleAmount },
         transaction,
       );
       await transaction.commit();
@@ -70,8 +36,8 @@ export const getRakutenWebhookData = async (
 
     // The record is not linked to a current user
     // TODO: log this as it could be useful to investigate any broken urls
-    cleanRakutenTransactionData.userId = null;
-    await rakutenServices.createRakutenTransaction(cleanRakutenTransactionData, transaction);
+    rakutenTransactionData.userId = undefined;
+    await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
     await transaction.commit();
     return httpResponse.ok(res);
   } catch (error) {

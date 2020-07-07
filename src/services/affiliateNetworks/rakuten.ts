@@ -1,5 +1,6 @@
 import { Transaction } from 'sequelize';
 import { FinancialDashboard, RakutenTransactions } from '../../database';
+import { RakutenTransactionsAttributes } from '../../interfaces/Networks';
 import { RakutenTransactionsModel } from '../../types/sequelize';
 import { calculateCommission } from './utils';
 
@@ -10,7 +11,7 @@ import { calculateCommission } from './utils';
  * @returns {Promise<RakutenTransactionsModel | null>}
  */
 export const createRakutenTransaction = (
-  data: RakutenTransactionsModel,
+  data: RakutenTransactionsAttributes,
   transaction: Transaction,
 ): Promise<RakutenTransactionsModel> => RakutenTransactions.create(data, { transaction });
 

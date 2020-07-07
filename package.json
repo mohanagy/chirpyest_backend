@@ -80,7 +80,6 @@
     "express-joi-validation": "^4.0.3",
     "http-status-codes": "^1.4.0",
     "joi-password-complexity": "^4.1.0",
-    "logger": "0.0.1",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
     "pg": "^8.2.1",

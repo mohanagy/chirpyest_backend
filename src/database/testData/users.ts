@@ -16,6 +16,6 @@ const customer2: any = {
 };
 
 export const createUsers = async (): Promise<any> => {
-  const users = await Users.bulkCreate([customer1, customer2]);
-  return users;
+  const [user1, user2] = await Users.bulkCreate([customer1, customer2], { returning: true });
+  return { user1, user2 };
 };

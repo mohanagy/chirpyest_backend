@@ -1,7 +1,6 @@
 export interface RakutenTransactionsAttributes {
-  userId: number;
-  transactionId: string;
-  advertiserId: string;
+  userId?: number;
+  etransactionId: string;
   orderId: string;
   offerId: string;
   skuNumber: string;
