@@ -33,7 +33,7 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       .send({ email, password: '1234', termsCondsAccepted: true })
       .expect(400, done);
   });
-  it('Should create user normally', (done) => {
+  it('Create User should succeed because email and password are not empty', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })
