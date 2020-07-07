@@ -8,7 +8,8 @@ module.exports = {
   ],
   rules: {
     'import/prefer-default-export': 'off',
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/__test__/**/*.ts", "**/*.spec.ts"] }]
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/__test__/**/*.ts", "**/*.spec.ts"] }],
+    "@typescript-eslint/no-unused-vars":["error", { "argsIgnorePattern": "^_" }]
   },
   settings: {
     "import/resolver": {

@@ -5,12 +5,17 @@ export enum UserTypes {
 
 export const messages = {
   auth: {
-    userAlreadyExists: 'User already exists',
-    userHasBeenCreated: 'User has been created',
+    userAlreadyExists: 'User Already Exists',
+    userHasBeenCreated: 'User Has Been Created',
+    notAuthorized: 'Not Authorized',
   },
   general: {
-    notFound: 'Not found',
-    commissionTypeError: 'TypeError: commission must be a number',
+    notFound: 'Not Found',
     internalServerError: 'Internal Server Error',
+    commissionTypeError: 'TypeError: commission must be a number',
+  },
+  users: {
+    userProfile: 'User Profile',
+    updateUserProfileSuccess: 'User Profile Updated Successfully',
   },
 };

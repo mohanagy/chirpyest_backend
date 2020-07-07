@@ -27,3 +27,21 @@ export interface EditUserAttributes {
 export interface UserData extends UserAttributes {
   password: string;
 }
+export interface UserId {
+  id: string;
+}
+
+export interface UserProfileResponse {
+  id: string;
+  name: string;
+  newsletterSubscription: boolean;
+  paypalAccount: string;
+  image: string;
+}
+
+export interface ProfileUpdatableFields {
+  name: string;
+  newsletterSubscription: boolean;
+  paypalAccount: string;
+  image: string;
+}

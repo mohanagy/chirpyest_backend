@@ -39,15 +39,14 @@ app.use((req, res) => {
 });
 
 // error handler
-app.use(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (err: ErrnoException, req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status || err.value ? 400 : 500);
-    return res.json({
-      success: false,
-      message: err.message || (err.error ? err.error.details : null),
-    });
-  },
-);
+app.use(async (error: ErrnoException, request: Request, response: Response, _next: NextFunction) => {
+  const transaction = request.app.get('transaction');
+  if (transaction && !['rollback', 'commit'].includes(transaction.finished)) await transaction.rollback();
+  response.status(error.status || error.value ? 400 : 500);
+  return response.json({
+    success: false,
+    message: error.message || (error.error ? error.error.details : null),
+  });
+});
 
 export default app;

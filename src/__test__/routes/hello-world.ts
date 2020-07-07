@@ -3,7 +3,7 @@ import request from 'supertest';
 import app from '../../app';
 
 describe('GET /hello-world endpoint', () => {
-  it('responds with hello-world text', (done) => {
+  it('should response with hello-world text', (done) => {
     request(app)
       .get('/hello-world')
       .expect(200)
