@@ -1,8 +1,13 @@
 import request from 'supertest';
 import app from '../../app';
+import buildDb from '../../database/build';
 
 const email = `${Math.random().toString(36).substring(7)}@gmail.com`;
 describe('POST /api/v1/auth/signup endpoint', () => {
+  before(async () => {
+    await buildDb();
+  });
+
   it('validation should fails the request since no data', (done) => {
     request(app).post('/api/v1/auth/signup').expect(400, done);
   });

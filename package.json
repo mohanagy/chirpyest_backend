@@ -18,7 +18,8 @@
     "test": "cross-env NODE_ENV=test mocha",
     "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha",
     "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w",
-    "test:local:report": "tsc && nyc npm run test:local"
+    "test:local:report": "tsc && nyc npm run test:local",
+    "seed:database": "cross-env NODE_ENV=development APP_ENV=test ts-node-dev ./src/database/build.script.ts"
   },
   "husky": {
     "hooks": {
@@ -39,8 +40,7 @@
     "@types/debug": "^4.1.5",
     "@types/express": "^4.17.6",
     "@types/hapi__joi": "^17.1.3",
-    "@types/jest": "^26.0.3",
-    "@types/logger": "0.0.0",
+    "@types/mocha": "^7.0.2",
     "@types/morgan": "^1.9.1",
     "@types/node": "^14.0.14",
     "@types/node-fetch": "^2.5.7",
@@ -61,14 +61,12 @@
     "nyc": "^15.1.0",
     "prettier": "^2.0.5",
     "prettier-plugin-organize-imports": "^1.1.0",
-    "sequelize-cli": "^6.1.0",
     "source-map-support": "^0.5.19",
     "supertest": "^4.0.2",
     "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.49"
   },
   "dependencies": {
-    "@hapi/boom": "^9.1.0",
     "@hapi/joi": "^17.1.1",
     "@types/joi-password-complexity": "^3.1.0",
     "amazon-cognito-identity-js": "^4.3.2",
@@ -82,7 +80,6 @@
     "express-joi-validation": "^4.0.3",
     "http-status-codes": "^1.4.0",
     "joi-password-complexity": "^4.1.0",
-    "logger": "0.0.1",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
     "pg": "^8.2.1",

@@ -58,7 +58,6 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
     if (userSub) {
       await authHelpers.removeCognitoUser(request.app, userSub);
     }
-
     return httpResponse.forbidden(response, error.message);
   }
 };
