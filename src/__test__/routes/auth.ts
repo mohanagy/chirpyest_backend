@@ -24,16 +24,16 @@ describe('POST /api/v1/auth/signup endpoint', () => {
     await buildDb();
   });
 
-  it('Validation should fail because the request body has no data', (done) => {
+  it('Should fail because the request body has no data', (done) => {
     request(app).post('/api/v1/auth/signup').expect(400, done);
   });
-  it('Validation should fail because the password does not match required rules', (done) => {
+  it('Should fail because the password does not match required rules', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '1234', termsCondsAccepted: true })
       .expect(400, done);
   });
-  it('Create User should succeed because email and password are not empty', (done) => {
+  it('Should create user successfully because email and password are not empty', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })
@@ -47,7 +47,7 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       })
       .expect(201, done);
   });
-  it('Create user should fail because the email is already in use', (done) => {
+  it('Should not create user because the email is already in use', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })

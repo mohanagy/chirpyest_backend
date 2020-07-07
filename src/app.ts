@@ -41,7 +41,7 @@ app.use((req, res) => {
 // error handler
 app.use(async (error: ErrnoException, request: Request, response: Response, _next: NextFunction) => {
   const transaction = request.app.get('transaction');
-  if (transaction && transaction.finished !== 'commit') await transaction.rollback();
+  if (transaction && !['rollback', 'commit'].includes(transaction.finished)) await transaction.rollback();
   response.status(error.status || error.value ? 400 : 500);
   return response.json({
     success: false,

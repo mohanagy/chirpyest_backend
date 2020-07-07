@@ -31,10 +31,10 @@ describe('GET /api/v1/users/:id/profile endpoint', () => {
     }
   });
 
-  it('every user can access his/her information only', (done) => {
+  it('should allow user to access his/her profile data', (done) => {
     request(app).get(`/api/v1/users/${userId}/profile`).set('Authorization', `Bearer ${token}`).expect(200, done);
   });
-  it('every user should has list of data', (done) => {
+  it('should list user data', (done) => {
     request(app)
       .get(`/api/v1/users/${userId}/profile`)
       .set('Authorization', `Bearer ${token}`)
@@ -44,7 +44,7 @@ describe('GET /api/v1/users/:id/profile endpoint', () => {
         done();
       });
   });
-  it('user cannot access other profiles ', (done) => {
+  it('should fail because user cannot access other users profile ', (done) => {
     request(app).get(`/api/v1/users/9999/profile`).set('Authorization', `Bearer ${token}`).expect(401, done);
   });
 });
@@ -81,7 +81,7 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
     }
   });
 
-  it('every user has the ability to edit his/her data', (done) => {
+  it('should allow the user to update his/her profile data', (done) => {
     request(app)
       .patch(`/api/v1/users/${userId}/profile`)
       .set('Authorization', `Bearer ${token}`)
@@ -94,7 +94,7 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
       });
   });
 
-  it('user cannot update his/her email', (done) => {
+  it('should fail because the user trying to update his/her email', (done) => {
     request(app)
       .patch(`/api/v1/users/${userId}/profile`)
       .set('Authorization', `Bearer ${token}`)
