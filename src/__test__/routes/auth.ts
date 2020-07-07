@@ -29,7 +29,7 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       .send({ email, password: '1234', termsCondsAccepted: true })
       .expect(400, done);
   });
-  it('should create user normally', (done) => {
+  it('Should create user normally', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })
@@ -43,7 +43,7 @@ describe('POST /api/v1/auth/signup endpoint', () => {
       })
       .expect(201, done);
   });
-  it("should fails since can't create two accounts with the same email ", (done) => {
+  it('Should fail because it doesn’t allow creating two accounts with the same email', (done) => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })

@@ -8,11 +8,11 @@ import { usersServices } from '../services';
  * @description signUp is a controller used to sign up new users
  * @param {Request} request represents request object
  * @param {Response} response represents response object
- * @param {NextFunction} _next middleware function
+ * @param {NextFunction} next middleware function
  * @return {Promise<Response>} object contains success status
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const signUp = async (request: Request, response: Response, _next: NextFunction): Promise<Response> => {
+export const signUp = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
   const transaction = await database.sequelize.transaction();
   let userSub;
   try {
@@ -52,6 +52,6 @@ export const signUp = async (request: Request, response: Response, _next: NextFu
       await authHelpers.removeCognitoUser(request.app, userSub);
     }
 
-    return httpResponse.forbidden(response, error.message);
+    return httpResponse.internalServerError(next, error);
   }
 };
