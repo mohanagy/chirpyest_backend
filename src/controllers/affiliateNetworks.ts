@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
-import database from '../database';
+import { Transaction } from 'sequelize/types';
 import { dto, httpResponse } from '../helpers';
-import { messages } from '../helpers/constants';
 import { RakutenTransactionsAttributes } from '../interfaces/Networks';
 import { rakutenServices, usersServices } from '../services';
 
@@ -10,38 +9,32 @@ import { rakutenServices, usersServices } from '../services';
 export const getRakutenWebhookData = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
+  transaction: Transaction,
 ): Promise<Response | void> => {
-  const transaction = await database.sequelize.transaction();
-  try {
-    const rakutenTransactionData: RakutenTransactionsAttributes = dto.rakutenDTO.rakutenData(req.query);
-    const { userId } = rakutenTransactionData;
+  const queryData = dto.generalDTO.queryData(req);
+  const rakutenTransactionData: RakutenTransactionsAttributes = dto.rakutenDTO.rakutenData(queryData);
+  const { userId } = rakutenTransactionData;
 
-    let user;
+  let user;
 
-    if (userId && Number.isInteger(+userId)) {
-      user = await usersServices.findUser({ where: { id: userId } }, transaction);
-    }
+  if (userId && Number.isInteger(+userId)) {
+    const filter = dto.generalDTO.filterData({ id: userId });
+    user = await usersServices.findUser(filter, transaction);
+  }
 
-    if (userId && user) {
-      await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
-      await rakutenServices.updatePendingCash(
-        userId,
-        { commissions: rakutenTransactionData.commissions, saleAmount: rakutenTransactionData.saleAmount },
-        transaction,
-      );
-      await transaction.commit();
-      return httpResponse.ok(res);
-    }
-
-    // The record is not linked to a current user
-    // TODO: log this as it could be useful to investigate any broken urls
-    rakutenTransactionData.userId = undefined;
+  if (userId && user) {
     await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
+
+    const updatePendingCashData = dto.rakutenDTO.updatePendingCashData(rakutenTransactionData);
+    await rakutenServices.updatePendingCash(userId, updatePendingCashData, transaction);
     await transaction.commit();
     return httpResponse.ok(res);
-  } catch (error) {
-    await transaction.rollback();
-    return httpResponse.internalServerError(next, new Error(messages.general.internalServerError));
   }
+  // The record is not linked to a current user
+  // TODO: log this as it could be useful to investigate any broken urls
+  rakutenTransactionData.userId = undefined;
+  await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
+  await transaction.commit();
+  return httpResponse.ok(res);
 };
