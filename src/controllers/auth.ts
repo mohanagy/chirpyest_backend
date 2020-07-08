@@ -23,7 +23,8 @@ export const signUp = async (request: Request, response: Response, next: NextFun
 
     const emailExists = await usersServices.isEmailExists(userData.email, transaction);
     if (emailExists) {
-      throw new Error(messages.auth.userAlreadyExists);
+      await transaction.rollback();
+      return httpResponse.conflict(response, messages.auth.userAlreadyExists);
     }
 
     const data = await usersServices.createUser(userData, transaction);
