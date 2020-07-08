@@ -1,4 +1,4 @@
-import { RakutenTransactionsAttributes } from '../../interfaces/Networks';
+import { RakutenTransactionsAttributes, UpdatePendingCashAttributes } from '../../interfaces/Networks';
 import convertToCents from '../convertToCents';
 
 export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
@@ -17,4 +17,9 @@ export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
   currency: data.currency,
   isEvent: data.is_event,
   u1: data.u1,
+});
+
+export const updatePendingCashData = (data: any): UpdatePendingCashAttributes => ({
+  commissions: data.commissions,
+  saleAmount: data.saleAmount,
 });

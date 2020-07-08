@@ -14,6 +14,8 @@ export default {
     response.status(httpStatus.NOT_FOUND).json(new FailureResponse(message)),
   unAuthorized: (response: Response, message: string): Response =>
     response.status(httpStatus.UNAUTHORIZED).json(new FailureResponse(message)),
+  conflict: (response: Response, message: string): Response =>
+    response.status(httpStatus.CONFLICT).json(new FailureResponse(message)),
   forbidden: (response: Response, message: string): Response =>
     response.status(httpStatus.FORBIDDEN).json(new FailureResponse(message)),
   notAllowedMethod: (request: Request, response: Response, message: string): Response =>

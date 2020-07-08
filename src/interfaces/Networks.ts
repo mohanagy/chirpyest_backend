@@ -36,3 +36,7 @@ export interface UserTransactionsHistoryAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export interface UpdatePendingCashAttributes {
+  commissions: number;
+  saleAmount: number;
+}
