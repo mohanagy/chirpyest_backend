@@ -51,6 +51,6 @@ describe('POST /api/v1/auth/signup endpoint', () => {
     request(app)
       .post('/api/v1/auth/signup')
       .send({ email, password: '123asd!@#ASD', termsCondsAccepted: true })
-      .expect(500, done);
+      .expect(409, done);
   });
 });
