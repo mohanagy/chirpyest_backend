@@ -23,7 +23,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run tsc-lint && lint-staged"
+      "pre-push": "npm run tsc-lint && lint-staged && npm run test:local"
     }
   },
   "lint-staged": {
