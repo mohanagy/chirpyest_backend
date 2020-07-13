@@ -7,7 +7,7 @@ describe('GET /hello-world endpoint', () => {
     request(app)
       .get('/hello-world')
       .expect(200)
-      .end((err, res) => {
+      .end((_err, res) => {
         expect(res.text).to.include('Hello, World!');
         done();
       });

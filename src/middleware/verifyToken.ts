@@ -45,5 +45,6 @@ export const verifyToken = async (
       return next();
     }
   }
+  await transaction.rollback();
   return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
 };
