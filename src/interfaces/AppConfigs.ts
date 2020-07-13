@@ -7,6 +7,7 @@ export interface DatabaseConfigs {
 
 export interface ServerConfigs {
   port: string;
+  SentryDNS: string;
 }
 
 export interface JWT {
