@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@sentry/typescript": "^5.19.1",
     "@types/bluebird": "^3.5.32",
     "@types/chai": "^4.2.11",
     "@types/config": "0.0.36",
@@ -71,6 +72,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@sentry/node": "^5.19.1",
     "amazon-cognito-identity-js": "^4.3.2",
     "aws-sdk": "^2.708.0",
     "config": "^3.3.1",
