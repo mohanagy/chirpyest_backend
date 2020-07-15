@@ -15,13 +15,15 @@ export const getUserProfile = async (
   request: Request,
   response: Response,
   _next: NextFunction,
-  _transaction: Transaction,
+  transaction: Transaction,
 ): Promise<Response> => {
   const user = request.app.get('user');
   const userId = dto.usersDTO.userId(request);
   if (!user || Number(user.id) !== Number(userId.id)) {
+    await transaction.rollback();
     return httpResponse.unAuthorized(response, constants.messages.auth.notAuthorized);
   }
+  await transaction.commit();
   return httpResponse.ok(response, dto.usersDTO.userProfileResponse(user), constants.messages.users.userProfile);
 };
 /**

@@ -9,6 +9,12 @@ import { UserTransactionsHistoryFactory } from './models/userTransactionsHistory
 export const dbConfig = new Sequelize(config.database.url, {
   define: { underscored: true, timestamps: true },
   logging: false,
+  pool: {
+    max: 5,
+    min: 0,
+    idle: 20000,
+    acquire: 20000,
+  },
 });
 
 export const Users = UserFactory(dbConfig);
