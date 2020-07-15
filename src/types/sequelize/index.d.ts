@@ -2,6 +2,7 @@
 import { BuildOptions, Model } from 'sequelize';
 import {
   FinancialDashboardAttributes,
+  ImpactRadiusAttributes,
   RakutenTransactionsAttributes,
   UserAttributes,
   UserTransactionsHistoryAttributes,
@@ -17,6 +18,12 @@ export interface RakutenTransactionsModel extends Model<RakutenTransactionsAttri
 export class RakutenTransactions extends Model<RakutenTransactionsModel, RakutenTransactionsAttributes> {}
 export type RakutenTransactionsStatic = typeof Model & {
   new (values?: Record<string, unknown>, options?: BuildOptions): RakutenTransactionsModel;
+};
+
+export interface ImpactRadiusTransactionsModel extends Model<ImpactRadiusAttributes>, ImpactRadiusAttributes {}
+export class ImpactRadiusTransactions extends Model<ImpactRadiusTransactionsModel, ImpactRadiusAttributes> {}
+export type ImpactRadiusTransactionsStatic = typeof Model & {
+  new (values?: Record<string, unknown>, options?: BuildOptions): ImpactRadiusTransactionsModel;
 };
 
 export interface FinancialDashboardModel extends Model<FinancialDashboardAttributes>, FinancialDashboardAttributes {}

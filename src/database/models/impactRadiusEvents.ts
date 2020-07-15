@@ -1,8 +1,8 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { RakutenTransactionsStatic } from '../../types/sequelize';
+import { ImpactRadiusTransactionsStatic } from '../../types/sequelize';
 
-export function RakutenTransactionsFactory(sequelize: Sequelize): RakutenTransactionsStatic {
-  return sequelize.define('rakutenTransactions', {
+export function ImpactRadiusTransactionsFactory(sequelize: Sequelize): ImpactRadiusTransactionsStatic {
+  return sequelize.define('impactRadiusTransactions', {
     userId: {
       type: DataTypes.INTEGER,
     },
@@ -19,21 +19,21 @@ export function RakutenTransactionsFactory(sequelize: Sequelize): RakutenTransac
       type: DataTypes.STRING,
     },
     statusDetail: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     adId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
     payout: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     deltaPayout: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     intendedPayout: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     amount: {
@@ -85,5 +85,5 @@ export function RakutenTransactionsFactory(sequelize: Sequelize): RakutenTransac
     promoCode: {
       type: DataTypes.STRING,
     },
-  }) as RakutenTransactionsStatic;
+  }) as ImpactRadiusTransactionsStatic;
 }

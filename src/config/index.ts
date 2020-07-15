@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import affiliateNetworks from './affiliateNetworks';
 import cognito from './cognito';
 import database from './database';
 import server from './server';
@@ -17,4 +18,5 @@ export default {
   database: database(),
   server: server(),
   cognito: cognito(),
+  affiliateNetworks: affiliateNetworks(),
 };

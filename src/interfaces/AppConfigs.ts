@@ -10,6 +10,11 @@ export interface ServerConfigs {
   SentryDNS: string;
 }
 
+export interface AffiliateNetworksConfigs {
+  impactRadiusToken: string;
+  rakutenToken: string;
+}
+
 export interface JWT {
   alg: string;
   e: string;

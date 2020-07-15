@@ -2,7 +2,6 @@ import { Transaction } from 'sequelize';
 import { FinancialDashboard, RakutenTransactions } from '../../database';
 import { RakutenTransactionsAttributes } from '../../interfaces/Networks';
 import { RakutenTransactionsModel } from '../../types/sequelize';
-import { calculateCommission } from './utils';
 
 /**
  * @description createRakutenTransaction is a service used to save rekuten webhook data to the db
@@ -16,7 +15,7 @@ export const createRakutenTransaction = (
 ): Promise<RakutenTransactionsModel> => RakutenTransactions.create(data, { transaction });
 
 export const updatePendingCash = async (userId: number, data: any, transaction: Transaction): Promise<any> => {
-  const userCommission = calculateCommission(data.commissions);
+  const userCommission = data.pendingCash;
 
   const [[, affectedCount]]: any = await FinancialDashboard.increment('pending', {
     by: userCommission,

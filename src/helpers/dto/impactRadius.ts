@@ -2,6 +2,7 @@ import { ImpactRadiusAttributes } from '../../interfaces/Networks';
 
 export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   userId: data.subId1,
+  token: data.token,
   campaignName: data.campaignName,
   actionTrackerId: data.actionTrackerId,
   actionId: data.actionId, // The unique ID that Impact Radius has assigned to the action.

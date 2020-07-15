@@ -19,7 +19,8 @@
     "test:local": "cross-env NODE_ENV=development APP_ENV=test mocha --exit",
     "test:local:watch": "cross-env NODE_ENV=development APP_ENV=test mocha -w",
     "test:local:report": "tsc && nyc npm run test:local",
-    "seed:database": "cross-env NODE_ENV=development APP_ENV=test ts-node-dev ./src/database/build.script.ts"
+    "seed:database:test": "cross-env NODE_ENV=development APP_ENV=test ts-node-dev ./src/database/build.script.ts",
+    "seed:database:dev": "cross-env NODE_ENV=development APP_ENV=development ts-node-dev ./src/database/build.script.ts"
   },
   "husky": {
     "hooks": {
