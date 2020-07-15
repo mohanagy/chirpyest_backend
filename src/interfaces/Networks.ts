@@ -18,6 +18,10 @@ export interface RakutenTransactionsAttributes {
   updatedAt?: Date;
 }
 
+export interface ImpactRadiusAttributes {
+  [key: string]: any;
+}
+
 export interface FinancialDashboardAttributes {
   userId: number;
   pending: number;

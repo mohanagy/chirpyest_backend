@@ -1,0 +1,30 @@
+import { ImpactRadiusAttributes } from '../../interfaces/Networks';
+
+export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
+  userId: data.subId1,
+  campaignName: data.campaignName,
+  actionTrackerId: data.actionTrackerId,
+  actionId: data.actionId, // The unique ID that Impact Radius has assigned to the action.
+  status: data.status,
+  statusDetail: data.statusDetail,
+  adId: data.adId,
+  payout: data.payout,
+  deltaPayout: data.deltaPayout,
+  intendedPayout: data.intendedPayout,
+  amount: data.amount,
+  deltaAmount: data.deltaAmount,
+  intendedAmount: data.intendedAmount,
+  currency: data.currency,
+  originalCurrency: data.originalCurrency,
+  originalAmount: data.originalAmount,
+  eventDate: data.eventDate,
+  creationDate: data.creationDate,
+  lockingDate: data.lockingDate,
+  clearedDate: data.clearedDate,
+  referringDomain: data.referringDomain,
+  landingPageUrl: data.landingPageUrl,
+  subId1: data.subId1,
+  subId2: data.subId2,
+  subId3: data.subId3,
+  promoCode: data.promoCode,
+});
