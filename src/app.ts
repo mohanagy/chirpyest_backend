@@ -1,10 +1,10 @@
 import * as Sentry from '@sentry/node';
 import cookieParser from 'cookie-parser';
 import express, { ErrorRequestHandler, NextFunction, Request, RequestHandler, Response } from 'express';
-import logger from 'morgan';
+import morgan from 'morgan';
 import fetch from 'node-fetch';
 import config from './config';
-import { httpResponse } from './helpers';
+import { httpResponse, logger } from './helpers';
 import cognito from './helpers/cognito';
 import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
   return next();
 });
 
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 
 app.use('/', routes);
@@ -53,6 +53,7 @@ app.use((_req, res) => {
 
 // error handler
 app.use(async (error: ErrnoException, request: Request, response: Response, _next: NextFunction) => {
+  logger.error(error);
   const transaction = request.app.get('transaction');
   if (transaction && !['rollback', 'commit'].includes(transaction.finished)) {
     await transaction.rollback();

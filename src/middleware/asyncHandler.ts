@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import database from '../database';
+import { logger } from '../helpers';
 
 /**
  * @description asyncHandler is a function used to wrap async routes
@@ -14,6 +15,7 @@ export default (fn: Function) => async (request: Request, response: Response, ne
   try {
     return await fn(request, response, next, transaction);
   } catch (error) {
+    logger.error(error);
     await transaction.rollback();
     return next(error);
   }

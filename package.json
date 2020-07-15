@@ -74,10 +74,12 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@sentry/node": "^5.19.1",
+    "@types/datadog-winston": "^1.0.2",
     "amazon-cognito-identity-js": "^4.3.2",
     "aws-sdk": "^2.708.0",
     "config": "^3.3.1",
     "cookie-parser": "^1.4.5",
+    "datadog-winston": "^1.5.0",
     "debug": "^4.1.1",
     "dotenv": "^8.2.0",
     "eslint-import-resolver-typescript": "^2.0.0",
