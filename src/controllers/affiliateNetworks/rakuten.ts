@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { dto, httpResponse } from '../../helpers';
+import { calculateCommission, dto, httpResponse } from '../../helpers';
 import { RakutenTransactionsAttributes } from '../../interfaces/Networks';
-import { rakutenServices, usersServices } from '../../services';
-import { calculateCommission } from '../../services/affiliateNetworks/utils';
+import { cashBackService, rakutenServices, usersServices } from '../../services';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getRakutenWebhookData = async (
@@ -27,7 +26,7 @@ export const getRakutenWebhookData = async (
   if (userId && user) {
     await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
     const userCommission = calculateCommission(rakutenTransactionData.commissions);
-    await rakutenServices.updatePendingCash(userId, { pendingCash: userCommission }, transaction);
+    await cashBackService.updatePendingCash(userId, { pendingCash: userCommission }, transaction);
     await transaction.commit();
     return httpResponse.ok(res);
   }

@@ -3,7 +3,7 @@ import request from 'supertest';
 import app from '../../app';
 import * as db from '../../database';
 import buildDb from '../../database/build';
-import { calculateCommission } from '../../services/affiliateNetworks/utils';
+import { calculateCommission } from '../../helpers';
 
 const transactionId1 = '11F79TL62R1GA54DAB3F3E6BADA181C8F';
 const transactionId2 = '32F72NL19EFEB54CEFB3C3E6BADA181C8F';

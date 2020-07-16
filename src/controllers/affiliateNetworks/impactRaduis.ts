@@ -2,10 +2,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import config from '../../config';
-import { dto, httpResponse, logger } from '../../helpers';
+import { calculateCommission, dto, httpResponse, logger } from '../../helpers';
 import { ImpactRadiusAttributes } from '../../interfaces';
-import { impactRadiusServices, rakutenServices, usersServices } from '../../services';
-import { calculateCommission } from '../../services/affiliateNetworks/utils';
+import { cashBackService, impactRadiusServices, usersServices } from '../../services';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const getImpactRadiusWebhookData = async (
@@ -14,7 +13,6 @@ export const getImpactRadiusWebhookData = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response | void> => {
-  logger.log('info', 'Impact Radius request', req.query);
   const queryData = dto.generalDTO.queryData(req);
   const impactRadiusTransactionData: ImpactRadiusAttributes = dto.impactRadiusDTO.impactRadiusData(queryData);
   // Check if the url has the correct token
@@ -32,9 +30,10 @@ export const getImpactRadiusWebhookData = async (
   }
 
   if (userId && user) {
+    // TODO: Handle the case when the commission is zero or less than 2 cents
     await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
     const userCommission = calculateCommission(+impactRadiusTransactionData.amount);
-    await rakutenServices.updatePendingCash(userId, { pendingCash: userCommission }, transaction);
+    await cashBackService.updatePendingCash(userId, { pendingCash: userCommission }, transaction);
     await transaction.commit();
     return httpResponse.ok(res);
   }
