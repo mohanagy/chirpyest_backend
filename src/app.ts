@@ -52,7 +52,7 @@ app.use(
     transports: [
       new DatadogWinston({
         apiKey: config.server.dataDogApiKey,
-        service: 'chirpyest',
+        service: process.env.HEROKU_APP_NAME || 'localhost',
         ddsource: 'node.js',
       }),
     ],

@@ -10,7 +10,7 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'combined.log' }),
     new DatadogWinston({
       apiKey: config.server.dataDogApiKey,
-      service: 'chirpyest',
+      service: process.env.HEROKU_APP_NAME || 'localhost',
       ddsource: 'node.js',
     }),
   ],
