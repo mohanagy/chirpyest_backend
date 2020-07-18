@@ -1,4 +1,5 @@
 import { ImpactRadiusAttributes } from '../../interfaces/Networks';
+import convertToCents from '../convertToCents';
 
 export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   userId: data.subId1,
@@ -9,12 +10,12 @@ export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   status: data.status,
   statusDetail: data.statusDetail,
   adId: data.adId,
-  payout: data.payout,
-  deltaPayout: data.deltaPayout,
-  intendedPayout: data.intendedPayout,
-  amount: data.amount,
-  deltaAmount: data.deltaAmount,
-  intendedAmount: data.intendedAmount,
+  payout: convertToCents(data.payout),
+  deltaPayout: convertToCents(data.deltaPayout),
+  intendedPayout: convertToCents(data.intendedPayout),
+  amount: convertToCents(data.amount),
+  deltaAmount: convertToCents(data.deltaAmount),
+  intendedAmount: convertToCents(data.intendedAmount),
   currency: data.currency,
   originalCurrency: data.originalCurrency,
   originalAmount: data.originalAmount,

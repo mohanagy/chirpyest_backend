@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { calculateCommission, dto, httpResponse } from '../../helpers';
+import { dto, httpResponse, logger } from '../../helpers';
 import { RakutenTransactionsAttributes } from '../../interfaces/Networks';
 import { cashBackService, rakutenServices, usersServices } from '../../services';
 
@@ -25,13 +25,17 @@ export const getRakutenWebhookData = async (
 
   if (userId && user) {
     await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
-    const userCommission = calculateCommission(rakutenTransactionData.commissions);
-    await cashBackService.updatePendingCash(userId, { pendingCash: userCommission }, transaction);
+
+    const transactionCommission = Number(rakutenTransactionData.commissions);
+    if (Number.isNaN(transactionCommission)) {
+      return httpResponse.internalServerError(_next, new Error('Transaction commission must be a number'));
+    }
+    await cashBackService.updatePendingCash(userId, { pendingCash: transactionCommission }, transaction);
     await transaction.commit();
     return httpResponse.ok(res);
   }
   // The record is not linked to a current user
-  // TODO: log this as it could be useful to investigate any broken urls
+  logger.log('warn', 'Rakuten: Url has no userId', req.query);
   rakutenTransactionData.userId = undefined;
   await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
   await transaction.commit();

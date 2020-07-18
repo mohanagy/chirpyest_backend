@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import config from '../../config';
-import { calculateCommission, dto, httpResponse, logger } from '../../helpers';
+import { dto, httpResponse, logger } from '../../helpers';
 import { ImpactRadiusAttributes } from '../../interfaces';
 import { cashBackService, impactRadiusServices, usersServices } from '../../services';
 
@@ -32,8 +32,11 @@ export const getImpactRadiusWebhookData = async (
   if (userId && user) {
     // TODO: Handle the case when the commission is zero or less than 2 cents
     await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
-    const userCommission = calculateCommission(+impactRadiusTransactionData.amount);
-    await cashBackService.updatePendingCash(userId, { pendingCash: userCommission }, transaction);
+    const transactionCommission = +impactRadiusTransactionData.payout;
+    if (Number.isNaN(transactionCommission)) {
+      return httpResponse.internalServerError(_next, new Error('Transaction commission must be a number'));
+    }
+    await cashBackService.updatePendingCash(userId, { pendingCash: transactionCommission }, transaction);
     await transaction.commit();
     return httpResponse.ok(res);
   }
