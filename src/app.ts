@@ -1,13 +1,10 @@
 import * as Sentry from '@sentry/node';
 import cookieParser from 'cookie-parser';
-import DatadogWinston from 'datadog-winston';
 import express, { ErrorRequestHandler, NextFunction, Request, RequestHandler, Response } from 'express';
-import expressWinston from 'express-winston';
 import morgan from 'morgan';
 import fetch from 'node-fetch';
-import winston from 'winston';
 import config from './config';
-import { httpResponse, logger } from './helpers';
+import { expressWinstonLogger, httpResponse, logger } from './helpers';
 import cognito from './helpers/cognito';
 import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
@@ -47,22 +44,9 @@ app.use((req, res, next) => {
 app.use(morgan('dev'));
 app.use(express.json());
 
-app.use(
-  expressWinston.logger({
-    transports: [
-      new DatadogWinston({
-        apiKey: config.server.dataDogApiKey,
-        service: process.env.HEROKU_APP_NAME || 'localhost',
-        ddsource: 'node.js',
-      }),
-    ],
-    format: winston.format.json(),
-    meta: true,
-    msg: 'HTTP {{req.method}} {{req.url}}',
-    expressFormat: true,
-    colorize: false,
-  }),
-);
+if (process.env.NODE_ENV === 'production') {
+  app.use(expressWinstonLogger);
+}
 
 app.use('/', routes);
 app.use(Sentry.Handlers.errorHandler() as ErrorRequestHandler);
