@@ -116,7 +116,7 @@ describe('Test Impact Radius webhook controller', () => {
     expect(impactRadiusTransactionsAfter.length).to.equal(impactRadiusTransactions.length + 1);
   });
 
-  it('Should create a new rakuten transaction even with the a wrong userId', async () => {
+  it('Should create a new Impact Radius transaction even with the a wrong userId', async () => {
     const hookData = mockHookData('afcg');
     const impactRadiusTransactions = await db.ImpactRadiusTransactions.findAll();
     const result = await request(app)
