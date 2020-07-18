@@ -56,13 +56,11 @@ describe('Test Impact Radius webhook controller', () => {
       where: { userId: impactRadiusTransactionData.userId },
     });
 
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/impact-radius/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
       .expect(200);
-
-    expect(result.body.success).to.equal(true);
 
     const impactRadiusTransactionsAfter = await db.ImpactRadiusTransactions.findAll();
     const financialDashboardAfter = await db.FinancialDashboard.findOne({
@@ -83,13 +81,11 @@ describe('Test Impact Radius webhook controller', () => {
       where: { userId: impactRadiusTransactionData.userId },
     });
 
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/impact-radius/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
       .expect(200);
-
-    expect(result.body.success).to.equal(true);
 
     const impactRadiusTransactionsAfter = await db.ImpactRadiusTransactions.findAll();
     const financialDashboardAfter = await db.FinancialDashboard.findOne({
@@ -104,7 +100,7 @@ describe('Test Impact Radius webhook controller', () => {
   it('Should create a new Impact Radius transaction without a user and mark as zombie', async () => {
     const hookData = mockHookData('100');
     const impactRadiusTransactions = await db.ImpactRadiusTransactions.findAll();
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/impact-radius/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
@@ -112,22 +108,19 @@ describe('Test Impact Radius webhook controller', () => {
 
     const impactRadiusTransactionsAfter = await db.ImpactRadiusTransactions.findAll();
 
-    expect(result.body.success).to.equal(true);
     expect(impactRadiusTransactionsAfter.length).to.equal(impactRadiusTransactions.length + 1);
   });
 
   it('Should create a new Impact Radius transaction even with the a wrong userId', async () => {
     const hookData = mockHookData('afcg');
     const impactRadiusTransactions = await db.ImpactRadiusTransactions.findAll();
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/impact-radius/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
       .expect(200);
 
     const impactRadiusTransactionsAfter = await db.ImpactRadiusTransactions.findAll();
-
-    expect(result.body.success).to.equal(true);
     expect(impactRadiusTransactionsAfter.length).to.equal(impactRadiusTransactions.length + 1);
   });
 });

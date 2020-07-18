@@ -48,13 +48,11 @@ describe('Test Rakuten webhook controller', () => {
     const financialDashboard = await db.FinancialDashboard.findOne({
       where: { userId: rakutenTransactionData.userId },
     });
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/rakuten/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
       .expect(200);
-
-    expect(result.body.success).to.equal(true);
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
     const financialDashboardAfter = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
@@ -69,13 +67,11 @@ describe('Test Rakuten webhook controller', () => {
 
     const rakutenTransactions = await db.RakutenTransactions.findAll();
     const financialDashboard = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/rakuten/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
       .expect(200);
-
-    expect(result.body.success).to.equal(true);
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
     const financialDashboardAfter = await db.FinancialDashboard.findOne({ where: { userId: hookData.u1 } });
@@ -88,7 +84,7 @@ describe('Test Rakuten webhook controller', () => {
   it('Should create a new rakuten transaction without a user and mark as zombie', async () => {
     const hookData = rakutenHookResponse(transactionId2, '55');
     const rakutenTransactions = await db.RakutenTransactions.findAll();
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/rakuten/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
@@ -96,14 +92,13 @@ describe('Test Rakuten webhook controller', () => {
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
 
-    expect(result.body.success).to.equal(true);
     expect(rakutenTransactionsAfter.length).to.equal(rakutenTransactions.length + 1);
   });
 
   it('Should create a new rakuten transaction even with the a wrong userId', async () => {
     const hookData = rakutenHookResponse(transactionId3, 'efcg1');
     const rakutenTransactions = await db.RakutenTransactions.findAll();
-    const result = await request(app)
+    await request(app)
       .get(`/api/v1/affiliate-networks/rakuten/webhook`)
       .query(hookData)
       .expect('Content-Type', /json/)
@@ -111,7 +106,6 @@ describe('Test Rakuten webhook controller', () => {
 
     const rakutenTransactionsAfter = await db.RakutenTransactions.findAll();
 
-    expect(result.body.success).to.equal(true);
     expect(rakutenTransactionsAfter.length).to.equal(rakutenTransactions.length + 1);
   });
 });
