@@ -5,6 +5,8 @@ export function FinancialDashboardFactory(sequelize: Sequelize): FinancialDashbo
   return sequelize.define('financialDashboard', {
     userId: {
       type: DataTypes.INTEGER,
+      unique: true,
+      allowNull: false,
     },
     pending: {
       type: DataTypes.INTEGER,
