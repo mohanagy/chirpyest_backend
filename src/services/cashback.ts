@@ -1,6 +1,7 @@
 import { Transaction } from 'sequelize';
 import { FinancialDashboard } from '../database';
-import { FinancialDashboardAttributes } from '../interfaces';
+import { constants } from '../helpers';
+import { Filter, FinancialDashboardAttributes } from '../interfaces';
 
 /**
  * @description incrementRecord will increment specific field by the amount
@@ -8,17 +9,18 @@ import { FinancialDashboardAttributes } from '../interfaces';
  * @param {Number} amount The amount to increment by
  * @param {Object} filter The filter object
  * @param {Transaction} transaction transaction object
+ * @return {Promise<FinancialDashboardAttributes>}
  */
 
 export const incrementRecord = async (
   field: any,
   amount: number,
-  filter: any,
+  filter: Filter,
   transaction: Transaction,
 ): Promise<FinancialDashboardAttributes> => {
   return FinancialDashboard.increment(field, {
+    ...filter,
     by: amount,
-    where: filter,
     transaction,
   });
 };
@@ -27,6 +29,7 @@ export const incrementRecord = async (
  * @description createFinancialRecord will create a new FinancialRecord for the user
  * @param {FinancialDashboardAttributes} data FinancialDashboard record data
  * @param {Transaction} transaction transaction object
+ * @return {Promise<FinancialDashboardAttributes>}
  */
 
 export const createFinancialRecord = async (
@@ -41,15 +44,21 @@ export const createFinancialRecord = async (
  * @param {Number} userId The id for the user who will receive the cashback
  * @param {Number} commissionAmount Cashback amount
  * @param {Transaction} transaction transaction object
+ * @return {Promise<FinancialDashboardAttributes>}
  */
 
 export const updatePendingCash = async (
   userId: number,
+  filter: Filter,
   commissionAmount: number,
   transaction: Transaction,
 ): Promise<FinancialDashboardAttributes> => {
-  const filter = { userId };
-  const [[, affectedCount]]: any = await incrementRecord('pending', commissionAmount, filter, transaction);
+  const [[, affectedCount]]: any = await incrementRecord(
+    constants.messages.general.pendingField,
+    commissionAmount,
+    filter,
+    transaction,
+  );
   if (affectedCount > 0) {
     return affectedCount;
   }

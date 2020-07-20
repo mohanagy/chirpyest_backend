@@ -14,6 +14,7 @@ export const messages = {
     internalServerError: 'Internal Server Error',
     commissionTypeError: 'TypeError: commission must be a number',
     forbidden: 'Forbidden',
+    pendingField: 'pending',
   },
   users: {
     userProfile: 'User Profile',

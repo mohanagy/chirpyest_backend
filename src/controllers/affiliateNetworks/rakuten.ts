@@ -37,7 +37,8 @@ export const getRakutenWebhookData = async (
     if (Number.isNaN(transactionCommission)) {
       return httpResponse.internalServerError(next, new Error(constants.messages.general.commissionTypeError));
     }
-    await cashBackService.updatePendingCash(userId, transactionCommission, transaction);
+    const filter = dto.generalDTO.filterData({ userId });
+    await cashBackService.updatePendingCash(userId, filter, transactionCommission, transaction);
     await transaction.commit();
     return httpResponse.ok(response);
   }

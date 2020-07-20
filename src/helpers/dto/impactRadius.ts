@@ -1,5 +1,6 @@
 import { ImpactRadiusAttributes } from '../../interfaces/Networks';
 import convertToCents from '../convertToCents';
+import isValidDate from '../isValidDate';
 
 export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   userId: data.subId1,
@@ -18,11 +19,11 @@ export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   intendedAmount: convertToCents(data.intendedAmount),
   currency: data.currency,
   originalCurrency: data.originalCurrency,
-  originalAmount: data.originalAmount,
-  eventDate: data.eventDate,
-  creationDate: data.creationDate,
-  lockingDate: data.lockingDate,
-  clearedDate: data.clearedDate,
+  originalAmount: convertToCents(data.originalAmount),
+  eventDate: isValidDate(data.eventDate) ? data.eventDate : undefined,
+  creationDate: isValidDate(data.creationDate) ? data.creationDate : undefined,
+  lockingDate: isValidDate(data.lockingDate) ? data.lockingDate : undefined,
+  clearedDate: isValidDate(data.clearedDate) ? data.clearedDate : undefined,
   referringDomain: data.referringDomain,
   landingPageUrl: data.landingPageUrl,
   subId1: data.subId1,

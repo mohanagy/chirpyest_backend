@@ -24,7 +24,7 @@ export const getImpactRadiusWebhookData = async (
   const impactRadiusTransactionData: ImpactRadiusAttributes = dto.impactRadiusDTO.impactRadiusData(queryData);
   // Check if the url has the correct token
   if (impactRadiusTransactionData.token !== config.affiliateNetworks.impactRadiusToken) {
-    return httpResponse.forbidden(response, 'Forbidden');
+    return httpResponse.forbidden(response, constants.messages.general.forbidden);
   }
 
   const { userId } = impactRadiusTransactionData;
@@ -44,7 +44,8 @@ export const getImpactRadiusWebhookData = async (
       await transaction.commit();
       return httpResponse.internalServerError(next, new Error(constants.messages.general.commissionTypeError));
     }
-    await cashBackService.updatePendingCash(userId, transactionCommission, transaction);
+    const filter = dto.generalDTO.filterData({ userId });
+    await cashBackService.updatePendingCash(userId, filter, transactionCommission, transaction);
     await transaction.commit();
     return httpResponse.ok(response);
   }
