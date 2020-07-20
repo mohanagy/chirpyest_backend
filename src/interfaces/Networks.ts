@@ -18,6 +18,36 @@ export interface RakutenTransactionsAttributes {
   updatedAt?: Date;
 }
 
+export interface ImpactRadiusAttributes {
+  userId?: number;
+  token?: string;
+  campaignName: string;
+  actionTrackerId: string;
+  actionId: string;
+  status: string;
+  statusDetail: string;
+  adId: string;
+  payout: number;
+  deltaPayout: number;
+  intendedPayout: number;
+  amount: number;
+  deltaAmount: number;
+  intendedAmount: number;
+  currency: string;
+  originalCurrency: string;
+  originalAmount: number;
+  eventDate: Date;
+  creationDate: Date;
+  lockingDate: Date;
+  clearedDate: Date;
+  referringDomain: string;
+  landingPageUrl: string;
+  subId1: string;
+  subId2: string;
+  subId3: string;
+  promoCode: string;
+}
+
 export interface FinancialDashboardAttributes {
   userId: number;
   pending: number;
