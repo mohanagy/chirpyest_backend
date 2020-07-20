@@ -2,7 +2,7 @@ import { FinancialDashboard } from '..';
 
 const user1FinancialDashboard: any = {
   userId: 1,
-  pending: 100,
+  pending: 0,
   receivableMilestone: 0,
   earnings: 0,
   lastClosedOut: 0,
