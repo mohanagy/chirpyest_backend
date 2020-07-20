@@ -25,25 +25,25 @@ export function ImpactRadiusTransactionsFactory(sequelize: Sequelize): ImpactRad
       type: DataTypes.STRING,
     },
     payout: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     deltaPayout: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     intendedPayout: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     amount: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     deltaAmount: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     intendedAmount: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     currency: {
       type: DataTypes.STRING,
@@ -53,19 +53,19 @@ export function ImpactRadiusTransactionsFactory(sequelize: Sequelize): ImpactRad
     },
 
     originalAmount: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     eventDate: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
     creationDate: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
     lockingDate: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
     clearedDate: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
     referringDomain: {
       type: DataTypes.STRING,

@@ -2,22 +2,29 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import config from '../../config';
-import { dto, httpResponse, logger } from '../../helpers';
+import { constants, dto, httpResponse, logger } from '../../helpers';
 import { ImpactRadiusAttributes } from '../../interfaces';
 import { cashBackService, impactRadiusServices, usersServices } from '../../services';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/**
+ * @description getImpactRadiusWebhookData is a controller used receive Impact Radius webhook events
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} next middleware function
+ * @return {Promise<Response>} object contains success status
+ */
+
 export const getImpactRadiusWebhookData = async (
-  req: Request,
-  res: Response,
-  _next: NextFunction,
+  request: Request,
+  response: Response,
+  next: NextFunction,
   transaction: Transaction,
 ): Promise<Response | void> => {
-  const queryData = dto.generalDTO.queryData(req);
+  const queryData = dto.generalDTO.queryData(request);
   const impactRadiusTransactionData: ImpactRadiusAttributes = dto.impactRadiusDTO.impactRadiusData(queryData);
   // Check if the url has the correct token
   if (impactRadiusTransactionData.token !== config.affiliateNetworks.impactRadiusToken) {
-    return httpResponse.forbidden(res, 'Forbidden');
+    return httpResponse.forbidden(response, 'Forbidden');
   }
 
   const { userId } = impactRadiusTransactionData;
@@ -34,17 +41,18 @@ export const getImpactRadiusWebhookData = async (
     await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
     const transactionCommission = +impactRadiusTransactionData.payout;
     if (Number.isNaN(transactionCommission)) {
-      return httpResponse.internalServerError(_next, new Error('Transaction commission must be a number'));
+      await transaction.commit();
+      return httpResponse.internalServerError(next, new Error(constants.messages.general.commissionTypeError));
     }
-    await cashBackService.updatePendingCash(userId, { pendingCash: transactionCommission }, transaction);
+    await cashBackService.updatePendingCash(userId, transactionCommission, transaction);
     await transaction.commit();
-    return httpResponse.ok(res);
+    return httpResponse.ok(response);
   }
 
   // The record is not linked to a current user
-  logger.log('warn', 'IR: Url has no userId', req.query);
+  logger.log('warn', 'IR: Url has no userId', request.query);
   impactRadiusTransactionData.userId = undefined;
   await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
   await transaction.commit();
-  return httpResponse.ok(res);
+  return httpResponse.ok(response);
 };

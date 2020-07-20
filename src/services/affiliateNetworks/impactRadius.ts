@@ -5,7 +5,7 @@ import { ImpactRadiusTransactionsModel } from '../../types/sequelize';
 
 /**
  * @description createImpactRadiusTransaction is a service used to save impactRadius webhook data to the db
- * @param {ImpactRadiusAttributes} data represents the api data
+ * @param {ImpactRadiusAttributes} data The data to be saved from Impact Radius hooks
  * @param {Transaction} transaction transaction
  * @returns {Promise<ImpactRadiusTransactionsModel | null>}
  */

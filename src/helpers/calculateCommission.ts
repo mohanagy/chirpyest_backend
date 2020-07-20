@@ -2,7 +2,7 @@ import { messages } from './constants';
 
 /**
  * @description calculate the user cash back amount
- * @param commission the commission given to Chirpyest
+ * @param {Number} commission the commission given to Chirpyest
  * @return {Number} The cashback given to Chirpyest user
  */
 

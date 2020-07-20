@@ -57,7 +57,7 @@ app.use((_req, res) => {
 
 // error handler
 app.use(async (error: ErrnoException, request: Request, response: Response, _next: NextFunction) => {
-  logger.error(error);
+  logger.error('Express error middlware: ', error);
   const transaction = request.app.get('transaction');
   if (transaction && !['rollback', 'commit'].includes(transaction.finished)) {
     await transaction.rollback();
