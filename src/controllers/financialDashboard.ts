@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { constants, dto, httpResponse } from '../helpers';
+import { Big, constants, dto, httpResponse } from '../helpers';
 import { financialDashboardService } from '../services';
 
 /**
@@ -23,7 +23,9 @@ export const getUserFinancialData = async (
   if (!user || Number(user.id) !== Number(userId.id)) {
     return httpResponse.unAuthorized(response, constants.messages.auth.notAuthorized);
   }
-  const filter = dto.generalDTO.filterData({ userId: user.id });
+  const filter = dto.generalDTO.filterData({ userId: userId.id });
   const data = await financialDashboardService.getUserFinancialDahsboard(filter);
+  const pendingDollars = new Big(data.pending).div(100).div(2).toFixed(2);
+  data.pending = pendingDollars;
   return response.send(data);
 };

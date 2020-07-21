@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize';
-import { dto, httpResponse } from '../helpers';
+import { dto, httpResponse, logger } from '../helpers';
 import { verifyJWTToken } from '../helpers/auth';
 import { messages } from '../helpers/constants';
 import { usersServices } from '../services';
@@ -27,7 +27,8 @@ export const verifyToken = async (
       await transaction.rollback();
       return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
     }
-    const user = await verifyJWTToken(token).catch(() => {
+    const user = await verifyJWTToken(token).catch((err) => {
+      logger.log('error', 'cognito verifyJWTToken', err);
       return undefined;
     });
 

@@ -3,6 +3,7 @@ import * as Constants from './constants';
 import * as DTO from './dto';
 import { expressWinstonLogger as expressWLogger } from './logger';
 
+export { default as Big } from './bigJsConfigs';
 export { default as calculateCommission } from './calculateCommission';
 export { default as cognito } from './cognito';
 export { default as convertToCents } from './convertToCents';
