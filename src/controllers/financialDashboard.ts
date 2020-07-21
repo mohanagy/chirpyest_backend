@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { Big, constants, dto, httpResponse } from '../helpers';
+import { calculateUserPendingCash, constants, dto, httpResponse } from '../helpers';
 import { financialDashboardService } from '../services';
 
 /**
@@ -25,7 +25,7 @@ export const getUserFinancialData = async (
   }
   const filter = dto.generalDTO.filterData({ userId: userId.id });
   const data = await financialDashboardService.getUserFinancialDahsboard(filter);
-  const pendingDollars = new Big(data.pending).div(100).div(2).toFixed(2);
+  const pendingDollars = calculateUserPendingCash(data.pending);
   data.pending = pendingDollars;
   return response.send(data);
 };
