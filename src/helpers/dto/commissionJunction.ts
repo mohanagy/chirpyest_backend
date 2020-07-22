@@ -4,6 +4,7 @@ import {
   CommissionJunctionPayloadItem,
   UpdatePendingCashAttributes,
 } from '../../interfaces/Networks';
+import convertToCents from '../convertToCents';
 
 export const commissionJunctionData = (data: CommissionJunctionPayload): CommissionJunctionData =>
   data.map((row: CommissionJunctionPayloadItem) => ({
@@ -12,7 +13,7 @@ export const commissionJunctionData = (data: CommissionJunctionPayload): Commiss
     advertiserId: row.advertiserId,
     actionTrackerName: row.actionTrackerName,
     advertiserName: row.advertiserName,
-    pubCommissionAmountUsd: row.pubCommissionAmountUsd,
+    pubCommissionAmountUsd: convertToCents(row.pubCommissionAmountUsd),
     saleAmountUsd: row.saleAmountUsd,
     correctionReason: row.correctionReason,
     postingDate: row.postingDate,
