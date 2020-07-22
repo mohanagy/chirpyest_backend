@@ -4,7 +4,7 @@ import app from '../../app';
 import { authHelpers, dto } from '../../helpers';
 import { usersServices } from '../../services';
 
-const email = `${Math.random().toString(36).substring(7)}@gmail.com`;
+const email = `naji+${Math.random().toString(36).substring(7)}@kiitos-tech.com`;
 describe('GET /api/v1/users/:id/profile endpoint', () => {
   let cognitoId: string;
   let userId: string;
@@ -21,7 +21,6 @@ describe('GET /api/v1/users/:id/profile endpoint', () => {
     } = response;
     cognitoId = cognitoIdResult;
     userId = id;
-    await authHelpers.confirmCognitoUser(app, email);
     token = await authHelpers.authenticateUser(app, { Username: email, Password: '123asd!@#ASD' }, cognitoId);
   });
   after(async () => {
@@ -71,7 +70,6 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
     } = response;
     cognitoId = cognitoIdResult;
     userId = id;
-    await authHelpers.confirmCognitoUser(app, email);
     token = await authHelpers.authenticateUser(app, { Username: email, Password: '123asd!@#ASD' }, cognitoId);
   });
   after(async () => {
