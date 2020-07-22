@@ -22,10 +22,10 @@ export function CommissionJunctionTransactionsFactory(sequelize: Sequelize): Com
       type: DataTypes.STRING,
     },
     pubCommissionAmountUsd: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
     },
     saleAmountUsd: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     correctionReason: {
