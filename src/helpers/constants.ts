@@ -21,3 +21,5 @@ export const messages = {
     updateUserProfileSuccess: 'User Profile Updated Successfully',
   },
 };
+
+export const commissionJunctionCronJobPattern = '* * * * *'; // check https://crontab.guru/ for more information

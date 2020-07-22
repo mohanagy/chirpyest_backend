@@ -1,3 +1,4 @@
+import * as AffiliateNetworks from './AffiliateNetworks';
 import * as impactRadius from './affiliateNetworks/impactRadius';
 import * as rakuten from './affiliateNetworks/rakuten';
 import * as cashBack from './cashback';
@@ -9,3 +10,4 @@ export const impactRadiusServices = impactRadius;
 export const usersServices = Users;
 export const cashBackService = cashBack;
 export const financialDashboardService = financialDashboard;
+export const affiliateNetworksServices = AffiliateNetworks;
