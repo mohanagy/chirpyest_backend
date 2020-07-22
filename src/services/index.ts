@@ -1,4 +1,4 @@
-import * as AffiliateNetworks from './AffiliateNetworks';
+import * as AffiliateNetworks from './affiliateNetworks';
 import * as impactRadius from './affiliateNetworks/impactRadius';
 import * as rakuten from './affiliateNetworks/rakuten';
 import * as cashBack from './cashback';

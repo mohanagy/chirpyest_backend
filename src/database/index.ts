@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import config from '../config';
 import { Database } from '../interfaces';
-import { CommissionJunctionTransactionsFactory } from './models/CommissionJunctionTransactions';
+import { CommissionJunctionTransactionsFactory } from './models/commissionJunctionTransactions';
 import { FinancialDashboardFactory } from './models/financialDashboard';
 import { ImpactRadiusTransactionsFactory } from './models/impactRadiusEvents';
 import { RakutenTransactionsFactory } from './models/rakutenTransactions';
