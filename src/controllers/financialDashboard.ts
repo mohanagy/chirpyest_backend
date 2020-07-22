@@ -8,7 +8,7 @@ import { financialDashboardService } from '../services';
  * @param {Request} request represents request object
  * @param {Response} response represents response object
  * @param {NextFunction} _next middleware function
- * @param {Transaction} _transaction transaction
+ * @param {Transaction} transaction transaction
  * @return {Promise<Response>} object contains success status
  */
 
