@@ -65,7 +65,6 @@ app.use(async (error: ErrnoException, request: Request, response: Response, _nex
   }
   response.status(error.status || error.value ? 400 : 500);
   return response.json({
-    success: false,
     message: error.message || (error.error ? error.error.details : null),
   });
 });
