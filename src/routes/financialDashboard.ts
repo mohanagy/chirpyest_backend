@@ -5,7 +5,7 @@ import { asyncHandler, verifyToken } from '../middleware';
 const router = express.Router();
 
 router.get(
-  '/user/:id/financial-dashboard',
+  '/users/:id/financial-dashboard',
   asyncHandler(verifyToken),
   asyncHandler(financialDashboardController.getUserFinancialData),
 );

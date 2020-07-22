@@ -16,16 +16,18 @@ export const getUserFinancialData = async (
   request: Request,
   response: Response,
   _next: NextFunction,
-  _transaction: Transaction,
+  transaction: Transaction,
 ): Promise<Response> => {
   const user = request.app.get('user');
   const userId = dto.usersDTO.userId(request);
   if (!user || Number(user.id) !== Number(userId.id)) {
+    await transaction.rollback();
     return httpResponse.unAuthorized(response, constants.messages.auth.notAuthorized);
   }
   const filter = dto.generalDTO.filterData({ userId: userId.id });
-  const data = await financialDashboardService.getUserFinancialDahsboard(filter);
+  const data = await financialDashboardService.getUserFinancialDahsboard(filter, transaction);
   const pendingDollars = calculateUserPendingCash(data.pending);
   data.pending = pendingDollars;
+  await transaction.commit();
   return response.send(data);
 };
