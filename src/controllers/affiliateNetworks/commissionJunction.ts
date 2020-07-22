@@ -67,9 +67,9 @@ export const getCommissionJunction = async (
   }, {});
 
   await Promise.all(
-    Object.keys(dataForUpdatingPendingCash).map(async (userId) => {
+    Object.keys(dataForUpdatingPendingCash).map((userId) => {
       const filter = dto.generalDTO.filterData({ userId });
-      await cashBackService.updatePendingCash(Number(userId), filter, dataForUpdatingPendingCash[userId], transaction);
+      return cashBackService.updatePendingCash(Number(userId), filter, dataForUpdatingPendingCash[userId], transaction);
     }),
   );
 
