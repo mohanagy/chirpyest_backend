@@ -50,7 +50,7 @@ const {
 
 const email = `naji+${Math.random().toString(36).substring(7)}@kiitos-tech.com`;
 
-describe.only('Test Commission Junction webhook controller', () => {
+describe('Test Commission Junction webhook controller', () => {
   let cognitoId: string;
   const filter = dto.generalDTO.filterData({ email });
   before(async () => {
