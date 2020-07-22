@@ -4,7 +4,7 @@ import request from 'supertest';
 import app from '../../app';
 import config from '../../config';
 import * as db from '../../database';
-import { authHelpers, dto } from '../../helpers';
+import { authHelpers, convertToCents, dto } from '../../helpers';
 import { usersServices } from '../../services';
 
 const commissionJunctionResponse: CommissionJunctionPayload = [
@@ -14,7 +14,7 @@ const commissionJunctionResponse: CommissionJunctionPayload = [
     actionTrackerName: 'Nook and Digital Product Sales',
     advertiserName: 'Barnes & Noble',
     postingDate: '2020-07-14T13:30:19Z',
-    pubCommissionAmountUsd: 0,
+    pubCommissionAmountUsd: 12.5,
     shopperId: 123,
     saleAmountUsd: 0,
     correctionReason: 'Deposit',
@@ -31,7 +31,7 @@ const commissionJunctionResponse: CommissionJunctionPayload = [
     actionTrackerName: 'Nook and Digital Product Sales',
     advertiserName: 'Barnes & Noble',
     postingDate: '2020-07-17T15:45:25Z',
-    pubCommissionAmountUsd: 0,
+    pubCommissionAmountUsd: 0.555,
     shopperId: 123,
     saleAmountUsd: 0,
     correctionReason: 'OTHER_REASON',
@@ -43,14 +43,23 @@ const commissionJunctionResponse: CommissionJunctionPayload = [
     orderDiscountPubCurrency: '0',
   },
 ];
-
+const financialDashboard = {
+  id: 1,
+  userId: 1,
+  pending: commissionJunctionResponse[0].pubCommissionAmountUsd,
+  receivableMilestone: 0,
+  earnings: 0,
+  lastClosedOut: 0,
+  createdAt: '2020-07-22T13:06:14.333Z',
+  updatedAt: '2020-07-22T13:06:14.333Z',
+};
 const {
   affiliateNetworks: { commissionJunctionConfig },
 } = config;
 
 const email = `naji+${Math.random().toString(36).substring(7)}@kiitos-tech.com`;
 
-describe('Test Commission Junction webhook controller', () => {
+describe.only('Test Commission Junction webhook controller', () => {
   let cognitoId: string;
   const filter = dto.generalDTO.filterData({ email });
   before(async () => {
@@ -87,30 +96,32 @@ describe('Test Commission Junction webhook controller', () => {
       .expect(409);
   });
 
-  it('Should allow any request secret key and body', async () => {
+  it('Should allow any request does have  secret key and body and it will be stored', async () => {
     await request(app)
       .post(`/api/v1/affiliate-networks/commission-junction/webhook`)
       .expect('Content-Type', /json/)
       .set('x-webhook-secret', commissionJunctionConfig.cJPersonalKey)
       .send(commissionJunctionResponse)
       .expect(200);
+
+    const cJTransactions = await db.CommissionJunctionTransactions.findAll({
+      raw: true,
+    });
+    const financialDashboardData = await db.FinancialDashboard.findOne({
+      where: { userId: commissionJunctionResponse[0].shopperId },
+      raw: true,
+    });
+    expect(cJTransactions.length).equal(commissionJunctionResponse.length);
+    expect(Number(cJTransactions[0].commissionId)).equal(commissionJunctionResponse[0].commissionId);
+    expect(financialDashboardData?.pending).equal(convertToCents(financialDashboard.pending));
+
     await db.CommissionJunctionTransactions.destroy({
       where: {
         advertiserName: commissionJunctionResponse[0].advertiserName,
       },
     });
-  });
-
-  it('Should allow any request secret key and body', async () => {
-    await request(app)
-      .post(`/api/v1/affiliate-networks/commission-junction/webhook`)
-      .expect('Content-Type', /json/)
-      .set('x-webhook-secret', commissionJunctionConfig.cJPersonalKey)
-      .send(commissionJunctionResponse)
-      .expect(200);
-    const cJTransactions = await db.CommissionJunctionTransactions.findAll({
-      raw: true,
+    await db.FinancialDashboard.destroy({
+      where: { userId: commissionJunctionResponse[0].shopperId },
     });
-    expect(cJTransactions.length).equal(commissionJunctionResponse.length);
   });
 });
