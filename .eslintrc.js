@@ -8,6 +8,15 @@ module.exports = {
   ],
   rules: {
     'import/prefer-default-export': 'off',
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/__test__/**/*.ts", "**/*.spec.ts"] }],
+    "@typescript-eslint/no-unused-vars":["error", { "argsIgnorePattern": "^_" }]
+  },
+  settings: {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", '.d.ts'],
+      },
+    }
   },
   parserOptions: {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features

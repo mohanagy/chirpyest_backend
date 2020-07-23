@@ -1,13 +1,10 @@
 class SuccessResponse {
-  success: boolean;
+  message?: string;
 
-  message: string;
+  data?: any;
 
-  data: any;
-
-  constructor(data: any, message: string) {
+  constructor(data?: any, message?: string) {
     this.message = message;
-    this.success = true;
     this.data = data;
   }
 }

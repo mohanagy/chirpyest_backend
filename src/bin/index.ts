@@ -7,6 +7,8 @@
 import debug from 'debug';
 import http from 'http';
 import app from '../app';
+import config from '../config';
+import { dbConfig } from '../database';
 import logger from '../helpers/logger';
 import { ErrnoException } from '../interfaces';
 
@@ -34,7 +36,7 @@ const normalizePort = (val: string): number | string | boolean => {
  * Get port from environment and store in Express.
  */
 
-const port = normalizePort(process.env.PORT || '4000');
+const port = normalizePort(config.server.port);
 app.set('port', port);
 
 /**
@@ -76,6 +78,14 @@ const onListening = (): void => {
   logger.info(`Listening on ${bind}`);
 };
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+dbConfig
+  .sync({ force: process.env.NODE_ENV === 'test' ? true : undefined })
+  .then(() => {
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+  })
+  .catch((err: ErrnoException) => {
+    debug(`error can't access the database : ${err}`);
+    logger.error(`can't access the database :${err}`);
+  });

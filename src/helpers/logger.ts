@@ -1,4 +1,13 @@
+import DatadogWinston from 'datadog-winston';
+import expressWinston from 'express-winston';
 import winston from 'winston';
+import config from '../config';
+
+const DatadogWinstonTransport = new DatadogWinston({
+  apiKey: config.server.dataDogApiKey,
+  service: process.env.HEROKU_APP_NAME || 'localhost',
+  ddsource: 'node.js',
+});
 
 const logger = winston.createLogger({
   level: 'info',
@@ -8,6 +17,11 @@ const logger = winston.createLogger({
     new winston.transports.File({ filename: 'combined.log' }),
   ],
 });
+
+if (process.env.NODE_ENV === 'production') {
+  logger.add(DatadogWinstonTransport);
+}
+
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
@@ -15,4 +29,14 @@ if (process.env.NODE_ENV !== 'production') {
     }),
   );
 }
+
+export const expressWinstonLogger = expressWinston.logger({
+  transports: [DatadogWinstonTransport],
+  format: winston.format.json(),
+  meta: true,
+  msg: 'HTTP {{req.method}} {{req.url}}',
+  expressFormat: true,
+  colorize: false,
+});
+
 export default logger;

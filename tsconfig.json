@@ -8,21 +8,17 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": "src",
-    "lib": [
-      "es5",
-      "es6",
-      "ESNext"
-    ],
+    "baseUrl": ".",
+    "types": ["node", "mocha"],
+    "lib": ["es5", "es6", "ESNext"],
     "allowJs": true,
     "strict": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", ".nyc_output", ".coverage"],
+  "extends": "./node_modules/@sentry/typescript/tsconfig.json",
+  "parserOptions": {
+    "debugLevel": true
+  }
 }
