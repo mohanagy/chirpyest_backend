@@ -9,13 +9,14 @@ import cognito from './helpers/cognito';
 import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
 import routes from './routes';
+import { job } from './tasks/commissionJunction';
 
 const app = express();
 
 app.use(cookieParser());
 
 cognito(app);
-
+job.start();
 (global as any).fetch = fetch;
 Sentry.init({
   dsn: config.server.SentryDNS,
@@ -65,7 +66,6 @@ app.use(async (error: ErrnoException, request: Request, response: Response, _nex
   }
   response.status(error.status || error.value ? 400 : 500);
   return response.json({
-    success: false,
     message: error.message || (error.error ? error.error.details : null),
   });
 });

@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 import config from '../config';
 import { Database } from '../interfaces';
+import { CommissionJunctionTransactionsFactory } from './models/commissionJunctionTransactions';
 import { FinancialDashboardFactory } from './models/financialDashboard';
 import { ImpactRadiusTransactionsFactory } from './models/impactRadiusEvents';
 import { RakutenTransactionsFactory } from './models/rakutenTransactions';
@@ -23,11 +24,13 @@ export const FinancialDashboard = FinancialDashboardFactory(dbConfig);
 export const RakutenTransactions = RakutenTransactionsFactory(dbConfig);
 export const UserTransactionsHistory = UserTransactionsHistoryFactory(dbConfig);
 export const ImpactRadiusTransactions = ImpactRadiusTransactionsFactory(dbConfig);
+export const CommissionJunctionTransactions = CommissionJunctionTransactionsFactory(dbConfig);
 
 // relations
 Users.hasOne(FinancialDashboard);
 Users.hasMany(RakutenTransactions);
 Users.hasMany(ImpactRadiusTransactions);
+Users.hasMany(CommissionJunctionTransactions);
 Users.hasMany(UserTransactionsHistory);
 
 const database: Database = {};

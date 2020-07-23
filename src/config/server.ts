@@ -6,6 +6,7 @@ const envVarsSchema = joi
     PORT: joi.number().required(),
     SENTRY_DNS: joi.string().required(),
     DATADOG_API_KEY: joi.string().required(),
+    HOST: joi.string().required(),
   })
   .unknown()
   .required();
@@ -20,6 +21,7 @@ const config = (): ServerConfigs => {
     port: envVars.PORT,
     SentryDNS: envVars.SENTRY_DNS,
     dataDogApiKey: envVars.DATADOG_API_KEY,
+    host: envVars.HOST,
   };
 };
 

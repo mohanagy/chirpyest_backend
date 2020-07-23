@@ -8,6 +8,7 @@ import { usersServices } from '../services';
  * @param {Request} request represents request object
  * @param {Response} response represents response object
  * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
  * @return {Promise<Response>} object contains success status
  */
 
@@ -31,6 +32,7 @@ export const getUserProfile = async (
  * @param {Request} request represents request object
  * @param {Response} response represents response object
  * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
  * @return {Promise<Response>} object contains success status
  * @returns Promise
  */

@@ -1,4 +1,5 @@
 export * as authDTO from './auth';
+export * as commissionJunctionDTO from './commissionJunction';
 export * as generalDTO from './general';
 export * as impactRadiusDTO from './impactRadius';
 export * as rakutenDTO from './rakuten';

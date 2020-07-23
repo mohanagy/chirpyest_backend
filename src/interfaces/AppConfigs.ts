@@ -9,13 +9,8 @@ export interface ServerConfigs {
   port: string;
   SentryDNS: string;
   dataDogApiKey: string;
+  host: string;
 }
-
-export interface AffiliateNetworksConfigs {
-  impactRadiusToken: string;
-  rakutenToken: string;
-}
-
 export interface JWT {
   alg: string;
   e: string;

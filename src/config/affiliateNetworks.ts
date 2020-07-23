@@ -3,6 +3,8 @@ import { AffiliateNetworksConfigs } from '../interfaces';
 
 const envVarsSchema = joi
   .object({
+    COMMISSION_JUNCTION_PUBLISHER_ID: joi.string().required(),
+    COMMISSION_JUNCTION_PERSONAL_KEY: joi.string().required(),
     IMPACT_RADIUS_TOKEN: joi.string().required(),
     RAKUTEN_TOKEN: joi.string().required(),
   })
@@ -16,6 +18,10 @@ const config = (): AffiliateNetworksConfigs => {
   }
 
   return {
+    commissionJunctionConfig: {
+      cJPublisherId: envVars.COMMISSION_JUNCTION_PUBLISHER_ID,
+      cJPersonalKey: envVars.COMMISSION_JUNCTION_PERSONAL_KEY,
+    },
     impactRadiusToken: envVars.IMPACT_RADIUS_TOKEN,
     rakutenToken: envVars.RAKUTEN_TOKEN,
   };

@@ -17,6 +17,62 @@ export interface RakutenTransactionsAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+export interface CommissionJunctionTransactionsAttributes {
+  actionTrackerId: number;
+  advertiserId: number;
+  actionTrackerName: string;
+  advertiserName: string;
+  postingDate: string;
+  pubCommissionAmountUsd: number;
+  userId?: number;
+  saleAmountUsd: number;
+  correctionReason: string;
+  orderDiscountUsd: number;
+  aid: number;
+  orderId: number;
+  commissionId: number;
+  saleAmountPubCurrency: string;
+  orderDiscountPubCurrency: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+export interface CommissionJunctionDataItem {
+  actionTrackerId: number;
+  advertiserId: number;
+  actionTrackerName: string;
+  advertiserName: string;
+  postingDate: string;
+  pubCommissionAmountUsd: number;
+  userId?: number;
+  saleAmountUsd: number;
+  correctionReason: string;
+  orderDiscountUsd: number;
+  aid: number;
+  orderId: number;
+  commissionId: number;
+  saleAmountPubCurrency: string;
+  orderDiscountPubCurrency: string;
+}
+export type CommissionJunctionData = Array<CommissionJunctionDataItem>;
+export interface CommissionJunctionPayloadItem {
+  actionTrackerId: number;
+  advertiserId: number;
+  actionTrackerName: string;
+  advertiserName: string;
+  postingDate: string;
+  pubCommissionAmountUsd: number;
+  shopperId?: number;
+  saleAmountUsd: number;
+  correctionReason: string;
+  orderDiscountUsd: number;
+  aid: number;
+  orderId: number;
+  commissionId: number;
+  saleAmountPubCurrency: string;
+  orderDiscountPubCurrency: string;
+}
+
+export type CommissionJunctionPayload = Array<CommissionJunctionPayloadItem>;
 
 export interface ImpactRadiusAttributes {
   userId?: number;
