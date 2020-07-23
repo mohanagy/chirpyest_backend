@@ -4,7 +4,7 @@ import moment from 'moment';
 import config from '../config';
 import { constants, logger } from '../helpers';
 
-const { commissionJunctionCronJobPattern } = constants;
+const { commissionJunctionCronJobPattern, commissionJunctionBaseUrl } = constants;
 const {
   affiliateNetworks: { commissionJunctionConfig },
   server: { host },
@@ -22,7 +22,7 @@ export const job = new CronJob(
           },
         },
       } = await axios.post(
-        'https://commissions.api.cj.com/query',
+        commissionJunctionBaseUrl,
         JSON.stringify({
           query: `{
                 publisherCommissions(forPublishers: ["${commissionJunctionConfig.cJPublisherId}"], sincePostingDate: "${startDate}", beforePostingDate: "${endDate}") {

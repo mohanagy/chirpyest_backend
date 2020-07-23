@@ -23,3 +23,5 @@ export const messages = {
 };
 
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
+
+export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
