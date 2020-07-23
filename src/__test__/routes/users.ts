@@ -87,7 +87,7 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
       .send(userData)
       .end((error, response) => {
         if (error) throw error;
-        expect(response.body.data).to.eql({ id: userId, ...userData });
+        expect(response.body.data).to.eql({ id: userId, ...userData, email, username: email.split('@')[0] });
         done();
       });
   });
