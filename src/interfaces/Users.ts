@@ -15,6 +15,7 @@ export interface UserAttributes {
   cognitoId?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  financialDashboard?: FinancialDashboardAttributes;
 }
 
 export interface EditUserAttributes {
