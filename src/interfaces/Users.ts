@@ -1,4 +1,5 @@
 import { UserTypes } from '../helpers/constants';
+import { FinancialDashboardAttributes } from './Networks';
 
 export interface UserAttributes {
   id?: number;
@@ -41,6 +42,7 @@ export interface UserProfileResponse {
   newsletterSubscription: boolean;
   paypalAccount: string;
   image: string;
+  financialData?: FinancialDashboardAttributes;
 }
 
 export interface ProfileUpdatableFields {

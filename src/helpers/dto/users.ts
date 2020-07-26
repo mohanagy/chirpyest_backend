@@ -25,6 +25,7 @@ export const userProfileResponse = (data: any): UserProfileResponse => ({
   newsletterSubscription: data.newsletterSubscription,
   paypalAccount: data.paypalAccount,
   image: data.image,
+  financialData: data.financialDashboard,
 });
 export const userProfileUpdatableFields = (data: any): ProfileUpdatableFields => ({
   name: data.name,
