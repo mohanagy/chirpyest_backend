@@ -10,7 +10,10 @@
     "init": "npm install",
     "start": "NODE_ENV=production node ./dist/bin/index.js",
     "dev": "cross-env NODE_ENV=development APP_ENV=development ts-node-dev --respawn --transpileOnly ./src/bin/index.ts",
-    "heroku-postbuild": "npm run init && npm run tsc",
+    "heroku-postbuild": "npm run init && npm run tsc && npm run db:migrate",
+    "db:migrate": "node ./migration.js",
+    "db:migrate:local": "NODE_ENV=development APP_ENV=development node ./migration.js",
+    "db:migrate:test": "cross-env NODE_ENV=development APP_ENV=test node ./migration.js",
     "tsc": "tsc",
     "tsc-lint": "tsc --noEmit",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
@@ -100,6 +103,7 @@
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.2.3",
     "typescript": "^3.9.5",
+    "umzug": "^2.3.0",
     "winston": "^3.3.3"
   },
   "nyc": {
