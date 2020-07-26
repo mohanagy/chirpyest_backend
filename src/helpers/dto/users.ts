@@ -4,9 +4,9 @@ import { UserTypes } from '../constants';
 export const userData = (data: any): UserData => ({
   email: data.email,
   password: data.password,
-  username: data.email.split('@')[0],
+  username: data.username,
   cognitoId: data.cognitoId,
-  name: data.name,
+  name: data.email.split('@')[0],
   newsletterSubscription: data.newsletterSubscription,
   termsCondsAccepted: data.termsCondsAccepted,
   type: data.type || UserTypes.Customer,
