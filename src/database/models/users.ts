@@ -8,11 +8,6 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: true,
-    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,

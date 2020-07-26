@@ -5,7 +5,7 @@ import * as database from '../database';
 import { EditUserAttributes, Filter, UserAttributes } from '../interfaces';
 import { UserModel } from '../types/sequelize';
 
-const { Users, FinancialDashboard } = database;
+const { Users } = database;
 
 /**
  * @description getUser is a service used to find the user using filters
@@ -14,7 +14,7 @@ const { Users, FinancialDashboard } = database;
  * @return {Promise<UserModel | null>} User data
  */
 export const getUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> => {
-  return Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
+  return Users.findOne({ ...filter, transaction });
 };
 
 /**
@@ -75,7 +75,7 @@ export const findAllUsers = async (transaction?: Transaction): Promise<UserModel
  * @return {Promise<UserModel | null>} user object
  */
 export const findUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> =>
-  Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
+  Users.findOne({ ...filter, transaction });
 
 /**
  * @description deleteUser is a service to  delete a user

@@ -5,5 +5,4 @@ export const updateUserProfile = joi.object({
   newsletterSubscription: joi.boolean().optional(),
   image: joi.string().uri().optional(),
   paypalAccount: joi.string().email().optional(),
-  username: joi.string().optional(),
 });
