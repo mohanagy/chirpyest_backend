@@ -1,4 +1,5 @@
 import { UserTypes } from '../helpers/constants';
+import { FinancialDashboardAttributes } from './Networks';
 
 export interface UserAttributes {
   id?: number;
@@ -8,6 +9,7 @@ export interface UserAttributes {
   newsletterSubscription: boolean;
   termsCondsAccepted: boolean;
   paypalAccount?: string;
+  username?: string;
   image?: string;
   isActive?: boolean;
   cognitoId?: string;
@@ -18,6 +20,7 @@ export interface UserAttributes {
 export interface EditUserAttributes {
   name?: string;
   type?: UserTypes;
+  username?: string;
   newsletterSubscription?: boolean;
   paypalAccount?: string;
   isActive?: boolean;
@@ -34,13 +37,17 @@ export interface UserId {
 export interface UserProfileResponse {
   id: string;
   name: string;
+  username: string;
+  email: string;
   newsletterSubscription: boolean;
   paypalAccount: string;
   image: string;
+  financialData?: FinancialDashboardAttributes;
 }
 
 export interface ProfileUpdatableFields {
   name: string;
+  username: string;
   newsletterSubscription: boolean;
   paypalAccount: string;
   image: string;
