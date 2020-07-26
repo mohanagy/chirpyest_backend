@@ -54,7 +54,6 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
   let token: string;
   const filter = dto.generalDTO.filterData({ email });
   const userData = {
-    name: 'testName',
     image: 'https://picsum.photos/200',
     paypalAccount: 'paypal@test.com',
     newsletterSubscription: true,
@@ -87,7 +86,13 @@ describe('PATCH /api/v1/users/:id/profile endpoint', () => {
       .send(userData)
       .end((error, response) => {
         if (error) throw error;
-        expect(response.body.data).to.eql({ id: userId, ...userData, email, username: email.split('@')[0] });
+        expect(response.body.data).to.eql({
+          id: userId,
+          ...userData,
+          email,
+          name: email.split('@')[0],
+          username: null,
+        });
         done();
       });
   });
