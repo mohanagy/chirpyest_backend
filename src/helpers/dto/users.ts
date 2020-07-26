@@ -4,9 +4,8 @@ import { UserTypes } from '../constants';
 export const userData = (data: any): UserData => ({
   email: data.email,
   password: data.password,
-  username: data.username,
   cognitoId: data.cognitoId,
-  name: data.email.split('@')[0],
+  name: data.name,
   newsletterSubscription: data.newsletterSubscription,
   termsCondsAccepted: data.termsCondsAccepted,
   type: data.type || UserTypes.Customer,
@@ -20,16 +19,12 @@ export const userId = (data: any): UserId => ({
 export const userProfileResponse = (data: any): UserProfileResponse => ({
   id: data.id,
   name: data.name,
-  email: data.email,
-  username: data.username,
   newsletterSubscription: data.newsletterSubscription,
   paypalAccount: data.paypalAccount,
   image: data.image,
-  financialData: data.financialDashboard,
 });
 export const userProfileUpdatableFields = (data: any): ProfileUpdatableFields => ({
   name: data.name,
-  username: data.username,
   newsletterSubscription: data.newsletterSubscription,
   paypalAccount: data.paypalAccount,
   image: data.image,
