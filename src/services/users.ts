@@ -1,6 +1,4 @@
 import { Transaction } from 'sequelize';
-/* eslint-disable no-underscore-dangle */
-import { isNullOrUndefined } from 'util';
 import * as database from '../database';
 import { calculateUserPendingCash } from '../helpers';
 import { EditUserAttributes, Filter, UserAttributes } from '../interfaces';
@@ -34,7 +32,7 @@ export const isEmailExists = async (email: string, transaction?: Transaction): P
     where: { email },
     transaction,
   });
-  if (isNullOrUndefined(User)) return false;
+  if (User === null || User === undefined) return false;
   return true;
 };
 
