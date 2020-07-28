@@ -35,6 +35,7 @@ const umzug = new Umzug({
   try {
     await umzug.up();
   } catch (error) {
+    //eslint-disable-next-line
     console.error(error);
   }
 })();
