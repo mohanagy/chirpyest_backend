@@ -5,7 +5,7 @@
  */
 
 const convertToCents = (value: number): number => {
-  if (!Number.isNaN(value)) return Math.floor(value * 100);
+  if (typeof value === 'number') return Math.floor(value * 100);
   return 0;
 };
 
