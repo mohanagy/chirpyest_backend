@@ -14,15 +14,15 @@ export const commissionJunctionData = (data: CommissionJunctionPayload): Commiss
     actionTrackerName: row.actionTrackerName,
     advertiserName: row.advertiserName,
     pubCommissionAmountUsd: convertToCents(Number(row.pubCommissionAmountUsd)),
-    saleAmountUsd: Number(row.saleAmountUsd),
+    saleAmountUsd: convertToCents(Number(row.saleAmountUsd)),
     correctionReason: row.correctionReason,
     postingDate: row.postingDate,
-    orderDiscountUsd: Number(row.orderDiscountUsd),
+    orderDiscountUsd: convertToCents(Number(row.orderDiscountUsd)),
     aid: row.aid,
     orderId: row.orderId,
     commissionId: row.commissionId,
-    saleAmountPubCurrency: Number(row.saleAmountPubCurrency),
-    orderDiscountPubCurrency: Number(row.orderDiscountPubCurrency),
+    saleAmountPubCurrency: convertToCents(Number(row.saleAmountPubCurrency)),
+    orderDiscountPubCurrency: convertToCents(Number(row.orderDiscountPubCurrency)),
   }));
 
 export const updatePendingCashData = (data: any): UpdatePendingCashAttributes => ({
