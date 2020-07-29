@@ -5,7 +5,8 @@
  */
 
 const convertToCents = (value: number): number => {
-  return Math.floor(value * 100);
+  if (typeof value === 'number') return Math.floor(value * 100);
+  return 0;
 };
 
 export default convertToCents;

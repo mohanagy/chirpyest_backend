@@ -1,7 +1,6 @@
 import { Transaction } from 'sequelize';
-/* eslint-disable no-underscore-dangle */
-import { isNullOrUndefined } from 'util';
 import * as database from '../database';
+import { calculateUserPendingCash } from '../helpers';
 import { EditUserAttributes, Filter, UserAttributes } from '../interfaces';
 import { UserModel } from '../types/sequelize';
 
@@ -14,7 +13,12 @@ const { Users, FinancialDashboard } = database;
  * @return {Promise<UserModel | null>} User data
  */
 export const getUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> => {
-  return Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
+  const user = await Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
+  if (user && user.financialDashboard) {
+    const pendingDollars = calculateUserPendingCash(user.financialDashboard.pending);
+    user.financialDashboard.pending = pendingDollars;
+  }
+  return user;
 };
 
 /**
@@ -28,7 +32,7 @@ export const isEmailExists = async (email: string, transaction?: Transaction): P
     where: { email },
     transaction,
   });
-  if (isNullOrUndefined(User)) return false;
+  if (User === null || User === undefined) return false;
   return true;
 };
 

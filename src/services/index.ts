@@ -3,7 +3,7 @@ import * as impactRadius from './affiliateNetworks/impactRadius';
 import * as rakuten from './affiliateNetworks/rakuten';
 import * as cashBack from './cashback';
 import * as financialDashboard from './financialDashboard';
-import * as Users from './Users';
+import * as Users from './users';
 
 export const rakutenServices = rakuten;
 export const impactRadiusServices = impactRadius;
