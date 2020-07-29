@@ -31,3 +31,13 @@ export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   subId3: data.subId3,
   promoCode: data.promoCode,
 });
+
+export const impactRadiusBrands = (data: any): any => {
+  return {
+    brandName: data.AdvertiserName,
+    url: data.AdvertiserUrl,
+    brandId: data.AdvertiserId,
+    trackingLink: data.TrackingLink,
+    status: data.ContractStatus,
+  };
+};

@@ -19,6 +19,21 @@ export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
   u1: data.u1,
 });
 
+// match 0% to 100%
+const regx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/;
+export const rakutenBrandsData = (data: any): any => {
+  return {
+    brandName: data['Advertiser Name'],
+    url: data['Advertiser URL'],
+    brandId: data.MID,
+    trackingLink: data['Link to Home Page'],
+    status: data.Status,
+    returnDays: data['Return Days'],
+    transactionUpdateWindow: data['Transaction Update Window'],
+    commission: data['Commission Terms'].match(regx)[0],
+  };
+};
+
 export const updatePendingCashData = (data: any): UpdatePendingCashAttributes => ({
   commissions: data.commissions,
   saleAmount: data.saleAmount,

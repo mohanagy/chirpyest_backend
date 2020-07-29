@@ -11,3 +11,5 @@ export const usersServices = Users;
 export const cashBackService = cashBack;
 export const financialDashboardService = financialDashboard;
 export const affiliateNetworksServices = AffiliateNetworks;
+
+export * as brandsService from './brands';

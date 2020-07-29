@@ -31,3 +31,30 @@ export const updatePendingCashData = (data: any): UpdatePendingCashAttributes =>
 });
 
 export const commissionJunctionWebhookSecret = (data: any): string | undefined => data['x-webhook-secret'];
+
+const getCjCommissionPercent = (action: any) => {
+  if (typeof action === 'object' && !Array.isArray(action)) {
+    if (typeof action.commission.default === 'object') {
+      return null;
+    }
+    return action.commission.default;
+  }
+  if (Array.isArray(action)) {
+    if (typeof action[0].commission.default === 'object') {
+      return null;
+    }
+    return action[0].commission.default;
+  }
+  throw new Error('Not a valid commission percent');
+};
+
+export const commissionJunctionBrands = (data: any): any => {
+  return {
+    brandName: data.advertiserName,
+    url: data.programUrl,
+    brandId: data.advertiserId,
+    trackingLink: 'https://www.anrdoezrs.net/links/4014745/type/am/sid/defaultvalue', // change default value to userId to track them
+    status: data.accountStatus,
+    commission: getCjCommissionPercent(data.actions.action),
+  };
+};
