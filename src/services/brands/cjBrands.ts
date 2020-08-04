@@ -2,19 +2,18 @@ import axiso from 'axios';
 import camelCase from 'camelcase';
 import { Parser } from 'xml2js';
 import config from '../../config';
-import { dto } from '../../helpers';
+import { constants, dto } from '../../helpers';
 import { createBrands } from './brands';
 
-const { commissionJunctionConfig } = config.affiliateNetworks;
-
-const url = `https://advertiser-lookup.api.cj.com/v2/advertiser-lookup?requestor-cid=${commissionJunctionConfig.cJPublisherId}&advertiser-ids=joined`;
-
-const token = commissionJunctionConfig.cJPersonalKey;
+const {
+  commissionJunctionConfig: { cJPersonalKey },
+} = config.affiliateNetworks;
+const { commissionJunctionBrandsUrl } = constants;
 
 export const getCjBrands = async (): Promise<any> => {
-  const { data } = await axiso.get(url, {
+  const { data } = await axiso.get(commissionJunctionBrandsUrl, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${cJPersonalKey}`,
     },
   });
 

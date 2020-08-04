@@ -4,6 +4,7 @@ import {
   CommissionJunctionPayloadItem,
   UpdatePendingCashAttributes,
 } from '../../interfaces/Networks';
+import { commissionJunctionTrackingLink } from '../constants';
 import convertToCents from '../convertToCents';
 
 export const commissionJunctionData = (data: CommissionJunctionPayload): CommissionJunctionData =>
@@ -53,7 +54,7 @@ export const commissionJunctionBrands = (data: any): any => {
     brandName: data.advertiserName,
     url: data.programUrl,
     brandId: data.advertiserId,
-    trackingLink: 'https://www.anrdoezrs.net/links/4014745/type/am/sid/defaultvalue', // change default value to userId to track them
+    trackingLink: commissionJunctionTrackingLink,
     status: data.accountStatus,
     commission: getCjCommissionPercent(data.actions.action),
     network: 'commissionJunction',

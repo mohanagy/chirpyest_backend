@@ -1,7 +1,4 @@
-export enum UserTypes {
-  Admin = 'admin',
-  Customer = 'customer',
-}
+import config from '../config';
 
 export const messages = {
   auth: {
@@ -26,3 +23,9 @@ export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://cr
 export const brandsCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
 
 export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
+
+export const commissionJunctionTrackingLink = 'https://www.anrdoezrs.net/links/4014745/type/am/sid/defaultvalue';
+
+const { commissionJunctionConfig } = config.affiliateNetworks;
+
+export const commissionJunctionBrandsUrl = `https://advertiser-lookup.api.cj.com/v2/advertiser-lookup?requestor-cid=${commissionJunctionConfig.cJPublisherId}&advertiser-ids=joined`;
