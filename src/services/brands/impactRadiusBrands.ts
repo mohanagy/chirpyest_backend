@@ -1,33 +1,30 @@
 import axios from 'axios';
+import config from '../../config';
+import { dto } from '../../helpers';
+import { BrandsAttributes } from '../../interfaces';
+import { createBrands } from './brands';
 
-const url1 =
-  'https://IRuXc4No43oX1719254YMvCSfVu3CcNYg1:yCBYr.9ib-mamkXnBjqkVCYkeW7FRDdz@api.impact.com/Mediapartners/IRuXc4No43oX1719254YMvCSfVu3CcNYg1/Campaigns.json';
+const { accountSID, authToken } = config.affiliateNetworks.impactRadiusConfig;
 
-// const url2 =
-// 'https://IRuXc4No43oX1719254YMvCSfVu3CcNYg1:yCBYr.9ib-mamkXnBjqkVCYkeW7FRDdz@api.impact.com/Mediapartners/IRuXc4No43oX1719254YMvCSfVu3CcNYg1/Reports/4016';
-
-const url2 =
-  'https://IRuXc4No43oX1719254YMvCSfVu3CcNYg1:yCBYr.9ib-mamkXnBjqkVCYkeW7FRDdz@api.impact.com/Mediapartners/IRuXc4No43oX1719254YMvCSfVu3CcNYg1/Reports/4016?PageSize=20000&Page=1&contract_status=Active';
+const baseImpactApiUrl = `https://${accountSID}:${authToken}@api.impact.com/Mediapartners/${accountSID}`;
+const campaignsEndpoint = `${baseImpactApiUrl}/Campaigns.json`;
+const campaignsEndpoint2 = `${baseImpactApiUrl}/Reports/4016?PageSize=20000&Page=1&contract_status=Active`;
 
 export const getImpactRadiusBrands = async (): Promise<any> => {
-  try {
-    const { data: url1Data } = await axios.get(url1);
-    const { data: url2Data } = await axios.get(url2);
-    const cleanList: any = [];
-    url1Data.Campaigns.forEach((campaign: any) => {
-      url2Data.Records.forEach((record: any) => {
-        if (record.Name === campaign.CampaignName) {
-          const updatedCampaign = { ...campaign };
-          updatedCampaign.Payout = record.Payout;
-          cleanList.push(updatedCampaign);
-        }
-      });
+  const { data: campaignsEndpointData } = await axios.get(campaignsEndpoint);
+  const { data: campaignsEndpoint2Data } = await axios.get(campaignsEndpoint2);
+  const impactRadiusBrandsList: BrandsAttributes[] = [];
+  campaignsEndpointData.Campaigns.forEach((campaign: any) => {
+    campaignsEndpoint2Data.Records.forEach((record: any) => {
+      if (record.Name === campaign.CampaignName) {
+        const updatedCampaign = { ...campaign };
+        updatedCampaign.Payout = record.Payout;
+        const cleanBrand = dto.impactRadiusDTO.impactRadiusBrands(updatedCampaign);
+        impactRadiusBrandsList.push(cleanBrand);
+      }
     });
+  });
 
-    // save cleanList to the db
-
-    return cleanList;
-  } catch (err) {
-    console.log('err', err);
-  }
+  await createBrands(impactRadiusBrandsList);
+  return impactRadiusBrandsList;
 };

@@ -1,14 +1,15 @@
 import axiso from 'axios';
 import camelCase from 'camelcase';
-import dotenv from 'dotenv';
 import { Parser } from 'xml2js';
+import config from '../../config';
 import { dto } from '../../helpers';
+import { createBrands } from './brands';
 
-dotenv.config();
+const { commissionJunctionConfig } = config.affiliateNetworks;
 
-const url = 'https://advertiser-lookup.api.cj.com/v2/advertiser-lookup?requestor-cid=4014745&advertiser-ids=joined';
+const url = `https://advertiser-lookup.api.cj.com/v2/advertiser-lookup?requestor-cid=${commissionJunctionConfig.cJPublisherId}&advertiser-ids=joined`;
 
-const token = '2x3hzy66wnys7h5yc52cj6ngrn';
+const token = commissionJunctionConfig.cJPersonalKey;
 
 export const getCjBrands = async (): Promise<any> => {
   const { data } = await axiso.get(url, {
@@ -30,5 +31,6 @@ export const getCjBrands = async (): Promise<any> => {
   });
 
   // save to the db
+  await createBrands(cleanData);
   return cleanData;
 };

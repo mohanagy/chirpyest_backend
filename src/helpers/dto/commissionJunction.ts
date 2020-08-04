@@ -56,5 +56,6 @@ export const commissionJunctionBrands = (data: any): any => {
     trackingLink: 'https://www.anrdoezrs.net/links/4014745/type/am/sid/defaultvalue', // change default value to userId to track them
     status: data.accountStatus,
     commission: getCjCommissionPercent(data.actions.action),
+    network: 'commissionJunction',
   };
 };

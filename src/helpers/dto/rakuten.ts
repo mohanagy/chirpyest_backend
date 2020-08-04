@@ -28,9 +28,8 @@ export const rakutenBrandsData = (data: any): any => {
     brandId: data.MID,
     trackingLink: data['Link to Home Page'],
     status: data.Status,
-    returnDays: data['Return Days'],
-    transactionUpdateWindow: data['Transaction Update Window'],
     commission: data['Commission Terms'].match(regx)[0],
+    network: 'rakuten',
   };
 };
 

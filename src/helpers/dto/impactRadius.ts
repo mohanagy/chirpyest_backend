@@ -39,5 +39,7 @@ export const impactRadiusBrands = (data: any): any => {
     brandId: data.AdvertiserId,
     trackingLink: data.TrackingLink,
     status: data.ContractStatus,
+    commission: data.Payout,
+    network: 'impactRadius',
   };
 };
