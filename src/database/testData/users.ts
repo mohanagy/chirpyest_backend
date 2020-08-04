@@ -1,5 +1,5 @@
 import { Users } from '..';
-import { UserTypes } from '../../helpers/constants';
+import { UserTypes } from '../../interfaces';
 
 const customer1: any = {
   email: 'abdalsamad@kiitos-tech.com',

@@ -1,5 +1,5 @@
+import { UserTypes } from '../../interfaces';
 import { ProfileUpdatableFields, UserData, UserId, UserProfileResponse } from '../../interfaces/Users';
-import { UserTypes } from '../constants';
 
 export const userData = (data: any): UserData => ({
   email: data.email,
