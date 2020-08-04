@@ -37,6 +37,9 @@ export const expressWinstonLogger = expressWinston.logger({
   msg: 'HTTP {{req.method}} {{req.url}}',
   expressFormat: true,
   colorize: false,
+  requestWhitelist: ['url', 'headers', 'method', 'httpVersion', 'originalUrl', 'query'],
+  bodyBlacklist: ['password'],
+  responseWhitelist: ['body'],
 });
 
 export default logger;
