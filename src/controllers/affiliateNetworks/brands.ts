@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
+import { httpResponse } from '../../helpers';
 import { brandsService } from '../../services';
 
 /**
@@ -17,7 +18,6 @@ export const getBrands = async (
   _next: NextFunction,
   _transaction: Transaction,
 ): Promise<Response | void> => {
-  console.log('hiiiiiiiiiiiiiiiiii');
-  const cjBrands = await brandsService.getImpactRadiusBrands();
-  response.send(cjBrands);
+  const brands = await brandsService.getBrands();
+  return httpResponse.ok(response, brands);
 };
