@@ -1,4 +1,5 @@
 import {
+  BrandsAttributes,
   CommissionJunctionData,
   CommissionJunctionPayload,
   CommissionJunctionPayloadItem,
@@ -33,23 +34,23 @@ export const updatePendingCashData = (data: any): UpdatePendingCashAttributes =>
 
 export const commissionJunctionWebhookSecret = (data: any): string | undefined => data['x-webhook-secret'];
 
-const getCjCommissionPercent = (action: any) => {
+const getCjCommissionPercent = (action: any): string => {
   if (typeof action === 'object' && !Array.isArray(action)) {
     if (typeof action.commission.default === 'object') {
-      return null;
+      return 'unknown';
     }
     return action.commission.default;
   }
   if (Array.isArray(action)) {
     if (typeof action[0].commission.default === 'object') {
-      return null;
+      return 'unknown';
     }
     return action[0].commission.default;
   }
   throw new Error('Not a valid commission percent');
 };
 
-export const commissionJunctionBrands = (data: any): any => {
+export const commissionJunctionBrands = (data: any): BrandsAttributes => {
   return {
     brandName: data.advertiserName,
     url: data.programUrl,

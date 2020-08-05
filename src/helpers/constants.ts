@@ -29,3 +29,14 @@ export const commissionJunctionTrackingLink = 'https://www.anrdoezrs.net/links/4
 const { commissionJunctionConfig } = config.affiliateNetworks;
 
 export const commissionJunctionBrandsUrl = `https://advertiser-lookup.api.cj.com/v2/advertiser-lookup?requestor-cid=${commissionJunctionConfig.cJPublisherId}&advertiser-ids=joined`;
+
+export const rakutenBrandsUrl = `http://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=13`;
+
+const { accountSID, authToken } = config.affiliateNetworks.impactRadiusConfig;
+
+const baseImpactApiUrl = `https://${accountSID}:${authToken}@api.impact.com/Mediapartners/${accountSID}`;
+export const campaignsEndpoint = `${baseImpactApiUrl}/Campaigns.json`;
+export const campaignsEndpoint2 = `${baseImpactApiUrl}/Reports/4016?PageSize=20000&Page=1&contract_status=Active`;
+
+// match 0% to 100%
+export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/;

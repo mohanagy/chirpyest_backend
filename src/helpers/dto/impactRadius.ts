@@ -1,4 +1,4 @@
-import { ImpactRadiusAttributes } from '../../interfaces/Networks';
+import { BrandsAttributes, ImpactRadiusAttributes } from '../../interfaces/Networks';
 import convertToCents from '../convertToCents';
 import isValidDate from '../isValidDate';
 
@@ -32,7 +32,7 @@ export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   promoCode: data.promoCode,
 });
 
-export const impactRadiusBrands = (data: any): any => {
+export const impactRadiusBrands = (data: any): BrandsAttributes => {
   return {
     brandName: data.AdvertiserName,
     url: data.AdvertiserUrl,

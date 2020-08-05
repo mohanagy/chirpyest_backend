@@ -1,23 +1,21 @@
 import csv from 'csvtojson';
 import request from 'request';
-import config from '../../config';
-import { dto } from '../../helpers';
+import { constants, dto } from '../../helpers';
+import { BrandsAttributes } from '../../interfaces';
 import { createBrands } from './brands';
 
-const csvUrl = `http://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=13`;
-
-export const getRakutenBrands = () => {
+export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
   return new Promise((resolve, reject) => {
-    const rakutenBrands: any = [];
-    const csvReq: any = request.get(csvUrl);
+    const rakutenBrands: Array<BrandsAttributes> = [];
+    const csvReq: any = request.get(constants.rakutenBrandsUrl);
 
     csv()
       .fromStream(csvReq)
       .on('data', (data) => {
-        const jsonStr = data.toString('utf8');
-        const json = JSON.parse(jsonStr);
+        const jsonString = data.toString('utf8');
+        const json = JSON.parse(jsonString);
         if (json.Status === 'Active') {
-          const cleanData = dto.rakutenDTO.rakutenBrandsData(json);
+          const cleanData: BrandsAttributes = dto.rakutenDTO.rakutenBrandsData(json);
           rakutenBrands.push(cleanData);
         }
       })

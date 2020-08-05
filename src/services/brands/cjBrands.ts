@@ -1,8 +1,9 @@
-import axiso from 'axios';
+import axios from 'axios';
 import camelCase from 'camelcase';
 import { Parser } from 'xml2js';
 import config from '../../config';
 import { constants, dto } from '../../helpers';
+import { BrandsAttributes } from '../../interfaces';
 import { createBrands } from './brands';
 
 const {
@@ -10,8 +11,8 @@ const {
 } = config.affiliateNetworks;
 const { commissionJunctionBrandsUrl } = constants;
 
-export const getCjBrands = async (): Promise<any> => {
-  const { data } = await axiso.get(commissionJunctionBrandsUrl, {
+export const getCjBrands = async (): Promise<Array<BrandsAttributes>> => {
+  const { data } = await axios.get(commissionJunctionBrandsUrl, {
     headers: {
       Authorization: `Bearer ${cJPersonalKey}`,
     },
@@ -25,7 +26,7 @@ export const getCjBrands = async (): Promise<any> => {
 
   const result = await parser.parseStringPromise(data);
 
-  const cleanData = result.cjApi.advertisers.advertiser.map((item: any) => {
+  const cleanData: Array<BrandsAttributes> = result.cjApi.advertisers.advertiser.map((item: any) => {
     return dto.commissionJunctionDTO.commissionJunctionBrands(item);
   });
 

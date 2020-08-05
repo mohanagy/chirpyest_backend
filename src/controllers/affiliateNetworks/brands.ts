@@ -17,7 +17,7 @@ export const getBrands = async (
   response: Response,
   _next: NextFunction,
   transaction: Transaction,
-): Promise<Response | void> => {
+): Promise<Response> => {
   const brands = await brandsService.getBrands();
   transaction.commit();
   return httpResponse.ok(response, brands);
