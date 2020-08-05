@@ -127,3 +127,15 @@ export interface UpdatePendingCashAttributes {
   commissions: number;
   saleAmount: number;
 }
+
+export interface BrandsAttributes {
+  brandName: string;
+  network: string;
+  url: string;
+  brandId: string;
+  trackingLink: string;
+  status: string;
+  commission: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

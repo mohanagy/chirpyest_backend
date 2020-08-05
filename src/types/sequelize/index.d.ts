@@ -1,6 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { BuildOptions, Model } from 'sequelize';
 import {
+  BrandsAttributes,
   CommissionJunctionTransactionsAttributes,
   FinancialDashboardAttributes,
   ImpactRadiusAttributes,
@@ -47,4 +48,10 @@ export interface CommissionJunctionModel
 export class CommissionJunction extends Model<CommissionJunctionModel, CommissionJunctionTransactionsAttributes> {}
 export type CommissionJunctionStatic = typeof Model & {
   new (values?: Record<string, unknown>, options?: BuildOptions): CommissionJunctionModel;
+};
+
+export interface BrandsModel extends Model<BrandsAttributes>, BrandsAttributes {}
+export class Brands extends Model<BrandsModel, BrandsAttributes> {}
+export type BrandsStatic = typeof Model & {
+  new (values?: Record<string, unknown>, options?: BuildOptions): BrandsModel;
 };

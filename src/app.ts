@@ -9,14 +9,14 @@ import cognito from './helpers/cognito';
 import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
 import routes from './routes';
-import { job } from './tasks/commissionJunction';
+import startTasks from './tasks';
 
 const app = express();
 
 app.use(cookieParser());
 
 cognito(app);
-job.start();
+startTasks();
 (global as any).fetch = fetch;
 Sentry.init({
   dsn: config.server.SentryDNS,

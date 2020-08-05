@@ -1,9 +1,11 @@
 import {
+  BrandsAttributes,
   CommissionJunctionData,
   CommissionJunctionPayload,
   CommissionJunctionPayloadItem,
   UpdatePendingCashAttributes,
 } from '../../interfaces/Networks';
+import { commissionJunctionTrackingLink } from '../constants';
 import convertToCents from '../convertToCents';
 
 export const commissionJunctionData = (data: CommissionJunctionPayload): CommissionJunctionData =>
@@ -31,3 +33,31 @@ export const updatePendingCashData = (data: any): UpdatePendingCashAttributes =>
 });
 
 export const commissionJunctionWebhookSecret = (data: any): string | undefined => data['x-webhook-secret'];
+
+const getCjCommissionPercent = (action: any): string => {
+  if (typeof action === 'object' && !Array.isArray(action)) {
+    if (typeof action.commission.default === 'object') {
+      return 'unknown';
+    }
+    return action.commission.default;
+  }
+  if (Array.isArray(action)) {
+    if (typeof action[0].commission.default === 'object') {
+      return 'unknown';
+    }
+    return action[0].commission.default;
+  }
+  throw new Error('Not a valid commission percent');
+};
+
+export const commissionJunctionBrands = (data: any): BrandsAttributes => {
+  return {
+    brandName: data.advertiserName,
+    url: data.programUrl,
+    brandId: data.advertiserId,
+    trackingLink: commissionJunctionTrackingLink,
+    status: data.accountStatus,
+    commission: getCjCommissionPercent(data.actions.action),
+    network: 'commissionJunction',
+  };
+};

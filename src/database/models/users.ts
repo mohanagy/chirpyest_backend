@@ -1,5 +1,5 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { UserTypes } from '../../helpers/constants';
+import { UserTypes } from '../../interfaces';
 import { UserStatic } from '../../types/sequelize';
 
 export function UserFactory(sequelize: Sequelize): UserStatic {

@@ -1,4 +1,5 @@
 import { RakutenTransactionsAttributes, UpdatePendingCashAttributes } from '../../interfaces/Networks';
+import { percentageRegx } from '../constants';
 import convertToCents from '../convertToCents';
 
 export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
@@ -18,6 +19,18 @@ export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
   isEvent: data.is_event,
   u1: data.u1,
 });
+
+export const rakutenBrandsData = (data: any): any => {
+  return {
+    brandName: data['Advertiser Name'],
+    url: data['Advertiser URL'],
+    brandId: data.MID,
+    trackingLink: data['Link to Home Page'],
+    status: data.Status,
+    commission: data['Commission Terms'].match(percentageRegx)[0],
+    network: 'rakuten',
+  };
+};
 
 export const updatePendingCashData = (data: any): UpdatePendingCashAttributes => ({
   commissions: data.commissions,

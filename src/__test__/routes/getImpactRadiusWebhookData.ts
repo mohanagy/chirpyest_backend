@@ -8,7 +8,7 @@ import { dto } from '../../helpers';
 
 const mockHookData = (userId: string): any => {
   return {
-    token: config.affiliateNetworks.impactRadiusToken,
+    token: config.affiliateNetworks.impactRadiusConfig.webhookToken,
     campaignName: 'Best Buy U.S',
     actionTrackerId: '17897',
     campaignId: '10014',

@@ -23,7 +23,7 @@ export const getImpactRadiusWebhookData = async (
   const queryData = dto.generalDTO.queryData(request);
   const impactRadiusTransactionData: ImpactRadiusAttributes = dto.impactRadiusDTO.impactRadiusData(queryData);
   // Check if the url has the correct token
-  if (impactRadiusTransactionData.token !== config.affiliateNetworks.impactRadiusToken) {
+  if (impactRadiusTransactionData.token !== config.affiliateNetworks.impactRadiusConfig.webhookToken) {
     return httpResponse.forbidden(response, constants.messages.general.forbidden);
   }
 

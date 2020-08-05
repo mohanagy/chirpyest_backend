@@ -9,7 +9,7 @@ const {
   affiliateNetworks: { commissionJunctionConfig },
   server: { host },
 } = config;
-export const job = new CronJob(
+export const commissionJunctionJob = new CronJob(
   commissionJunctionCronJobPattern,
   async () => {
     try {

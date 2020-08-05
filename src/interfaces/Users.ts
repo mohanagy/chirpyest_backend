@@ -1,5 +1,9 @@
-import { UserTypes } from '../helpers/constants';
 import { FinancialDashboardAttributes } from './Networks';
+
+export enum UserTypes {
+  Admin = 'admin',
+  Customer = 'customer',
+}
 
 export interface UserAttributes {
   id?: number;

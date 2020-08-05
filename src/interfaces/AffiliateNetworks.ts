@@ -3,8 +3,19 @@ export interface CommissionJunction {
   cJPersonalKey: string;
 }
 
+export interface Rakuten {
+  securityToken: string;
+  webhookToken: string;
+}
+
+export interface ImpactRadius {
+  webhookToken: string;
+  accountSID: string;
+  authToken: string;
+}
+
 export interface AffiliateNetworksConfigs {
   commissionJunctionConfig: CommissionJunction;
-  impactRadiusToken: string;
-  rakutenToken: string;
+  rakutenConfig: Rakuten;
+  impactRadiusConfig: ImpactRadius;
 }
