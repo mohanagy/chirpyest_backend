@@ -4,7 +4,7 @@ import { constants, dto, httpResponse } from '../helpers';
 import { usersServices } from '../services';
 
 /**
- * @description signUp is a controller used to fetch user profile data
+ * @description getUserProfile is a controller used to fetch user profile data
  * @param {Request} request represents request object
  * @param {Response} response represents response object
  * @param {NextFunction} _next middleware function
