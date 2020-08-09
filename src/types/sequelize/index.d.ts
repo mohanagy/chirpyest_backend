@@ -5,6 +5,7 @@ import {
   CommissionJunctionTransactionsAttributes,
   FinancialDashboardAttributes,
   ImpactRadiusAttributes,
+  PaymentsAttributes,
   RakutenTransactionsAttributes,
   UserAttributes,
   UserTransactionsHistoryAttributes,
@@ -54,4 +55,10 @@ export interface BrandsModel extends Model<BrandsAttributes>, BrandsAttributes {
 export class Brands extends Model<BrandsModel, BrandsAttributes> {}
 export type BrandsStatic = typeof Model & {
   new (values?: Record<string, unknown>, options?: BuildOptions): BrandsModel;
+};
+
+export interface PaymentsModel extends Model<PaymentsAttributes>, PaymentsAttributes {}
+export class Payments extends Model<PaymentsModel, PaymentsAttributes> {}
+export type PaymentsStatic = typeof Model & {
+  new (values?: Record<string, unknown>, options?: BuildOptions): PaymentsModel;
 };
