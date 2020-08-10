@@ -4,6 +4,8 @@ import { asyncHandler } from '../middleware';
 
 const router = express.Router();
 
-router.get('/payments', asyncHandler(paymentsController.preparePayments));
+router
+  .get('/payments', asyncHandler(paymentsController.preparePayments))
+  .post('/payments', asyncHandler(paymentsController.sendPayments));
 
 export default router;
