@@ -1,4 +1,5 @@
 import { DataTypes, Sequelize } from 'sequelize';
+import { constants } from '../../helpers';
 import { PaymentsStatic } from '../../types/sequelize';
 
 export function PaymentsFactory(sequelize: Sequelize): PaymentsStatic {
@@ -12,11 +13,12 @@ export function PaymentsFactory(sequelize: Sequelize): PaymentsStatic {
     },
     status: {
       type: DataTypes.STRING,
-      defaultValue: 'pending',
+      defaultValue: constants.PENDING,
     },
     transactionId: {
       type: DataTypes.STRING,
       allowNull: true,
+      unique: true,
     },
   }) as PaymentsStatic;
 }
