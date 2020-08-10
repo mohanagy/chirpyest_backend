@@ -157,14 +157,14 @@ export const sendPayments = async (
 
   await paymentsService.sendPayPalPayouts(payoutsRequestData);
 
-  const updateBulkPaymentsFilter = dto.generalDTO.filterData({
+  const updatePaymentsFilter = dto.generalDTO.filterData({
     status: constants.PENDING,
   });
-  const updateBulkPaymentsData = {
+  const updatePaymentsData = {
     status: constants.PROCESSING,
   };
   logger.info(`sendPayments: change pending payments status to PROCESSING : ${moment().format('YYYY-MM-DD HH:ss')}`);
-  await paymentsService.updateBulkPayments(updateBulkPaymentsFilter, updateBulkPaymentsData, transaction);
+  await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData, transaction);
 
   logger.info(`sendPayments: done : ${moment().format('YYYY-MM-DD HH:ss')}`);
   return httpResponse.ok(response, {});
