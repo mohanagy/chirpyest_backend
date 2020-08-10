@@ -3,6 +3,7 @@ import path from 'path';
 import affiliateNetworks from './affiliateNetworks';
 import cognito from './cognito';
 import database from './database';
+import payPal from './payPal';
 import server from './server';
 
 if (!process.env.NODE_ENV) {
@@ -19,4 +20,5 @@ export default {
   server: server(),
   cognito: cognito(),
   affiliateNetworks: affiliateNetworks(),
+  payPalConfig: payPal(),
 };
