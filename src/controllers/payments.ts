@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import moment from 'moment';
 import { Transaction } from 'sequelize/types';
-import { constants, httpResponse, logger } from '../helpers';
+import { v4 as uuid } from 'uuid';
+import { constants, dto, httpResponse, logger } from '../helpers';
 import { PaymentsAttributes } from '../interfaces';
 import { paymentsService, usersServices } from '../services';
 
@@ -76,7 +77,7 @@ export const preparePayments = async (
   logger.info(
     `manipulate affiliate networks services response to fit payments service: ${moment().format('YYYY-MM-DD HH:ss')}`,
   );
-  const filteredData: Array<PaymentsAttributes> = Object.keys(classifiedResponseByUserId)
+  const paymentsDraftPayload: Array<PaymentsAttributes> = Object.keys(classifiedResponseByUserId)
     .filter(
       (key) =>
         classifiedResponseByUserId[key].closedOut >= 25 &&
@@ -87,13 +88,84 @@ export const preparePayments = async (
         userId: usersObject[element].id,
         closedOut: classifiedResponseByUserId[element].closedOut,
         paypalAccount: usersObject[element].paypalAccount,
+        transactionId: uuid(),
       };
     });
-  logger.info(`payments payload ${filteredData}: ${moment().format('YYYY-MM-DD HH:ss')}`);
+
+  const filter = dto.generalDTO.filterData({ status: constants.PENDING });
+
+  const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
+
+  const paymentsPayload = paymentsDraftPayload.filter((row) => {
+    const lastPayment = pendingPayments.reverse().find((element) => element.userId === row.userId);
+    if (!lastPayment) return true;
+    const { updatedAt } = lastPayment;
+    const isBeforeMonth = moment(updatedAt).isBefore(1, 'm');
+    return isBeforeMonth;
+  });
+
+  logger.info(`payments payload ${paymentsPayload}: ${moment().format('YYYY-MM-DD HH:ss')}`);
   logger.info(`creat new payment records : ${moment().format('YYYY-MM-DD HH:ss')}`);
-  await paymentsService.createBulkPayments(filteredData, transaction);
+  await paymentsService.createBulkPayments(paymentsPayload, transaction);
   logger.info(`process done : ${moment().format('YYYY-MM-DD HH:ss')}`);
 
   await transaction.commit();
-  return httpResponse.ok(response, {}, constants.messages.users.userProfile);
+  return httpResponse.ok(response, {});
+};
+/**
+ * @description sendPayments is a controller used to send payments
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} object contains success status
+ */
+
+export const sendPayments = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const filter = dto.generalDTO.filterData({ status: constants.PENDING });
+
+  logger.info(`sendPayments: get all pending  payments: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
+  logger.info(`sendPayments: pending payments ${pendingPayments}: ${moment().format('YYYY-MM-DD HH:ss')}`);
+
+  logger.info(`sendPayments: convert data to paypal shape : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  const payoutsReceiversData = pendingPayments.map(({ paypalAccount, closedOut, transactionId }) => ({
+    recipient_type: 'EMAIL',
+    amount: {
+      value: closedOut,
+      currency: 'USD',
+    },
+    receiver: paypalAccount,
+    sender_item_id: transactionId || uuid(),
+  }));
+  const senderBatchId = `Payouts_${moment().format('YYYY_MM_DD_SS')}`;
+
+  const payoutsRequestData = {
+    sender_batch_header: {
+      sender_batch_id: senderBatchId,
+      email_subject: 'You have a payout!',
+      email_message: 'You have received a payout! Thanks for using our service!',
+    },
+    items: payoutsReceiversData,
+  };
+  logger.info(`sendPayments: payoutsRequestData ${payoutsRequestData}: ${moment().format('YYYY-MM-DD HH:ss')}`);
+
+  await paymentsService.sendPayPalPayouts(payoutsRequestData);
+
+  const updateBulkPaymentsFilter = dto.generalDTO.filterData({
+    status: constants.PENDING,
+  });
+  const updateBulkPaymentsData = {
+    status: constants.PROCESSING,
+  };
+  logger.info(`sendPayments: change pending payments status to PROCESSING : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  await paymentsService.updateBulkPayments(updateBulkPaymentsFilter, updateBulkPaymentsData, transaction);
+
+  logger.info(`sendPayments: done : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  return httpResponse.ok(response, {});
 };
