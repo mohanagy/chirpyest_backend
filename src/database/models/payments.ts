@@ -20,5 +20,9 @@ export function PaymentsFactory(sequelize: Sequelize): PaymentsStatic {
       allowNull: true,
       unique: true,
     },
+    payoutBatchId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   }) as PaymentsStatic;
 }

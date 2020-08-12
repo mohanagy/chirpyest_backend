@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import moment from 'moment';
+import { Op } from 'sequelize';
 import { Transaction } from 'sequelize/types';
 import { v4 as uuid } from 'uuid';
 import { constants, dto, httpResponse, logger } from '../helpers';
-import { PaymentsAttributes } from '../interfaces';
-import { paymentsService, usersServices } from '../services';
+import { PaymentsAttributes, PayoutsBatchIdsAttributes } from '../interfaces';
+import { financialDashboardService, paymentsService, usersServices } from '../services';
 
 /**
  * @description preparePayments is a controller used to prepare payments for users before releasing
@@ -21,10 +22,10 @@ export const preparePayments = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
-  logger.info(`receive Cron Job `);
+  logger.info(`receive Cron Job`);
 
   // const apiRequest = axios.create({
-  //   baseURL: `${request.protocol}://127.0.0.1:${port}`,
+  //   baseURL:`${request.protocol}://127.0.0.1:${port}`,
   // });
 
   logger.info(`call affiliate networks services`);
@@ -43,7 +44,7 @@ export const preparePayments = async (
   logger.info(`resolve affiliate networks services response`);
   const affiliateNetworksResult = await Promise.allSettled(affiliateNetworksRequest);
 
-  logger.info(`get fulfilled affiliate networks services response `);
+  logger.info(`get fulfilled affiliate networks services response`);
   const fulfilledRequests: Array<PromiseFulfilledResult<Record<string, any>>> = affiliateNetworksResult.filter(
     (result) => result.status === 'fulfilled',
   ) as Array<PromiseFulfilledResult<Record<string, any>>>;
@@ -101,9 +102,9 @@ export const preparePayments = async (
   });
 
   logger.info(`payments payload ${paymentsPayload}`);
-  logger.info(`creat new payment records `);
+  logger.info(`creat new payment records`);
   await paymentsService.createBulkPayments(paymentsPayload, transaction);
-  logger.info(`process done `);
+  logger.info(`process done`);
 
   await transaction.commit();
   return httpResponse.ok(response, {});
@@ -130,7 +131,7 @@ export const sendPayments = async (
   const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
   logger.info(`sendPayments: pending payments ${pendingPayments}`);
 
-  logger.info(`sendPayments: convert data to paypal shape `);
+  logger.info(`sendPayments: convert data to paypal shape`);
   const payoutsReceiversData = pendingPayments.map(({ paypalAccount, closedOut, transactionId }) => ({
     recipient_type: 'EMAIL',
     amount: {
@@ -157,7 +158,9 @@ export const sendPayments = async (
   };
   logger.info(`sendPayments: payoutsRequestData ${payoutsRequestData}`);
 
-  await paymentsService.sendPayPalPayouts(payoutsRequestData);
+  const {
+    batch_header: { payout_batch_id: payoutBatchId },
+  } = await paymentsService.sendPayPalPayouts(payoutsRequestData);
 
   const updatePaymentsFilter = dto.generalDTO.filterData({
     status: constants.PENDING,
@@ -165,11 +168,91 @@ export const sendPayments = async (
 
   const updatePaymentsData = {
     status: constants.PROCESSING,
+    payoutBatchId,
   };
   logger.info(`sendPayments: change pending payments status to PROCESSING`);
-  await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData);
+  await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData, transaction);
 
-  logger.info(`sendPayments: done `);
+  logger.info(`sendPayments: done`);
+  await transaction.commit();
+  return httpResponse.ok(response, {});
+};
+
+/**
+ * @description checkPayments is a controller used to check payments status
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} object contains success status
+ */
+
+export const checkPayments = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const filter = dto.generalDTO.filterData({
+    status: constants.PROCESSING,
+    payoutBatchId: {
+      [Op.not]: null,
+    },
+  });
+
+  logger.info(`sendPayments: get all pending  payments`);
+  const processedPayments = await paymentsService.getAllPayments(filter, transaction);
+
+  const payoutsBatchIds = processedPayments.reduce((acc: PayoutsBatchIdsAttributes, payment) => {
+    const { payoutBatchId, closedOut } = payment;
+    if (payoutBatchId && !acc[payoutBatchId])
+      acc[payoutBatchId] = {
+        closedOut,
+      };
+    return acc;
+  }, {});
+  const finishedPayouts = await Promise.all(
+    Object.keys(payoutsBatchIds).filter(async (payoutBatchId) => {
+      const {
+        batch_header: { batch_status: batchStatus },
+      } = await paymentsService.showPayoutBatchDetails(payoutBatchId);
+      const status = batchStatus.toLowerCase();
+
+      const updatePaymentsFilter = dto.generalDTO.filterData({
+        payoutBatchId,
+      });
+      const updatePaymentsData = { status };
+      await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData);
+      if (status === constants.SUCCESS) {
+        return payoutBatchId;
+      }
+      return false;
+    }),
+  );
+  const filteredProcessedPayments = processedPayments.filter((payment) =>
+    Object.keys(finishedPayouts).includes(payment.payoutBatchId || ''),
+  );
+
+  await Promise.all(
+    filteredProcessedPayments.map(({ payoutBatchId, userId, closedOut }) => {
+      if (payoutBatchId) {
+        const updateUserFinicalData = {
+          pending: -closedOut,
+          earnings: closedOut,
+          last_closed_out: closedOut,
+        };
+        const updateUserFinicalDashboardFilter = dto.generalDTO.filterData({
+          userId,
+        });
+        financialDashboardService.updateUserFinicalDashboard(
+          updateUserFinicalData,
+          updateUserFinicalDashboardFilter,
+          transaction,
+        );
+      }
+      return payoutBatchId;
+    }),
+  );
   await transaction.commit();
   return httpResponse.ok(response, {});
 };

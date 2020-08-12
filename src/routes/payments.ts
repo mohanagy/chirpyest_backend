@@ -6,6 +6,7 @@ const router = express.Router();
 
 router
   .get('/payments', asyncHandler(paymentsController.preparePayments))
-  .post('/payments', asyncHandler(paymentsController.sendPayments));
+  .post('/payments', asyncHandler(paymentsController.sendPayments))
+  .put('/payments', asyncHandler(paymentsController.checkPayments));
 
 export default router;

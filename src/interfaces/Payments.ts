@@ -5,6 +5,7 @@ export interface PaymentsAttributes {
   closedOut: number;
   status?: string;
   transactionId?: string;
+  payoutBatchId?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -24,4 +25,10 @@ export interface PayoutsRequestAttributes {
     receiver: string;
     sender_item_id: string;
   }[];
+}
+
+export interface PayoutsBatchIdsAttributes {
+  [key: string]: {
+    closedOut: number;
+  };
 }

@@ -88,3 +88,20 @@ export const sendPayPalPayouts = async (PayoutsRequestData: PayoutsRequestAttrib
 
   return data;
 };
+
+/**
+ * @description showPayoutBatchDetails is a service used for display the status of the payout
+ * @param  {string} patchBatchId patch Batch Id
+ * @returns {Promise<any>}
+ */
+export const showPayoutBatchDetails = async (patchBatchId: string): Promise<any> => {
+  const authorizationToken = await generatePayPalAccessToken();
+  const { data } = await axios.get(`${constants.payPalEndpoint}/v1/payments/payouts/${patchBatchId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authorizationToken}`,
+    },
+  });
+
+  return data;
+};
