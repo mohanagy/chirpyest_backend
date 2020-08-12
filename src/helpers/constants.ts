@@ -23,6 +23,7 @@ export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://cr
 export const brandsCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
 export const preparingPaymentsCronJobPattern = '0 0 1 * *'; // check https://crontab.guru/ for more information
 export const sendingPaymentsCronJobPattern = '0 0 4 * *'; // check https://crontab.guru/ for more information
+export const checkingPaymentsCronJobPattern = '0 22 4 * *'; // check https://crontab.guru/ for more information
 
 export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
 
