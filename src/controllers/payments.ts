@@ -21,13 +21,13 @@ export const preparePayments = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
-  logger.info(`receive Cron Job : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`receive Cron Job `);
 
   // const apiRequest = axios.create({
   //   baseURL: `${request.protocol}://127.0.0.1:${port}`,
   // });
 
-  logger.info(`call affiliate networks services: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`call affiliate networks services`);
   const affiliateNetworksRequest = [
     Promise.resolve({
       data: [{ userId: 1, type: 'CJ', total: 10 }],
@@ -40,20 +40,18 @@ export const preparePayments = async (
     }),
   ];
 
-  logger.info(`resolve affiliate networks services response: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`resolve affiliate networks services response`);
   const affiliateNetworksResult = await Promise.allSettled(affiliateNetworksRequest);
 
-  logger.info(`get fulfilled affiliate networks services response : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`get fulfilled affiliate networks services response `);
   const fulfilledRequests: Array<PromiseFulfilledResult<Record<string, any>>> = affiliateNetworksResult.filter(
     (result) => result.status === 'fulfilled',
   ) as Array<PromiseFulfilledResult<Record<string, any>>>;
 
-  logger.info(
-    `convert  affiliate networks services response to object of users: ${moment().format('YYYY-MM-DD HH:ss')}`,
-  );
+  logger.info(`convert  affiliate networks services response to object of users`);
   const classifiedResponseByUserId = fulfilledRequests
     .flatMap(({ value }) => value.data)
-    .reduce((acc: any, element) => {
+    .reduce((acc, element) => {
       if (!acc[element.userId]) {
         acc[element.userId] = {
           [element.type]: element,
@@ -67,16 +65,14 @@ export const preparePayments = async (
       return acc;
     }, {});
 
-  logger.info(`fetch all users from database to match response: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`fetch all users from database to match response`);
   const users = await usersServices.findAllUsers();
   const usersObject = users.reduce((acc: any, user) => {
     if (user.id && !acc[user.id]) acc[user.id] = user;
     return acc;
   }, {});
 
-  logger.info(
-    `manipulate affiliate networks services response to fit payments service: ${moment().format('YYYY-MM-DD HH:ss')}`,
-  );
+  logger.info(`manipulate affiliate networks services response to fit payments service`);
   const paymentsDraftPayload: Array<PaymentsAttributes> = Object.keys(classifiedResponseByUserId)
     .filter(
       (key) =>
@@ -104,14 +100,15 @@ export const preparePayments = async (
     return isBeforeMonth;
   });
 
-  logger.info(`payments payload ${paymentsPayload}: ${moment().format('YYYY-MM-DD HH:ss')}`);
-  logger.info(`creat new payment records : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`payments payload ${paymentsPayload}`);
+  logger.info(`creat new payment records `);
   await paymentsService.createBulkPayments(paymentsPayload, transaction);
-  logger.info(`process done : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`process done `);
 
   await transaction.commit();
   return httpResponse.ok(response, {});
 };
+
 /**
  * @description sendPayments is a controller used to send payments
  * @param {Request} request represents request object
@@ -129,11 +126,11 @@ export const sendPayments = async (
 ): Promise<Response> => {
   const filter = dto.generalDTO.filterData({ status: constants.PENDING });
 
-  logger.info(`sendPayments: get all pending  payments: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`sendPayments: get all pending  payments`);
   const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
-  logger.info(`sendPayments: pending payments ${pendingPayments}: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`sendPayments: pending payments ${pendingPayments}`);
 
-  logger.info(`sendPayments: convert data to paypal shape : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`sendPayments: convert data to paypal shape `);
   const payoutsReceiversData = pendingPayments.map(({ paypalAccount, closedOut, transactionId }) => ({
     recipient_type: 'EMAIL',
     amount: {
@@ -143,6 +140,11 @@ export const sendPayments = async (
     receiver: paypalAccount,
     sender_item_id: transactionId || uuid(),
   }));
+  if (!pendingPayments.length) {
+    await transaction.rollback();
+    logger.info(`sendPayments: no pending payments`);
+    return httpResponse.ok(response, {});
+  }
   const senderBatchId = `Payouts_${moment().format('YYYY_MM_DD_SS')}`;
 
   const payoutsRequestData = {
@@ -153,19 +155,21 @@ export const sendPayments = async (
     },
     items: payoutsReceiversData,
   };
-  logger.info(`sendPayments: payoutsRequestData ${payoutsRequestData}: ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`sendPayments: payoutsRequestData ${payoutsRequestData}`);
 
   await paymentsService.sendPayPalPayouts(payoutsRequestData);
 
   const updatePaymentsFilter = dto.generalDTO.filterData({
     status: constants.PENDING,
   });
+
   const updatePaymentsData = {
     status: constants.PROCESSING,
   };
-  logger.info(`sendPayments: change pending payments status to PROCESSING : ${moment().format('YYYY-MM-DD HH:ss')}`);
-  await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData, transaction);
+  logger.info(`sendPayments: change pending payments status to PROCESSING`);
+  await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData);
 
-  logger.info(`sendPayments: done : ${moment().format('YYYY-MM-DD HH:ss')}`);
+  logger.info(`sendPayments: done `);
+  await transaction.commit();
   return httpResponse.ok(response, {});
 };
