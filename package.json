@@ -85,6 +85,7 @@
     "aws-sdk": "^2.708.0",
     "axios": "^0.19.2",
     "camelcase": "^6.0.0",
+    "camelcase-keys": "^6.2.2",
     "config": "^3.3.1",
     "cookie-parser": "^1.4.5",
     "cron": "^1.8.2",

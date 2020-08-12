@@ -40,3 +40,7 @@ export const campaignsEndpoint2 = `${baseImpactApiUrl}/Reports/4016?PageSize=200
 
 // match 0% to 100%
 export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/;
+
+export const paymentSummaryEndpoint = `https://reportws.linksynergy.com/downloadreport.php?bdate=20200101&edate=20200601&token=${config.affiliateNetworks.rakutenConfig.securityToken}&nid=1&reportid=1`;
+export const paymentHistoryEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=2`;
+export const paymentDetailsReportEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=3&invoiceid=1142851`;
