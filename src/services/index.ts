@@ -5,6 +5,7 @@ import * as brands from './brands';
 import * as cashBack from './cashback';
 import * as financialDashboard from './financialDashboard';
 import * as payments from './payments';
+import * as paymentsTransitions from './paymentsTransitions';
 import * as Users from './users';
 
 export const rakutenServices = rakuten;
@@ -15,3 +16,4 @@ export const financialDashboardService = financialDashboard;
 export const affiliateNetworksServices = AffiliateNetworks;
 export const brandsService = brands;
 export const paymentsService = payments;
+export const paymentsTransitionsService = paymentsTransitions;

@@ -47,6 +47,7 @@ export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/;
 export const PENDING = 'pending';
 export const PROCESSING = 'processing';
 export const SUCCESS = 'success';
+export const PREPARING = 'preparing';
 
 export const payPalEndpoint =
   process.env.NODE_ENV === 'production' ? 'https://api.paypal.com' : 'https://api.sandbox.paypal.com';

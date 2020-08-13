@@ -6,6 +6,7 @@ import { CommissionJunctionTransactionsFactory } from './models/commissionJuncti
 import { FinancialDashboardFactory } from './models/financialDashboard';
 import { ImpactRadiusTransactionsFactory } from './models/impactRadiusEvents';
 import { PaymentsFactory } from './models/payments';
+import { PaymentsTransactionsFactory } from './models/paymentsTransactions';
 import { RakutenTransactionsFactory } from './models/rakutenTransactions';
 import { UserFactory } from './models/users';
 import { UserTransactionsHistoryFactory } from './models/userTransactionsHistory';
@@ -29,7 +30,7 @@ export const ImpactRadiusTransactions = ImpactRadiusTransactionsFactory(dbConfig
 export const CommissionJunctionTransactions = CommissionJunctionTransactionsFactory(dbConfig);
 export const Brands = BrandsFactory(dbConfig);
 export const Payments = PaymentsFactory(dbConfig);
-
+export const PaymentsTransactions = PaymentsTransactionsFactory(dbConfig);
 // relations
 Users.hasOne(FinancialDashboard);
 Users.hasMany(RakutenTransactions);
@@ -37,6 +38,8 @@ Users.hasMany(ImpactRadiusTransactions);
 Users.hasMany(CommissionJunctionTransactions);
 Users.hasMany(UserTransactionsHistory);
 Users.hasMany(Payments);
+Payments.hasMany(PaymentsTransactions);
+Users.hasMany(PaymentsTransactions);
 
 const database: Database = {};
 

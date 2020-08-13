@@ -9,6 +9,15 @@ export interface PaymentsAttributes {
   createdAt?: string;
   updatedAt?: string;
 }
+export interface PaymentsTransactionsAttributes {
+  id?: number;
+  userId?: number;
+  paymentId?: number;
+  type: string;
+  payPalAccount: string;
+  amount: number;
+  status: string;
+}
 
 export interface PayoutsRequestAttributes {
   sender_batch_header: {
@@ -31,4 +40,8 @@ export interface PayoutsBatchIdsAttributes {
   [key: string]: {
     closedOut: number;
   };
+}
+
+export interface ClassifiedResponseByUserIdAttributes {
+  [key: string]: any;
 }
