@@ -3,6 +3,7 @@ import path from 'path';
 import affiliateNetworks from './affiliateNetworks';
 import cognito from './cognito';
 import database from './database';
+import emails from './emails';
 import payPal from './payPal';
 import server from './server';
 
@@ -21,4 +22,5 @@ export default {
   cognito: cognito(),
   affiliateNetworks: affiliateNetworks(),
   payPalConfig: payPal(),
+  emailsConfig: emails(),
 };

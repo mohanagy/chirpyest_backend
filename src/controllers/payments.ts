@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Op } from 'sequelize';
 import { Transaction } from 'sequelize/types';
 import { v4 as uuid } from 'uuid';
-import { constants, dto, httpResponse, logger } from '../helpers';
+import { constants, dto, httpResponse, logger, mailer } from '../helpers';
 import { PaymentsAttributes, PayoutsBatchIdsAttributes } from '../interfaces';
 import { financialDashboardService, paymentsService, usersServices } from '../services';
 
@@ -97,7 +97,7 @@ export const preparePayments = async (
     const lastPayment = pendingPayments.reverse().find((element) => element.userId === row.userId);
     if (!lastPayment) return true;
     const { updatedAt } = lastPayment;
-    const isBeforeMonth = moment(updatedAt).isBefore(1, 'm');
+    const isBeforeMonth = moment(updatedAt).isBefore(29, 'd');
     return isBeforeMonth;
   });
 
@@ -200,7 +200,7 @@ export const checkPayments = async (
     },
   });
 
-  logger.info(`sendPayments: get all pending  payments`);
+  logger.info(`sendPayments: get all pending payments`);
   const processedPayments = await paymentsService.getAllPayments(filter, transaction);
 
   const payoutsBatchIds = processedPayments.reduce((acc: PayoutsBatchIdsAttributes, payment) => {
@@ -226,6 +226,14 @@ export const checkPayments = async (
       if (status === constants.SUCCESS) {
         return payoutBatchId;
       }
+
+      await mailer.transporter.sendMail({
+        from: '"Mohammed Naji" <naji@kiitos-tech.com>', // sender address
+        to: 'naji@kiitos-tech.com', // list of receivers
+        subject: 'Payment Error',
+        text: `this payout Batch Id ${payoutBatchId} has status :${status}`, // plain text body
+      });
+
       return false;
     }),
   );
