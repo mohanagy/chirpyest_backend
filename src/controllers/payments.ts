@@ -4,8 +4,8 @@ import { Op } from 'sequelize';
 import { Transaction } from 'sequelize/types';
 import { v4 as uuid } from 'uuid';
 import { constants, dto, httpResponse, logger, mailer } from '../helpers';
-import { PaymentsAttributes, PayoutsBatchIdsAttributes } from '../interfaces';
-import { financialDashboardService, paymentsService, usersServices } from '../services';
+import { ClassifiedResponseByUserIdAttributes, PaymentsAttributes, PayoutsBatchIdsAttributes } from '../interfaces';
+import { financialDashboardService, paymentsService, paymentsTransitionsService, usersServices } from '../services';
 
 /**
  * @description preparePayments is a controller used to prepare payments for users before releasing
@@ -24,47 +24,32 @@ export const preparePayments = async (
 ): Promise<Response> => {
   logger.info(`receive Cron Job`);
 
-  // const apiRequest = axios.create({
-  //   baseURL:`${request.protocol}://127.0.0.1:${port}`,
-  // });
+  const paymentsTransitionsFilter = dto.generalDTO.filterData({ status: constants.PENDING });
 
-  logger.info(`call affiliate networks services`);
-  const affiliateNetworksRequest = [
-    Promise.resolve({
-      data: [{ userId: 1, type: 'CJ', total: 10 }],
-    }),
-    Promise.resolve({
-      data: [{ userId: 1, type: 'R', total: 20 }],
-    }),
-    Promise.resolve({
-      data: [{ userId: 3, type: 'IR', total: 5 }],
-    }),
-  ];
+  const paymentsTransactions = await paymentsTransitionsService.getAllPaymentsTransactions(
+    paymentsTransitionsFilter,
+    transaction,
+  );
 
-  logger.info(`resolve affiliate networks services response`);
-  const affiliateNetworksResult = await Promise.allSettled(affiliateNetworksRequest);
+  const pendingTransactions = paymentsTransactions.filter((result) => result.status === constants.PENDING);
 
-  logger.info(`get fulfilled affiliate networks services response`);
-  const fulfilledRequests: Array<PromiseFulfilledResult<Record<string, any>>> = affiliateNetworksResult.filter(
-    (result) => result.status === 'fulfilled',
-  ) as Array<PromiseFulfilledResult<Record<string, any>>>;
-
-  logger.info(`convert  affiliate networks services response to object of users`);
-  const classifiedResponseByUserId = fulfilledRequests
-    .flatMap(({ value }) => value.data)
-    .reduce((acc, element) => {
-      if (!acc[element.userId]) {
-        acc[element.userId] = {
-          [element.type]: element,
-          closedOut: element.total,
-        };
-      } else {
-        acc[element.userId][element.type] = element;
-        acc[element.userId].closedOut += element.total;
+  const classifiedResponseByUserId = pendingTransactions.reduce(
+    (acc: ClassifiedResponseByUserIdAttributes, element) => {
+      if (element.userId) {
+        if (!acc[element.userId]) {
+          acc[element.userId] = {
+            [element.type]: element,
+            closedOut: element.amount,
+          };
+        } else {
+          acc[element.userId][element.type] = element;
+          acc[element.userId].closedOut += element.amount;
+        }
       }
-
       return acc;
-    }, {});
+    },
+    {},
+  );
 
   logger.info(`fetch all users from database to match response`);
   const users = await usersServices.findAllUsers();
@@ -89,25 +74,29 @@ export const preparePayments = async (
       };
     });
 
-  const filter = dto.generalDTO.filterData({ status: constants.PENDING });
-
-  const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
-
-  const paymentsPayload = paymentsDraftPayload.filter((row) => {
-    const lastPayment = pendingPayments.reverse().find((element) => element.userId === row.userId);
-    if (!lastPayment) return true;
-    const { updatedAt } = lastPayment;
-    const isBeforeMonth = moment(updatedAt).isBefore(29, 'd');
-    return isBeforeMonth;
-  });
-
-  logger.info(`payments payload ${paymentsPayload}`);
   logger.info(`creat new payment records`);
-  await paymentsService.createBulkPayments(paymentsPayload, transaction);
+  const paymentsData = await paymentsService.createBulkPayments(paymentsDraftPayload, transaction);
+
+  await Promise.all(
+    paymentsData.map(async ({ id, userId }) => {
+      const filter = dto.generalDTO.filterData({
+        userId,
+        status: constants.PENDING,
+      });
+
+      const data = {
+        paymentId: id,
+        status: constants.PREPARING,
+      };
+
+      await paymentsTransitionsService.updatePaymentsTransactions(filter, data, transaction);
+    }),
+  );
+
   logger.info(`process done`);
 
   await transaction.commit();
-  return httpResponse.ok(response, {});
+  return httpResponse.ok(response, paymentsData);
 };
 
 /**
