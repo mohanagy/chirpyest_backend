@@ -7,6 +7,7 @@ import {
 } from '../../interfaces/Networks';
 import { commissionJunctionTrackingLink } from '../constants';
 import convertToCents from '../convertToCents';
+import { removeTrailingZeros } from '../removeTrailingZeros';
 
 export const commissionJunctionData = (data: CommissionJunctionPayload): CommissionJunctionData =>
   data.map((row: CommissionJunctionPayloadItem) => ({
@@ -39,13 +40,13 @@ const getCjCommissionPercent = (action: any): string => {
     if (typeof action.commission.default === 'object') {
       return 'unknown';
     }
-    return action.commission.default;
+    return removeTrailingZeros(action.commission.default);
   }
   if (Array.isArray(action)) {
     if (typeof action[0].commission.default === 'object') {
       return 'unknown';
     }
-    return action[0].commission.default;
+    return removeTrailingZeros(action[0].commission.default);
   }
   throw new Error('Not a valid commission percent');
 };
