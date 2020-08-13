@@ -23,7 +23,7 @@ export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
 export const rakutenBrandsData = (data: any): any => {
   return {
     brandName: data['Advertiser Name'],
-    url: data['Advertiser URL'],
+    url: `https://click.linksynergy.com/deeplink?id=Aq5kmT*JPrM&mid=${data.MID}`,
     brandId: data.MID,
     trackingLink: data['Link to Home Page'],
     status: data.Status,
