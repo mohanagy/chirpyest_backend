@@ -7,6 +7,7 @@ import {
 } from '../../interfaces/Networks';
 import { commissionJunctionTrackingLink } from '../constants';
 import convertToCents from '../convertToCents';
+import { removeTrailingZeros } from '../removeTrailingZeros';
 
 export const commissionJunctionData = (data: CommissionJunctionPayload): CommissionJunctionData =>
   data.map((row: CommissionJunctionPayloadItem) => ({
@@ -57,7 +58,7 @@ const getCjCommissionPercent = (action: any): string => {
           return 'unknown';
       }
     }
-    return action.commission.default;
+    return removeTrailingZeros(action.commission.default);
   }
   if (Array.isArray(action)) {
     const commissionsSet: Set<number> = new Set();
@@ -79,9 +80,9 @@ const getCjCommissionPercent = (action: any): string => {
     });
     let result = '';
     if (sorted.length === 1) {
-      result = `${sorted[0].toString()}%`;
+      result = `${removeTrailingZeros(sorted[0].toString())}%`;
     } else {
-      result = `${sorted[sorted.length - 1].toString()}%`;
+      result = `${removeTrailingZeros(sorted[sorted.length - 1].toString())}%`;
     }
     return result;
   }

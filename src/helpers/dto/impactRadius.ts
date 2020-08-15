@@ -1,6 +1,7 @@
 import { BrandsAttributes, ImpactRadiusAttributes } from '../../interfaces/Networks';
 import convertToCents from '../convertToCents';
 import isValidDate from '../isValidDate';
+import { removeTrailingZeros } from '../removeTrailingZeros';
 
 export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   userId: data.subId1,
@@ -33,13 +34,19 @@ export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
 });
 
 export const impactRadiusBrands = (data: any): BrandsAttributes => {
+  let commission = null;
+  if (data.Payout.includes('%')) {
+    commission = removeTrailingZeros(data.Payout);
+  } else {
+    commission = data.Payout;
+  }
   return {
     brandName: data.AdvertiserName,
     url: data.AdvertiserUrl,
     brandId: data.AdvertiserId,
     trackingLink: data.TrackingLink,
     status: data.ContractStatus,
-    commission: data.Payout,
+    commission,
     network: 'impactRadius',
   };
 };
