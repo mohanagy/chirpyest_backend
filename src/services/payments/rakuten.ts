@@ -2,11 +2,17 @@
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import csv from 'csvtojson';
+import moment from 'moment';
 import { RakutenTransactions } from '../../database';
 import { constants } from '../../helpers';
 import { CommissionsByOrder, IPaymentByUser, OrdersGroupedByUser, RakutenFinalUserPayment } from '../../interfaces';
 
 const { paymentSummaryEndpoint, paymentHistoryEndpoint, paymentDetailsReportEndpoint } = constants;
+const paymentSummaryEndpointParsed = new URL(paymentSummaryEndpoint);
+const startOfLastMonth = moment().subtract(1, 'month').startOf('month').format('YYYYMMDD');
+const endOfLastMonth = moment().subtract(1, 'month').endOf('month').format('YYYYMMDD');
+paymentSummaryEndpointParsed.searchParams.set('bdate', startOfLastMonth);
+paymentSummaryEndpointParsed.searchParams.set('edate', endOfLastMonth);
 
 const timeout = (s: number) => new Promise((res) => setTimeout(res, s * 1000));
 

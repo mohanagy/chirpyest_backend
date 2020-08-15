@@ -97,6 +97,8 @@
     "express": "^4.17.1",
     "express-joi-validation": "^4.0.3",
     "express-winston": "^4.0.3",
+    "graphql": "^15.3.0",
+    "graphql-request": "^3.0.0",
     "http-status-codes": "^1.4.0",
     "joi-password-complexity": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
