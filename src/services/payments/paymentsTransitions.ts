@@ -1,7 +1,7 @@
 import { Transaction } from 'sequelize';
-import * as database from '../database';
-import { Filter, PaymentsTransactionsAttributes } from '../interfaces';
-import { PaymentsTransactionsModel } from '../types/sequelize';
+import * as database from '../../database';
+import { Filter, PaymentsTransactionsAttributes } from '../../interfaces';
+import { PaymentsTransactionsModel } from '../../types/sequelize';
 
 const { PaymentsTransactions } = database;
 
