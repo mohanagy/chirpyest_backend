@@ -34,18 +34,56 @@ export const updatePendingCashData = (data: any): UpdatePendingCashAttributes =>
 
 export const commissionJunctionWebhookSecret = (data: any): string | undefined => data['x-webhook-secret'];
 
+const getOrderLevelCommission = (text: string, type: string) => {
+  const regex = /\d*.?\d+/;
+  const matchedArr = text.match(regex);
+  if (!matchedArr) {
+    return 'unknown';
+  }
+  const commission = matchedArr[0];
+  const userCommission = Number(commission) / 2;
+  return `${userCommission.toString()} USD per ${type}`;
+};
+
 const getCjCommissionPercent = (action: any): string => {
   if (typeof action === 'object' && !Array.isArray(action)) {
     if (typeof action.commission.default === 'object') {
-      return 'unknown';
+      switch (action.commission.default.$.type) {
+        case 'order-level':
+          return getOrderLevelCommission(action.commission.default._, 'order');
+        case 'item-level':
+          return getOrderLevelCommission(action.commission.default._, 'item');
+        default:
+          return 'unknown';
+      }
     }
     return action.commission.default;
   }
   if (Array.isArray(action)) {
-    if (typeof action[0].commission.default === 'object') {
+    const commissionsSet: Set<number> = new Set();
+    action.forEach((item) => {
+      if (typeof item.commission.default === 'string') {
+        const percent = item.commission.default.split('%')[0];
+        const userPercent = Number(percent) / 2;
+        commissionsSet.add(userPercent);
+      }
+    });
+
+    const commissionsArray: number[] = [...commissionsSet];
+    if (!commissionsArray.length) {
       return 'unknown';
     }
-    return action[0].commission.default;
+
+    const sorted = commissionsArray.sort((a: number, b: number) => {
+      return a - b;
+    });
+    let result = '';
+    if (sorted.length === 1) {
+      result = `${sorted[0].toString()}%`;
+    } else {
+      result = `${sorted[sorted.length - 1].toString()}%`;
+    }
+    return result;
   }
   throw new Error('Not a valid commission percent');
 };
