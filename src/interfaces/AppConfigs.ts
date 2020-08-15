@@ -45,3 +45,8 @@ export interface Database {
   sequelize?: any;
   Sequelize?: any;
 }
+
+export interface PayPalConfigs {
+  payPalClientId: string;
+  payPalSecret: string;
+}

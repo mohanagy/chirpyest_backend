@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import { httpResponse } from '../../helpers';
-import { brandsService } from '../../services';
+import { brandsService, paymentsService } from '../../services';
 
 /**
  * @description getImpactRadiusWebhookData is a controller used receive Impact Radius webhook events
@@ -21,4 +21,22 @@ export const getBrands = async (
   const brands = await brandsService.getBrands();
   transaction.commit();
   return httpResponse.ok(response, brands);
+};
+
+export const getPayments = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  try {
+    // const brands2 = await paymentsService.calculateImpactRadiusUserPayment();
+    // const brands = await paymentsService.calculateRakutenUserPayment();
+    const brandsCj = await paymentsService.calculateCjUserPayment();
+    transaction.commit();
+    return httpResponse.ok(response, brandsCj);
+  } catch (err) {
+    console.log('err', err);
+    return err;
+  }
 };

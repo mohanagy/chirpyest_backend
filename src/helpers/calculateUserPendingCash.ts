@@ -6,7 +6,7 @@ import { messages } from './constants';
  * @return {Number} The cashback given to Chirpyest user
  */
 
-const calculateUserPendingCash = (value: number): number => {
+const calculateUserPendingCash = (value?: number): number => {
   if (typeof value !== 'number') {
     throw new Error(messages.general.commissionTypeError);
   }
