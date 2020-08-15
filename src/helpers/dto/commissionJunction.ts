@@ -65,8 +65,7 @@ const getCjCommissionPercent = (action: any): string => {
     action.forEach((item) => {
       if (typeof item.commission.default === 'string') {
         const percent = item.commission.default.split('%')[0];
-        const userPercent = Number(percent) / 2;
-        commissionsSet.add(userPercent);
+        commissionsSet.add(percent);
       }
     });
 
@@ -80,9 +79,9 @@ const getCjCommissionPercent = (action: any): string => {
     });
     let result = '';
     if (sorted.length === 1) {
-      result = `${removeTrailingZeros(sorted[0].toString())}%`;
+      result = `${removeTrailingZeros(sorted[0].toString())}`;
     } else {
-      result = `${removeTrailingZeros(sorted[sorted.length - 1].toString())}%`;
+      result = `${removeTrailingZeros(sorted[sorted.length - 1].toString())}`;
     }
     return result;
   }
