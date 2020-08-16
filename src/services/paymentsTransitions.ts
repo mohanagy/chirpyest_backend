@@ -29,5 +29,5 @@ export const updatePaymentsTransactions = (
   data: Partial<PaymentsTransactionsAttributes>,
   transaction?: Transaction,
 ): Promise<[number, PaymentsTransactionsModel[]]> => {
-  return PaymentsTransactions.update(data, { transaction, ...filter });
+  return PaymentsTransactions.update(data, { transaction, ...filter, returning: true });
 };

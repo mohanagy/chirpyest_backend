@@ -27,6 +27,7 @@ export const commissionJunctionJob = new CronJob(
           query: `{
                 publisherCommissions(forPublishers: ["${commissionJunctionConfig.cJPublisherId}"], sincePostingDate: "${startDate}", beforePostingDate: "${endDate}") {
                   records {
+                    actionStatus
                     actionTrackerId
                     actionTrackerName
                     advertiserName

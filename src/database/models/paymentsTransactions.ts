@@ -19,5 +19,9 @@ export function PaymentsTransactionsFactory(sequelize: Sequelize): PaymentsTrans
       type: DataTypes.STRING,
       defaultValue: constants.PENDING,
     },
+    paymentId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   }) as PaymentsTransactionsStatic;
 }
