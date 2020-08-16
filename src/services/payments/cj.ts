@@ -1,26 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { gql, GraphQLClient } from 'graphql-request';
-// import moment from 'moment';
 import config from '../../config';
-// import { PaymentsTransactions } from '../../database';
-import { constants, convertToCents, calculateUserPendingCash } from '../../helpers';
+import { constants, convertToCents } from '../../helpers';
 import { IPaymentByUser } from '../../interfaces';
 import { getMonthRange } from './utils';
-import { cjData } from './cjData';
 
 const { commissionJunctionBaseUrl } = constants;
 const {
   affiliateNetworks: { commissionJunctionConfig },
 } = config;
 
-// const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toISOString();
-// const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toISOString();
-
 export const calculateCjUserPayment = async (): Promise<any> => {
   const { start, end, halfMonthId } = getMonthRange();
   const startOfLastMonth = start.toJSON();
   const endOfLastMonth = end.toJSON();
-  // first half payment
+
   const graphQLClient = new GraphQLClient(commissionJunctionBaseUrl, {
     headers: {
       authorization: `Bearer ${commissionJunctionConfig.cJPersonalKey}`,
@@ -62,7 +56,7 @@ export const calculateCjUserPayment = async (): Promise<any> => {
   } = await graphQLClient.request(query);
 
   const closedPayments: any[] = [];
-  cjData.forEach((record: any) => {
+  cjCommissionsListRaw.forEach((record: any) => {
     const userId = record.shopperId;
     if (userId && !Number.isNaN(userId)) {
       if (record.actionStatus.toLowerCase() === 'closed') {

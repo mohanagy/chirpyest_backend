@@ -2,7 +2,6 @@
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import csv from 'csvtojson';
-// import moment from 'moment';
 import { RakutenTransactions } from '../../database';
 import { constants, convertToCents } from '../../helpers';
 import { CommissionsByOrder, IPaymentByUser, OrdersGroupedByUser, RakutenFinalUserPayment } from '../../interfaces';
@@ -16,7 +15,7 @@ const endOfLastMonth = end.format('YYYYMMDD');
 paymentSummaryEndpointParsed.searchParams.set('bdate', startOfLastMonth);
 paymentSummaryEndpointParsed.searchParams.set('edate', endOfLastMonth);
 
-// const timeout = (s: number) => new Promise((res) => setTimeout(res, s * 1000));
+const timeout = (s: number) => new Promise((res) => setTimeout(res, s * 1000));
 
 export const calculateRakutenUserPayment = async (): Promise<Array<RakutenFinalUserPayment>> => {
   const allTransactions = [];
@@ -36,7 +35,7 @@ export const calculateRakutenUserPayment = async (): Promise<Array<RakutenFinalU
       const paymentDetailsReport = camelcaseKeys(paymentDetailsReportRaw);
       allTransactions.push(...paymentDetailsReport);
       // The payment api allow one request per minute + 15 sec to be safe
-      // await timeout(75);
+      await timeout(75);
     }
   }
 

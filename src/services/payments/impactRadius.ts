@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
-// import moment from 'moment';
 import { URL } from 'url';
 import { constants, dto, convertToCents } from '../../helpers';
 import { ImpactRadiusPayment, IPaymentByUser } from '../../interfaces';
 import { getMonthRange } from './utils';
-import { iRDummyData } from './impactRadiusDummyData';
 
 const { paymentReportEndpoint } = constants;
 
@@ -23,8 +20,7 @@ export const calculateImpactRadiusUserPayment = async (): Promise<any> => {
   } = await axios.get(paymentReportEndpointParsed.href);
 
   const paidAndApproved: ImpactRadiusPayment[] = [];
-  iRDummyData.forEach((action: any) => {
-    console.log('action', action);
+  actionsListRaw.forEach((action: any) => {
     const cleanAction: ImpactRadiusPayment = camelcaseKeys(action);
     const userId = cleanAction.subId1;
     if (userId && !Number.isNaN(userId)) {

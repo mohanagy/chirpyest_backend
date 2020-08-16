@@ -8,49 +8,25 @@ const { calculatePaymentsCronJobPattern } = constants;
 export const calcPaymentsCronJob = new CronJob(
   calculatePaymentsCronJobPattern,
   async () => {
-    logger.info('CalculatePayment cronjob started');
+    logger.info('Calculate payment cronjob started');
     const transaction = await database.sequelize.transaction();
-    const { calculateRakutenUserPayment, calculateImpactRadiusUserPayment, calculateCjUserPayment } = paymentsService;
     try {
-      const dataaa = await Promise.all([
+      const { calculateRakutenUserPayment, calculateImpactRadiusUserPayment, calculateCjUserPayment } = paymentsService;
+      const paymentsArr = await Promise.all([
         calculateRakutenUserPayment(),
         calculateImpactRadiusUserPayment(),
         calculateCjUserPayment(),
       ]);
-      console.log('data', dataaa);
-      // save to the database
-      await paymentsTransitionsService.createPaymentsTransactions(dataaa, transaction);
-      transaction.commit();
-      logger.info('CalculatePayment cronjob succeeded');
+      const flatPyaments = paymentsArr.flat();
+      await paymentsTransitionsService.createPaymentsTransactions(flatPyaments, transaction);
+      await transaction.commit();
+      logger.info('Calculate payment cronjob succeeded');
     } catch (error) {
-      logger.error(`get brands cron job error: ${error.response ? error.response.data.errors : error.message}`);
       await transaction.rollback();
+      logger.error(`Calculate payment cron job error: ${error.response ? error.response.data.errors : error.message}`);
     }
   },
   null,
   true,
   'Etc/UTC',
 );
-
-// export const savePaymentsData = async () => {
-//   console.log('hi');
-//   try {
-//     const transaction = await database.sequelize.transaction();
-
-//     const promises = [
-//       rakuten.calculateRakutenUserPayment(),
-//       impactRadius.calculateImpactRadiusUserPayment(),
-//       cj.calculateCjUserPayment(),
-//     ];
-//     // await rakuten.calculateRakutenUserPayment();
-//     // await impactRadius.calculateImpactRadiusUserPayment();
-//     // await cj.calculateCjUserPayment();
-//     const res = await Promise.allSettled(promises);
-//     // console.log('res', res);
-//     res.forEach((item: any) => {
-//       console.log(item.value);
-//     });
-//   } catch (error) {
-//     console.log('error', error);
-//   }
-// };

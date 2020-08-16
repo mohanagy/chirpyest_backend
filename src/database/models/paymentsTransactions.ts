@@ -15,6 +15,7 @@ export function PaymentsTransactionsFactory(sequelize: Sequelize): PaymentsTrans
       },
       amount: {
         type: DataTypes.INTEGER,
+        allowNull: false,
       },
       status: {
         type: DataTypes.STRING,
@@ -34,7 +35,6 @@ export function PaymentsTransactionsFactory(sequelize: Sequelize): PaymentsTrans
         {
           unique: true,
           fields: ['user_id', 'type', 'half_month_id'],
-          where: {},
         },
       ],
     },
