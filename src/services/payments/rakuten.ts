@@ -3,13 +3,12 @@ import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import csv from 'csvtojson';
 import { RakutenTransactions } from '../../database';
-import { constants, convertToCents } from '../../helpers';
+import { constants, convertToCents, getHalfMonthRange } from '../../helpers';
 import { CommissionsByOrder, IPaymentByUser, OrdersGroupedByUser, RakutenFinalUserPayment } from '../../interfaces';
-import { getMonthRange } from './utils';
 
 const { paymentSummaryEndpoint, paymentHistoryEndpoint, paymentDetailsReportEndpoint } = constants;
 const paymentSummaryEndpointParsed = new URL(paymentSummaryEndpoint);
-const { start, end, halfMonthId } = getMonthRange();
+const { start, end, halfMonthId } = getHalfMonthRange();
 const startOfLastMonth = start.format('YYYYMMDD');
 const endOfLastMonth = end.format('YYYYMMDD');
 paymentSummaryEndpointParsed.searchParams.set('bdate', startOfLastMonth);

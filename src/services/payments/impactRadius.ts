@@ -1,16 +1,15 @@
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import { URL } from 'url';
-import { constants, dto, convertToCents } from '../../helpers';
+import { constants, dto, convertToCents, getHalfMonthRange } from '../../helpers';
 import { ImpactRadiusPayment, IPaymentByUser } from '../../interfaces';
-import { getMonthRange } from './utils';
 
 const { paymentReportEndpoint } = constants;
 
 const paymentReportEndpointParsed = new URL(paymentReportEndpoint);
 
 export const calculateImpactRadiusUserPayment = async (): Promise<any> => {
-  const { start, end, halfMonthId } = getMonthRange();
+  const { start, end, halfMonthId } = getHalfMonthRange();
   const startOfLastMonth = start.format('YYYY-MM-DD');
   const endOfLastMonth = end.format('YYYY-MM-DD');
   paymentReportEndpointParsed.searchParams.set('START_DATE', startOfLastMonth);

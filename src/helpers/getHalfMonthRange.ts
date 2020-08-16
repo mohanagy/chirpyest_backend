@@ -1,10 +1,10 @@
 import moment from 'moment';
 
-export const getMonthRange = () => {
+const getHalfMonthRange = (): any => {
   const day = moment().date();
   let half = null;
 
-  if (day < 15) {
+  if (day > 15) {
     half = 0; // first half of the month
   } else {
     half = 1; // second half of the month
@@ -25,3 +25,5 @@ export const getMonthRange = () => {
   const halfMonthId = `${half}_${month}_${year}`;
   return { start, end, half, halfMonthId };
 };
+
+export default getHalfMonthRange;

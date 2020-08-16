@@ -9,6 +9,7 @@ export { default as cognito } from './cognito';
 export { default as convertToCents } from './convertToCents';
 export { default as httpResponse } from './httpResponse';
 export { default as logger } from './logger';
+export { default as getHalfMonthRange } from './getHalfMonthRange';
 
 export const authHelpers = auth;
 export const dto = DTO;

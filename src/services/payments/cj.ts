@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { gql, GraphQLClient } from 'graphql-request';
 import config from '../../config';
-import { constants, convertToCents } from '../../helpers';
+import { constants, convertToCents, getHalfMonthRange } from '../../helpers';
 import { IPaymentByUser } from '../../interfaces';
-import { getMonthRange } from './utils';
 
 const { commissionJunctionBaseUrl } = constants;
 const {
@@ -11,7 +10,7 @@ const {
 } = config;
 
 export const calculateCjUserPayment = async (): Promise<any> => {
-  const { start, end, halfMonthId } = getMonthRange();
+  const { start, end, halfMonthId } = getHalfMonthRange();
   const startOfLastMonth = start.toJSON();
   const endOfLastMonth = end.toJSON();
 
