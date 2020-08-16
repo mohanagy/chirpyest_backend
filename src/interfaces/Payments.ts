@@ -39,6 +39,7 @@ export interface PayoutsRequestAttributes {
 export interface PayoutsBatchIdsAttributes {
   [key: string]: {
     closedOut: number;
+    id?: number;
   };
 }
 

@@ -24,6 +24,10 @@ export function PaymentsTransactionsFactory(sequelize: Sequelize): PaymentsTrans
         type: DataTypes.STRING, // 1_8_2020 => firstHalf_month_year
         allowNull: false,
       },
+      paymentId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
     },
     {
       indexes: [

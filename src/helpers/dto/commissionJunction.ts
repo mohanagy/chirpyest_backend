@@ -10,6 +10,7 @@ import convertToCents from '../convertToCents';
 
 export const commissionJunctionData = (data: CommissionJunctionPayload): CommissionJunctionData =>
   data.map((row: CommissionJunctionPayloadItem) => ({
+    actionStatus: row.actionStatus,
     actionTrackerId: row.actionTrackerId,
     userId: row.shopperId,
     advertiserId: row.advertiserId,

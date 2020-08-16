@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { NextFunction, Request, Response } from 'express';
 import moment from 'moment';
 import { Op } from 'sequelize';
@@ -77,21 +78,19 @@ export const preparePayments = async (
   logger.info(`creat new payment records`);
   const paymentsData = await paymentsService.createBulkPayments(paymentsDraftPayload, transaction);
 
-  await Promise.all(
-    paymentsData.map(async ({ id, userId }) => {
-      const filter = dto.generalDTO.filterData({
-        userId,
-        status: constants.PENDING,
-      });
+  for await (const { id, userId } of paymentsData) {
+    const filter = dto.generalDTO.filterData({
+      userId,
+      status: constants.PENDING,
+    });
 
-      const data = {
-        paymentId: id,
-        status: constants.PREPARING,
-      };
+    const data = {
+      paymentId: id,
+      status: constants.PREPARING,
+    };
 
-      await paymentsTransitionsService.updatePaymentsTransactions(filter, data, transaction);
-    }),
-  );
+    await paymentsTransitionsService.updatePaymentsTransactions(filter, data, transaction);
+  }
 
   logger.info(`process done`);
 
@@ -121,15 +120,29 @@ export const sendPayments = async (
   logger.info(`sendPayments: pending payments ${pendingPayments}`);
 
   logger.info(`sendPayments: convert data to paypal shape`);
-  const payoutsReceiversData = pendingPayments.map(({ paypalAccount, closedOut, transactionId }) => ({
-    recipient_type: 'EMAIL',
-    amount: {
-      value: closedOut,
-      currency: 'USD',
-    },
-    receiver: paypalAccount,
-    sender_item_id: transactionId || uuid(),
-  }));
+  const payoutsReceiversData = await Promise.all(
+    pendingPayments.map(({ paypalAccount, closedOut, transactionId, id }) => {
+      const updatePaymentsTransactionsFilter = dto.generalDTO.filterData({
+        paymentId: id,
+      });
+
+      const data = {
+        paymentId: id,
+        status: constants.PROCESSING,
+      };
+
+      paymentsTransitionsService.updatePaymentsTransactions(updatePaymentsTransactionsFilter, data, transaction);
+      return {
+        recipient_type: 'EMAIL',
+        amount: {
+          value: closedOut,
+          currency: 'USD',
+        },
+        receiver: paypalAccount,
+        sender_item_id: transactionId || uuid(),
+      };
+    }),
+  );
   if (!pendingPayments.length) {
     await transaction.rollback();
     logger.info(`sendPayments: no pending payments`);
@@ -193,45 +206,51 @@ export const checkPayments = async (
   const processedPayments = await paymentsService.getAllPayments(filter, transaction);
 
   const payoutsBatchIds = processedPayments.reduce((acc: PayoutsBatchIdsAttributes, payment) => {
-    const { payoutBatchId, closedOut } = payment;
+    const { payoutBatchId, closedOut, id } = payment;
     if (payoutBatchId && !acc[payoutBatchId])
       acc[payoutBatchId] = {
         closedOut,
+        id,
       };
     return acc;
   }, {});
-  const finishedPayouts = await Promise.all(
-    Object.keys(payoutsBatchIds).filter(async (payoutBatchId) => {
-      const {
-        batch_header: { batch_status: batchStatus },
-      } = await paymentsService.showPayoutBatchDetails(payoutBatchId);
-      const status = batchStatus.toLowerCase();
+  const finishedPayouts: Array<string> = [];
+  for await (const payoutBatchId of Object.keys(payoutsBatchIds)) {
+    const {
+      batch_header: { batch_status: batchStatus },
+    } = await paymentsService.showPayoutBatchDetails(payoutBatchId);
+    const status = batchStatus.toLowerCase();
 
-      const updatePaymentsFilter = dto.generalDTO.filterData({
-        payoutBatchId,
-      });
-      const updatePaymentsData = { status };
-      await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData);
-      if (status === constants.SUCCESS) {
-        return payoutBatchId;
-      }
+    const updatePaymentsFilter = dto.generalDTO.filterData({
+      payoutBatchId,
+    });
+    const updatePaymentsData = { status };
+    await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData, transaction);
+    const updatePaymentsTransactionsFilter = dto.generalDTO.filterData({
+      paymentId: payoutsBatchIds[payoutBatchId].id,
+    });
+    const data = {
+      status,
+    };
 
-      await mailer.transporter.sendMail({
-        from: '"Mohammed Naji" <naji@kiitos-tech.com>', // sender address
-        to: 'naji@kiitos-tech.com', // list of receivers
-        subject: 'Payment Error',
-        text: `this payout Batch Id ${payoutBatchId} has status :${status}`, // plain text body
-      });
+    await paymentsTransitionsService.updatePaymentsTransactions(updatePaymentsTransactionsFilter, data, transaction);
+    if (status === constants.SUCCESS) {
+      finishedPayouts.push(payoutBatchId);
+    }
 
-      return false;
-    }),
-  );
+    await mailer.transporter.sendMail({
+      from: '"Mohammed Naji" <naji@kiitos-tech.com>', // sender address
+      to: 'naji@kiitos-tech.com', // list of receivers
+      subject: 'Payment Error',
+      text: `this payout Batch Id ${payoutBatchId} has status :${status}`, // plain text body
+    });
+  }
+
   const filteredProcessedPayments = processedPayments.filter((payment) =>
-    Object.keys(finishedPayouts).includes(payment.payoutBatchId || ''),
+    finishedPayouts.includes(payment.payoutBatchId || ''),
   );
-
   await Promise.all(
-    filteredProcessedPayments.map(({ payoutBatchId, userId, closedOut }) => {
+    filteredProcessedPayments.map(async ({ payoutBatchId, userId, closedOut }) => {
       if (payoutBatchId) {
         const updateUserFinicalData = {
           pending: -closedOut,
@@ -241,7 +260,7 @@ export const checkPayments = async (
         const updateUserFinicalDashboardFilter = dto.generalDTO.filterData({
           userId,
         });
-        financialDashboardService.updateUserFinicalDashboard(
+        await financialDashboardService.updateUserFinicalDashboard(
           updateUserFinicalData,
           updateUserFinicalDashboardFilter,
           transaction,
