@@ -2,19 +2,21 @@
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
 import csv from 'csvtojson';
-import moment from 'moment';
+// import moment from 'moment';
 import { RakutenTransactions } from '../../database';
-import { constants } from '../../helpers';
+import { constants, convertToCents } from '../../helpers';
 import { CommissionsByOrder, IPaymentByUser, OrdersGroupedByUser, RakutenFinalUserPayment } from '../../interfaces';
+import { getMonthRange } from './utils';
 
 const { paymentSummaryEndpoint, paymentHistoryEndpoint, paymentDetailsReportEndpoint } = constants;
 const paymentSummaryEndpointParsed = new URL(paymentSummaryEndpoint);
-const startOfLastMonth = moment().subtract(1, 'month').startOf('month').format('YYYYMMDD');
-const endOfLastMonth = moment().subtract(1, 'month').endOf('month').format('YYYYMMDD');
+const { start, end, halfMonthId } = getMonthRange();
+const startOfLastMonth = start.format('YYYYMMDD');
+const endOfLastMonth = end.format('YYYYMMDD');
 paymentSummaryEndpointParsed.searchParams.set('bdate', startOfLastMonth);
 paymentSummaryEndpointParsed.searchParams.set('edate', endOfLastMonth);
 
-const timeout = (s: number) => new Promise((res) => setTimeout(res, s * 1000));
+// const timeout = (s: number) => new Promise((res) => setTimeout(res, s * 1000));
 
 export const calculateRakutenUserPayment = async (): Promise<Array<RakutenFinalUserPayment>> => {
   const allTransactions = [];
@@ -34,7 +36,7 @@ export const calculateRakutenUserPayment = async (): Promise<Array<RakutenFinalU
       const paymentDetailsReport = camelcaseKeys(paymentDetailsReportRaw);
       allTransactions.push(...paymentDetailsReport);
       // The payment api allow one request per minute + 15 sec to be safe
-      await timeout(75);
+      // await timeout(75);
     }
   }
 
@@ -83,8 +85,9 @@ export const calculateRakutenUserPayment = async (): Promise<Array<RakutenFinalU
 
   const formatedTotalPayments: Array<RakutenFinalUserPayment> = Object.entries(totalPaymentByUser).reduce(
     (acc: Array<RakutenFinalUserPayment>, curr) => {
-      const [userId, total] = curr;
-      acc.push({ userId, total, type: 'R' });
+      const [userId, amount] = curr;
+      const userPayment = convertToCents(Number(amount) / 2);
+      acc.push({ userId, amount: userPayment, type: 'R', halfMonthId });
       return acc;
     },
     [],

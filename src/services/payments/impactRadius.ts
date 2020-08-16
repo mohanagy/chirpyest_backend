@@ -1,25 +1,30 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
 import camelcaseKeys from 'camelcase-keys';
-import moment from 'moment';
+// import moment from 'moment';
 import { URL } from 'url';
-import { constants, dto } from '../../helpers';
+import { constants, dto, convertToCents } from '../../helpers';
 import { ImpactRadiusPayment, IPaymentByUser } from '../../interfaces';
+import { getMonthRange } from './utils';
+import { iRDummyData } from './impactRadiusDummyData';
 
 const { paymentReportEndpoint } = constants;
 
 const paymentReportEndpointParsed = new URL(paymentReportEndpoint);
-const startOfLastMonth = moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
-const endOfLastMonth = moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
-paymentReportEndpointParsed.searchParams.set('START_DATE', startOfLastMonth);
-paymentReportEndpointParsed.searchParams.set('END_DATE', endOfLastMonth);
 
 export const calculateImpactRadiusUserPayment = async (): Promise<any> => {
+  const { start, end, halfMonthId } = getMonthRange();
+  const startOfLastMonth = start.format('YYYY-MM-DD');
+  const endOfLastMonth = end.format('YYYY-MM-DD');
+  paymentReportEndpointParsed.searchParams.set('START_DATE', startOfLastMonth);
+  paymentReportEndpointParsed.searchParams.set('END_DATE', endOfLastMonth);
   const {
     data: { Records: actionsListRaw },
   } = await axios.get(paymentReportEndpointParsed.href);
 
   const paidAndApproved: ImpactRadiusPayment[] = [];
-  actionsListRaw.forEach((action: any) => {
+  iRDummyData.forEach((action: any) => {
+    console.log('action', action);
     const cleanAction: ImpactRadiusPayment = camelcaseKeys(action);
     const userId = cleanAction.subId1;
     if (userId && !Number.isNaN(userId)) {
@@ -41,14 +46,9 @@ export const calculateImpactRadiusUserPayment = async (): Promise<any> => {
 
   const formatedTotalPayments = Object.entries(paymentsByUser).reduce((acc: any, curr) => {
     const [userId, amount] = curr;
-    const userCommission: any = (amount / 2).toFixed(2);
-    acc.push({ userId, amount: userCommission, type: 'IR', status: 'pending' });
+    const userCommission = convertToCents(Number(amount) / 2);
+    acc.push({ userId, amount: userCommission, type: 'IR', status: 'pending', halfMonthId });
     return acc;
   }, []);
-
-  if (formatedTotalPayments.length) {
-    // save to db
-  }
-
   return formatedTotalPayments;
 };

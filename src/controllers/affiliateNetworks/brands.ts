@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
+// import moment from 'moment';
 import { httpResponse } from '../../helpers';
-import { brandsService, paymentsService } from '../../services';
+import { brandsService, paymentsService, paymentsTransitionsService } from '../../services';
+// import { savePaymentsData } from '../../services/payments/allPayments';
 
 /**
  * @description getImpactRadiusWebhookData is a controller used receive Impact Radius webhook events
@@ -30,13 +32,21 @@ export const getPayments = async (
   transaction: Transaction,
 ): Promise<Response> => {
   try {
-    // const brands2 = await paymentsService.calculateImpactRadiusUserPayment();
-    // const brands = await paymentsService.calculateRakutenUserPayment();
-    const brandsCj = await paymentsService.calculateCjUserPayment();
+    const { calculateRakutenUserPayment, calculateImpactRadiusUserPayment, calculateCjUserPayment } = paymentsService;
+    const paymentsArr = await Promise.all([
+      calculateRakutenUserPayment(),
+      calculateImpactRadiusUserPayment(),
+      calculateCjUserPayment(),
+    ]);
+    const flatPyaments = paymentsArr.flat();
+    console.log('flatPyaments', flatPyaments);
+    const queyrRes = await paymentsTransitionsService.createPaymentsTransactions(flatPyaments, transaction);
+    console.log('queyrRes', queyrRes);
     transaction.commit();
-    return httpResponse.ok(response, brandsCj);
+    return httpResponse.ok(response, paymentsArr);
   } catch (err) {
     console.log('err', err);
+    transaction.rollback();
     return err;
   }
 };

@@ -48,8 +48,9 @@ export interface ClassifiedResponseByUserIdAttributes {
 
 export interface RakutenFinalUserPayment {
   userId: string;
-  total: number;
+  amount: number;
   type: string;
+  halfMonthId: string;
 }
 
 export interface CommissionsByOrder {

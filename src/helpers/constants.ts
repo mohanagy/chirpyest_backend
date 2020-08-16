@@ -21,6 +21,7 @@ export const messages = {
 
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
 export const brandsCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
+export const calculatePaymentsCronJobPattern = '* * * * *'; // check https://crontab.guru/ for more information
 export const preparingPaymentsCronJobPattern = '0 0 1 * *'; // check https://crontab.guru/ for more information
 export const sendingPaymentsCronJobPattern = '0 0 4 * *'; // check https://crontab.guru/ for more information
 export const checkingPaymentsCronJobPattern = '0 22 4 * *'; // check https://crontab.guru/ for more information

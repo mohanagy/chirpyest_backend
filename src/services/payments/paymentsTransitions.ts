@@ -31,3 +31,13 @@ export const updatePaymentsTransactions = (
 ): Promise<[number, PaymentsTransactionsModel[]]> => {
   return PaymentsTransactions.update(data, { transaction, ...filter });
 };
+
+/**
+ * @description updatePaymentsTransactions is a service used to update  transactions  record
+ * @param {Filter} filter filters applied on search
+ * @param {Transaction} transaction  transaction object
+ * @return {Promise<PaymentsAttributes[]>} PaymentsTransactionsModel data
+ */
+export const createPaymentsTransactions = (data: any, transaction?: Transaction): Promise<any> => {
+  return PaymentsTransactions.bulkCreate(data, { transaction, ignoreDuplicates: true });
+};

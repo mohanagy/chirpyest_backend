@@ -1,18 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { gql, GraphQLClient } from 'graphql-request';
-import moment from 'moment';
+// import moment from 'moment';
 import config from '../../config';
-import { constants } from '../../helpers';
+// import { PaymentsTransactions } from '../../database';
+import { constants, convertToCents, calculateUserPendingCash } from '../../helpers';
 import { IPaymentByUser } from '../../interfaces';
+import { getMonthRange } from './utils';
+import { cjData } from './cjData';
 
 const { commissionJunctionBaseUrl } = constants;
 const {
   affiliateNetworks: { commissionJunctionConfig },
 } = config;
 
-const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toISOString();
-const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toISOString();
+// const startOfLastMonth = moment().subtract(1, 'month').startOf('month').toISOString();
+// const endOfLastMonth = moment().subtract(1, 'month').endOf('month').toISOString();
 
 export const calculateCjUserPayment = async (): Promise<any> => {
+  const { start, end, halfMonthId } = getMonthRange();
+  const startOfLastMonth = start.toJSON();
+  const endOfLastMonth = end.toJSON();
+  // first half payment
   const graphQLClient = new GraphQLClient(commissionJunctionBaseUrl, {
     headers: {
       authorization: `Bearer ${commissionJunctionConfig.cJPersonalKey}`,
@@ -54,7 +62,7 @@ export const calculateCjUserPayment = async (): Promise<any> => {
   } = await graphQLClient.request(query);
 
   const closedPayments: any[] = [];
-  cjCommissionsListRaw.forEach((record: any) => {
+  cjData.forEach((record: any) => {
     const userId = record.shopperId;
     if (userId && !Number.isNaN(userId)) {
       if (record.actionStatus.toLowerCase() === 'closed') {
@@ -74,16 +82,10 @@ export const calculateCjUserPayment = async (): Promise<any> => {
 
   const formatedTotalPayments = Object.entries(paymentsByUser).reduce((acc: any, curr) => {
     const [userId, amount] = curr;
-    const userCommission: any = (amount / 2).toFixed(2);
-    acc.push({ userId, amount: userCommission, type: 'CJ', status: 'pending' });
+    const userCommission: any = convertToCents(Number(amount) / 2);
+    acc.push({ userId, amount: userCommission, type: 'CJ', status: 'pending', halfMonthId });
     return acc;
   }, []);
-
-  console.log('formatedTotalPayments', formatedTotalPayments);
-
-  // if (formatedTotalPayments.length) {
-  //   // save to db
-  // }
 
   return formatedTotalPayments;
 };
