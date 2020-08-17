@@ -1,7 +1,7 @@
 import { Transaction } from 'sequelize';
-import * as database from '../database';
-import { Filter, PaymentsTransactionsAttributes } from '../interfaces';
-import { PaymentsTransactionsModel } from '../types/sequelize';
+import * as database from '../../database';
+import { Filter, PaymentsTransactionsAttributes } from '../../interfaces';
+import { PaymentsTransactionsModel } from '../../types/sequelize';
 
 const { PaymentsTransactions } = database;
 
@@ -30,4 +30,14 @@ export const updatePaymentsTransactions = (
   transaction?: Transaction,
 ): Promise<[number, PaymentsTransactionsModel[]]> => {
   return PaymentsTransactions.update(data, { transaction, ...filter, returning: true });
+};
+
+/**
+ * @description updatePaymentsTransactions is a service used to update  transactions  record
+ * @param {Filter} filter filters applied on search
+ * @param {Transaction} transaction  transaction object
+ * @return {Promise<PaymentsAttributes[]>} PaymentsTransactionsModel data
+ */
+export const createPaymentsTransactions = (data: any, transaction?: Transaction): Promise<any> => {
+  return PaymentsTransactions.bulkCreate(data, { transaction, ignoreDuplicates: true });
 };

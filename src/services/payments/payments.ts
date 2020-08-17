@@ -1,11 +1,11 @@
 import axios from 'axios';
 import qs from 'qs';
 import { Transaction } from 'sequelize';
-import config from '../config';
-import * as database from '../database';
-import { constants } from '../helpers';
-import { Filter, PaymentsAttributes, PayoutsRequestAttributes } from '../interfaces';
-import { PaymentsModel } from '../types/sequelize';
+import config from '../../config';
+import * as database from '../../database';
+import { constants } from '../../helpers';
+import { Filter, PaymentsAttributes, PayoutsRequestAttributes } from '../../interfaces';
+import { PaymentsModel } from '../../types/sequelize';
 
 const { Payments } = database;
 const { payPalConfig } = config;

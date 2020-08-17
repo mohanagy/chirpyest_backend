@@ -16,4 +16,6 @@ router.post(
 
 router.get('/affiliate-networks/brands', asyncHandler(affiliateNetworksController.getBrands));
 
+router.get('/payments', asyncHandler(affiliateNetworksController.getPayments));
+
 export default router;
