@@ -81,6 +81,7 @@ const onListening = (): void => {
 dbConfig
   .sync({ force: process.env.NODE_ENV === 'test' ? true : undefined })
   .then(() => {
+    logger.info(`Server is trying to bind :${port}`);
     server.listen(port);
     server.on('error', onError);
     server.on('listening', onListening);
