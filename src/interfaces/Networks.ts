@@ -38,6 +38,7 @@ export interface CommissionJunctionTransactionsAttributes {
 }
 export interface CommissionJunctionDataItem {
   actionTrackerId: number;
+  actionStatus: string;
   advertiserId: number;
   actionTrackerName: string;
   advertiserName: string;
@@ -57,6 +58,7 @@ export type CommissionJunctionData = Array<CommissionJunctionDataItem>;
 
 export interface CommissionJunctionPayloadItem {
   actionTrackerId: number;
+  actionStatus: string;
   advertiserId: number;
   actionTrackerName: string;
   advertiserName: string;

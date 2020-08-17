@@ -21,6 +21,9 @@ export const messages = {
 
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
 export const brandsCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
+export const preparingPaymentsCronJobPattern = '0 0 1 * *'; // check https://crontab.guru/ for more information
+export const sendingPaymentsCronJobPattern = '0 0 4 * *'; // check https://crontab.guru/ for more information
+export const checkingPaymentsCronJobPattern = '0 22 4 * *'; // check https://crontab.guru/ for more information
 
 export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
 
@@ -40,3 +43,11 @@ export const campaignsEndpoint2 = `${baseImpactApiUrl}/Reports/4016?PageSize=200
 
 // match 0% to 100%
 export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/;
+
+export const PENDING = 'pending';
+export const PROCESSING = 'processing';
+export const SUCCESS = 'success';
+export const PREPARING = 'preparing';
+
+export const payPalEndpoint =
+  process.env.NODE_ENV === 'production' ? 'https://api.paypal.com' : 'https://api.sandbox.paypal.com';

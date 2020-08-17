@@ -10,6 +10,7 @@ import { usersServices } from '../../services';
 const commissionJunctionResponse: CommissionJunctionPayload = [
   {
     actionTrackerId: 372642,
+    actionStatus: 'pending',
     advertiserId: 4258829,
     actionTrackerName: 'Nook and Digital Product Sales',
     advertiserName: 'Barnes & Noble',
@@ -28,6 +29,7 @@ const commissionJunctionResponse: CommissionJunctionPayload = [
   {
     actionTrackerId: 372642,
     advertiserId: 4258829,
+    actionStatus: 'pending',
     actionTrackerName: 'Nook and Digital Product Sales',
     advertiserName: 'Barnes & Noble',
     postingDate: '2020-07-17T15:45:25Z',

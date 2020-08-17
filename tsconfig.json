@@ -10,7 +10,7 @@
     "outDir": "dist",
     "baseUrl": ".",
     "types": ["node", "mocha"],
-    "lib": ["es5", "es6", "ESNext"],
+    "lib": ["es5", "es6", "ESNext","ES2020"],
     "allowJs": true,
     "strict": true,
     "resolveJsonModule": true
