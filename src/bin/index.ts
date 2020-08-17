@@ -37,6 +37,7 @@ const normalizePort = (val: string): number | string | boolean => {
  */
 
 const port = normalizePort(config.server.port);
+logger.info('PORT', port);
 app.set('port', port);
 
 /**
