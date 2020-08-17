@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import axios from 'axios';
 import camelCase from 'camelcase';
 import { Parser } from 'xml2js';
@@ -12,25 +13,36 @@ const {
 const { commissionJunctionBrandsUrl } = constants;
 
 export const getCjBrands = async (): Promise<Array<BrandsAttributes>> => {
-  const { data } = await axios.get(commissionJunctionBrandsUrl, {
-    headers: {
-      Authorization: `Bearer ${cJPersonalKey}`,
-    },
-  });
+  let page = 1;
+  let totalRecords = 0;
+  let allAdvertisers: Array<BrandsAttributes> = [];
+  let result = [];
 
-  const parser = new Parser({
-    tagNameProcessors: [camelCase],
-    attrNameProcessors: [camelCase],
-    explicitArray: false,
-  });
+  do {
+    const { data } = await axios.get(commissionJunctionBrandsUrl, {
+      params: { 'page-number': page },
+      headers: {
+        Authorization: `Bearer ${cJPersonalKey}`,
+      },
+    });
 
-  const result = await parser.parseStringPromise(data);
+    page += 1;
+    const parser = new Parser({
+      tagNameProcessors: [camelCase],
+      attrNameProcessors: [camelCase],
+      explicitArray: false,
+    });
 
-  const cleanData: Array<BrandsAttributes> = result.cjApi.advertisers.advertiser.map((item: any) => {
-    return dto.commissionJunctionDTO.commissionJunctionBrands(item);
-  });
+    result = await parser.parseStringPromise(data);
+
+    totalRecords = result.cjApi.advertisers.$.totalMatched;
+    const cleanData: Array<BrandsAttributes> = result.cjApi.advertisers.advertiser.map((item: any) => {
+      return dto.commissionJunctionDTO.commissionJunctionBrands(item);
+    });
+    allAdvertisers = allAdvertisers.concat(cleanData);
+  } while (allAdvertisers.length < totalRecords);
 
   // save to the db
-  await createBrands(cleanData);
-  return cleanData;
+  await createBrands(allAdvertisers);
+  return allAdvertisers;
 };
