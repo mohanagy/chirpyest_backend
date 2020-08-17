@@ -14,6 +14,14 @@ export const updateUserFinicalDashboard = (
   data: any,
   filter: Filter,
   transaction: Transaction,
+): Promise<[number, FinancialDashboardModel[]]> => {
+  return FinancialDashboard.update(data, { ...filter, transaction });
+};
+
+export const incrementUserFinicalDashboard = (
+  data: any,
+  filter: Filter,
+  transaction: Transaction,
 ): Promise<FinancialDashboardModel> => {
   return FinancialDashboard.increment(data, { ...filter, transaction });
 };

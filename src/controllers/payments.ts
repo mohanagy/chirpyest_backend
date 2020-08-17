@@ -4,7 +4,7 @@ import moment from 'moment';
 import { Op } from 'sequelize';
 import { Transaction } from 'sequelize/types';
 import { v4 as uuid } from 'uuid';
-import { constants, dto, httpResponse, logger, mailer } from '../helpers';
+import { constants, dto, httpResponse, logger } from '../helpers';
 import { ClassifiedResponseByUserIdAttributes, PaymentsAttributes, PayoutsBatchIdsAttributes } from '../interfaces';
 import { financialDashboardService, paymentsService, paymentsTransitionsService, usersServices } from '../services';
 
@@ -238,12 +238,12 @@ export const checkPayments = async (
       finishedPayouts.push(payoutBatchId);
     }
 
-    await mailer.transporter.sendMail({
-      from: '"Mohammed Naji" <naji@kiitos-tech.com>', // sender address
-      to: 'naji@kiitos-tech.com', // list of receivers
-      subject: 'Payment Error',
-      text: `this payout Batch Id ${payoutBatchId} has status :${status}`, // plain text body
-    });
+    // await mailer.transporter.sendMail({
+    //   from: '"Mohammed Naji" <naji@kiitos-tech.com>', // sender address
+    //   to: 'naji@kiitos-tech.com', // list of receivers
+    //   subject: 'Payment Error',
+    //   text: `this payout Batch Id ${payoutBatchId} has status :${status}`, // plain text body
+    // });
   }
 
   const filteredProcessedPayments = processedPayments.filter((payment) =>
@@ -252,9 +252,20 @@ export const checkPayments = async (
   await Promise.all(
     filteredProcessedPayments.map(async ({ payoutBatchId, userId, closedOut }) => {
       if (payoutBatchId) {
-        const updateUserFinicalData = {
+        const incrementUserFinicalData = {
           pending: -closedOut,
           earnings: closedOut,
+          last_closed_out: closedOut,
+        };
+        const incrementUserFinicalDashboardFilter = dto.generalDTO.filterData({
+          userId,
+        });
+        await financialDashboardService.incrementUserFinicalDashboard(
+          incrementUserFinicalData,
+          incrementUserFinicalDashboardFilter,
+          transaction,
+        );
+        const updateUserFinicalData = {
           last_closed_out: closedOut,
         };
         const updateUserFinicalDashboardFilter = dto.generalDTO.filterData({
