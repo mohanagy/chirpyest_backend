@@ -9,14 +9,14 @@ import cognito from './helpers/cognito';
 import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
 import routes from './routes';
-import { job } from './tasks/commissionJunction';
+import startTasks from './tasks';
 
 const app = express();
 
 app.use(cookieParser());
 
 cognito(app);
-job.start();
+startTasks();
 (global as any).fetch = fetch;
 Sentry.init({
   dsn: config.server.SentryDNS,
@@ -28,7 +28,7 @@ app.use(Sentry.Handlers.requestHandler() as RequestHandler);
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,PATCH');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Access-Control-Allow-Headers, Origin,Accept, Content-Type,Authorization, Access-Control-Request-Headers',

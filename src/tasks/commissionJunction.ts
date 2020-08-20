@@ -9,7 +9,7 @@ const {
   affiliateNetworks: { commissionJunctionConfig },
   server: { host },
 } = config;
-export const job = new CronJob(
+export const commissionJunctionJob = new CronJob(
   commissionJunctionCronJobPattern,
   async () => {
     try {
@@ -27,6 +27,7 @@ export const job = new CronJob(
           query: `{
                 publisherCommissions(forPublishers: ["${commissionJunctionConfig.cJPublisherId}"], sincePostingDate: "${startDate}", beforePostingDate: "${endDate}") {
                   records {
+                    actionStatus
                     actionTrackerId
                     actionTrackerName
                     advertiserName

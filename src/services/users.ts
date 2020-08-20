@@ -1,11 +1,10 @@
 import { Transaction } from 'sequelize';
-/* eslint-disable no-underscore-dangle */
-import { isNullOrUndefined } from 'util';
 import * as database from '../database';
+import { calculateUserPendingCash } from '../helpers';
 import { EditUserAttributes, Filter, UserAttributes } from '../interfaces';
 import { UserModel } from '../types/sequelize';
 
-const { Users } = database;
+const { Users, FinancialDashboard } = database;
 
 /**
  * @description getUser is a service used to find the user using filters
@@ -14,7 +13,12 @@ const { Users } = database;
  * @return {Promise<UserModel | null>} User data
  */
 export const getUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> => {
-  return Users.findOne({ ...filter, transaction });
+  const user = await Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
+  if (user && user.financialDashboard) {
+    const pendingDollars = calculateUserPendingCash(user.financialDashboard.pending);
+    user.financialDashboard.pending = pendingDollars;
+  }
+  return user;
 };
 
 /**
@@ -28,7 +32,7 @@ export const isEmailExists = async (email: string, transaction?: Transaction): P
     where: { email },
     transaction,
   });
-  if (isNullOrUndefined(User)) return false;
+  if (User === null || User === undefined) return false;
   return true;
 };
 
@@ -75,7 +79,7 @@ export const findAllUsers = async (transaction?: Transaction): Promise<UserModel
  * @return {Promise<UserModel | null>} user object
  */
 export const findUser = async (filter: Filter, transaction?: Transaction): Promise<UserModel | null> =>
-  Users.findOne({ ...filter, transaction });
+  Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
 
 /**
  * @description deleteUser is a service to  delete a user

@@ -14,4 +14,6 @@ router.post(
   asyncHandler(affiliateNetworksController.getCommissionJunction),
 );
 
+router.get('/affiliate-networks/brands', asyncHandler(affiliateNetworksController.getBrands));
+
 export default router;

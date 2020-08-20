@@ -31,13 +31,14 @@ export interface CommissionJunctionTransactionsAttributes {
   aid: number;
   orderId: number;
   commissionId: number;
-  saleAmountPubCurrency: string;
-  orderDiscountPubCurrency: string;
+  saleAmountPubCurrency: number;
+  orderDiscountPubCurrency: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
 export interface CommissionJunctionDataItem {
   actionTrackerId: number;
+  actionStatus: string;
   advertiserId: number;
   actionTrackerName: string;
   advertiserName: string;
@@ -50,21 +51,23 @@ export interface CommissionJunctionDataItem {
   aid: number;
   orderId: number;
   commissionId: number;
-  saleAmountPubCurrency: string;
-  orderDiscountPubCurrency: string;
+  saleAmountPubCurrency: number;
+  orderDiscountPubCurrency: number;
 }
 export type CommissionJunctionData = Array<CommissionJunctionDataItem>;
+
 export interface CommissionJunctionPayloadItem {
   actionTrackerId: number;
+  actionStatus: string;
   advertiserId: number;
   actionTrackerName: string;
   advertiserName: string;
   postingDate: string;
-  pubCommissionAmountUsd: number;
+  pubCommissionAmountUsd: string;
   shopperId?: number;
-  saleAmountUsd: number;
+  saleAmountUsd: string;
   correctionReason: string;
-  orderDiscountUsd: number;
+  orderDiscountUsd: string;
   aid: number;
   orderId: number;
   commissionId: number;
@@ -125,4 +128,16 @@ export interface UserTransactionsHistoryAttributes {
 export interface UpdatePendingCashAttributes {
   commissions: number;
   saleAmount: number;
+}
+
+export interface BrandsAttributes {
+  brandName: string;
+  network: string;
+  url: string;
+  brandId: string;
+  trackingLink: string;
+  status: string;
+  commission: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

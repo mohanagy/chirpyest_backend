@@ -25,9 +25,11 @@ export const getUserFinancialData = async (
     return httpResponse.unAuthorized(response, constants.messages.auth.notAuthorized);
   }
   const filter = dto.generalDTO.filterData({ userId: userId.id });
-  const data = await financialDashboardService.getUserFinancialDahsboard(filter, transaction);
-  const pendingDollars = calculateUserPendingCash(data.pending);
-  data.pending = pendingDollars;
+  const data = await financialDashboardService.getUserFinancialDashboard(filter, transaction);
+  if (data) {
+    const pendingDollars = calculateUserPendingCash(data.pending);
+    data.pending = pendingDollars;
+  }
   await transaction.commit();
   return response.send(data);
 };
