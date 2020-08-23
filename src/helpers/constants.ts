@@ -57,3 +57,117 @@ export const PREPARING = 'preparing';
 
 export const payPalEndpoint =
   process.env.NODE_ENV === 'production' ? 'https://api.paypal.com' : 'https://api.sandbox.paypal.com';
+
+export const trendingBrands = [
+  { id: '', name: 'Target' },
+  { id: '2423467', name: 'Revolve' },
+  { id: '4942550', name: 'Nike' },
+  { id: '', name: 'Gap' },
+  { id: '355678', name: 'Goop' },
+  { id: '', name: 'PacSun' },
+  { id: '43728', name: 'UGG' },
+  { id: '', name: 'Athleta' },
+  { id: '', name: 'Intermix' },
+  { id: '40776', name: 'MOTHER Denim' },
+  { id: '4258829', name: 'Barnes & Noble' },
+  { id: '4964921', name: 'Kenneth Cole' },
+  { id: '', name: 'Lucky Brand' },
+];
+
+interface BrandsCategoreis {
+  [key: string]: any;
+}
+
+export const brandsCategories: BrandsCategoreis = {
+  '1237': {
+    name: 'Nordstrom',
+    id: '1237',
+    category: 'fashion',
+  },
+  '43176': {
+    name: 'Urban Outfitters',
+    id: '43176',
+    category: 'fashion',
+  },
+  '5253058': {
+    name: 'Lacoste',
+    id: '5253058',
+    category: 'fashion',
+  },
+  '42004': {
+    name: 'Kate Spade',
+    id: '42004',
+    category: 'fashion',
+  },
+
+  'Beauty Counter': {
+    name: 'Beauty Counter',
+    id: '',
+    category: 'beauty',
+  },
+  '24765': {
+    name: 'Benefit',
+    id: '24765',
+    category: 'beauty',
+  },
+  'Sigma Beauty': {
+    name: 'Sigma Beauty',
+    id: '',
+    category: 'beauty',
+  },
+  '36310': {
+    name: 'Dyson',
+    id: '36310',
+    category: 'beauty',
+  },
+  '3009921': {
+    name: 'Stila',
+    id: '3009921',
+    category: 'beauty',
+  },
+  '37353': {
+    name: 'Container Store',
+    id: '37353',
+    category: 'home',
+  },
+  '4867369': {
+    name: 'One Kings Lane',
+    id: '4867369',
+    category: 'home',
+  },
+  '1845109': {
+    name: 'KitchenAid',
+    id: '1845109',
+    category: 'home',
+  },
+  'Home Depot': {
+    name: 'Home Depot',
+    id: '',
+    category: 'home',
+  },
+  '2149': {
+    name: 'Walmart',
+    id: '2149',
+    category: 'lifestyle',
+  },
+  '4836691': {
+    name: 'CVS',
+    id: '4836691',
+    category: 'lifestyle',
+  },
+  '1434782': {
+    name: 'Best Buy',
+    id: '1434782',
+    category: 'lifestyle',
+  },
+  QVC: {
+    name: 'QVC',
+    id: '',
+    category: 'lifestyle',
+  },
+};
+
+export const lifestyle = ['2149', '2149', '4836691', '1434782'];
+export const home = ['37353', '4867369', '1845109'];
+export const beauty = ['24765', '36310', '3009921'];
+export const fashion = ['1237', '43176', '5253058', '42004'];

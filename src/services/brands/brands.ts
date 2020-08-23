@@ -6,8 +6,8 @@ import { BrandsModel } from '../../types/sequelize';
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
  */
-export const getBrands = (): Promise<Array<BrandsModel>> => {
-  return Brands.findAll();
+export const getBrands = (filter: any): Promise<Array<BrandsModel>> => {
+  return Brands.findAll(filter);
 };
 
 /**
@@ -16,6 +16,6 @@ export const getBrands = (): Promise<Array<BrandsModel>> => {
  */
 export const createBrands = (data: Array<BrandsAttributes>): Promise<Array<BrandsModel>> => {
   return Brands.bulkCreate(data, {
-    ignoreDuplicates: true,
+    updateOnDuplicate: ['brandName', 'category', 'updatedAt'],
   });
 };

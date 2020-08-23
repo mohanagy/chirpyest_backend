@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { httpResponse } from '../../helpers';
+import { httpResponse, dto } from '../../helpers';
 import { brandsService, paymentsService, paymentsTransitionsService } from '../../services';
 
 /**
@@ -12,12 +12,23 @@ import { brandsService, paymentsService, paymentsTransitionsService } from '../.
  */
 
 export const getBrands = async (
-  _request: Request,
+  request: Request,
   response: Response,
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
-  const brands = await brandsService.getBrands();
+  const { isTrending, category } = request.query;
+  let filter = {};
+  if (isTrending === 'true') {
+    filter = dto.generalDTO.filterData({
+      isTrending: true,
+    });
+  } else if (category) {
+    filter = dto.generalDTO.filterData({
+      category,
+    });
+  }
+  const brands = await brandsService.getBrands(filter);
   transaction.commit();
   return httpResponse.ok(response, brands);
 };

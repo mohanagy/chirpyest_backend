@@ -7,6 +7,7 @@ import { createBrands } from './brands';
 export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
   return new Promise((resolve, reject) => {
     const rakutenBrands: Array<BrandsAttributes> = [];
+    const cache: any = {};
     const csvReq: any = request.get(constants.rakutenBrandsUrl);
 
     csv()
@@ -16,7 +17,10 @@ export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
         const json = JSON.parse(jsonString);
         if (json.Status === 'Active') {
           const cleanData: BrandsAttributes = dto.rakutenDTO.rakutenBrandsData(json);
-          rakutenBrands.push(cleanData);
+          if (!cache[json.MID]) {
+            rakutenBrands.push(cleanData);
+            cache[json.MID] = true;
+          }
         }
       })
       .on('done', async (error) => {
