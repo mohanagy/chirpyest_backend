@@ -46,12 +46,37 @@ export const getPayments = async (
       calculateImpactRadiusUserPayment(),
       calculateCjUserPayment(),
     ]);
-    const flatPyaments = paymentsArr.flat();
-    await paymentsTransitionsService.createPaymentsTransactions(flatPyaments, transaction);
+    const flatPayments = paymentsArr.flat();
+    await paymentsTransitionsService.createPaymentsTransactions(flatPayments, transaction);
     transaction.commit();
-    return httpResponse.ok(response, flatPyaments);
+    return httpResponse.ok(response, flatPayments);
   } catch (err) {
     transaction.rollback();
     return next(err);
   }
+};
+
+/**
+ * @description shortLinks is a controller used to short network links
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} object contains success status
+ */
+
+export const shortLinks = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const userId = dto.usersDTO.userId(request);
+  const bodyData = dto.generalDTO.bodyData(request);
+  const { url } = bodyData;
+  const trackableLink = await brandsService.checkUrlNetwork(url, userId.id);
+  const { shortUrl } = await brandsService.convertLink(trackableLink);
+
+  await transaction.commit();
+  return httpResponse.ok(response, shortUrl);
 };

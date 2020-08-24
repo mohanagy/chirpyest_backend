@@ -144,3 +144,11 @@ export interface BrandsAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface UrlBrand {
+  [key: string]: string | undefined;
+}
+
+export interface GenerateTrackableLinkAttributes {
+  [key: string]: (args: UrlBrand) => string;
+}

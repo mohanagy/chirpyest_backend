@@ -19,3 +19,9 @@ export interface AffiliateNetworksConfigs {
   rakutenConfig: Rakuten;
   impactRadiusConfig: ImpactRadius;
 }
+export interface BrandsConfigs {
+  rebrandlyApiKey: string;
+  rebrandlyWorkspace: string;
+  rebrandlyDomain: string;
+  rebrandlyEndpoint: string;
+}

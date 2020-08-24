@@ -6,3 +6,7 @@ export const brandsQuery = joi.object({
   isTrending: joi.string(),
   category: joi.valid(...categories),
 });
+
+export const shortLinksValidate = joi.object({
+  url: joi.string().uri().required(),
+});
