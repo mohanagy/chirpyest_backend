@@ -3,7 +3,7 @@
 const { Sequelize } = require('sequelize');
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
+  up: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addColumn(
@@ -33,7 +33,7 @@ module.exports = {
       ]);
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.removeColumn('brands', 'category', { transaction: t }),
