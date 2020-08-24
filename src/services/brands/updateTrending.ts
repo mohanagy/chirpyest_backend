@@ -10,6 +10,7 @@ const trendingIds = trendingBrands.reduce((acc: any[], curr) => {
   return acc;
 }, []);
 
+// script to be run when we want to update the trending and category for brands
 export const updateTrending = () => {
   return Brands.update(
     { isTrending: true },
@@ -20,8 +21,6 @@ export const updateTrending = () => {
     },
   );
 };
-
-updateTrending();
 
 export const updateCategory = () => {
   Promise.all([
@@ -59,3 +58,9 @@ export const updateCategory = () => {
     ),
   ]);
 };
+
+(async () => {
+  await updateTrending();
+  await updateCategory();
+  console.info('done');
+})();
