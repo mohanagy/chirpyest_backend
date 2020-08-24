@@ -63,3 +63,24 @@ export const updateUserProfile = async (
     constants.messages.users.updateUserProfileSuccess,
   );
 };
+
+/**
+ * @description getUsersList is a controller used to get all users
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} array of users
+ * @returns Promise
+ */
+export const getUsersList = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const users = await usersServices.findAllUsers(transaction);
+
+  await transaction.commit();
+  return httpResponse.ok(response, users);
+};

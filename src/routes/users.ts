@@ -6,6 +6,7 @@ import { usersValidation } from '../validations';
 const router = express.Router();
 
 router.get('/users/:id/profile', asyncHandler(verifyToken), asyncHandler(usersControllers.getUserProfile));
+router.get('/users', asyncHandler(usersControllers.getUsersList));
 router.patch(
   '/users/:id/profile',
   asyncHandler(verifyToken),

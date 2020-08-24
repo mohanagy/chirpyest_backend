@@ -108,7 +108,7 @@ export interface ImpactRadiusAttributes {
 }
 
 export interface FinancialDashboardAttributes {
-  userId: number;
+  userId?: number;
   pending: number;
   receivableMilestone: number;
   earnings: number;
