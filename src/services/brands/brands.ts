@@ -29,11 +29,11 @@ export const createBrands = (data: Array<BrandsAttributes>, transaction: Transac
  * @description Add parameters to open new url for rakuten
  * @param  {string} trackingLink
  * @param  {string} userId
- * @param  {string} activeTabUrl
+ * @param  {string} originalUrl
  * @returns string
  */
-export const generateRakutenUrl = ({ trackingLink, brandId, userId = '', activeTabUrl }: UrlBrand): string => {
-  const trackingUrl = `${trackingLink}&mid=${brandId}&u1=${userId}&murl=${activeTabUrl}`;
+export const generateRakutenUrl = ({ trackingLink, brandId, userId = '', originalUrl }: UrlBrand): string => {
+  const trackingUrl = `${trackingLink}&mid=${brandId}&u1=${userId}&murl=${originalUrl}`;
   return trackingUrl;
 };
 
@@ -41,11 +41,11 @@ export const generateRakutenUrl = ({ trackingLink, brandId, userId = '', activeT
  * @description Add parameters to generate new url for impact radius
  * @param  {string} trackingLink
  * @param  {string} userId
- * @param  {string} activeTabUrl
+ * @param  {string} originalUrl
  * @returns string
  */
-export const generateImpactRadiusUrl = ({ trackingLink, userId = '', activeTabUrl }: UrlBrand): string => {
-  const trackingUrl = `${trackingLink}?subId1=${userId}&u=${activeTabUrl}`;
+export const generateImpactRadiusUrl = ({ trackingLink, userId = '', originalUrl }: UrlBrand): string => {
+  const trackingUrl = `${trackingLink}?subId1=${userId}&u=${originalUrl}`;
   return trackingUrl;
 };
 
@@ -53,12 +53,12 @@ export const generateImpactRadiusUrl = ({ trackingLink, userId = '', activeTabUr
  * @description Add parameters to generate new url for commission junction
  * @param  {string} trackingLink
  * @param  {string} userId
- * @param  {string} activeTabUrl
+ * @param  {string} originalUrl
  * @returns string
  */
-export const generateCommissionJunctionUrl = ({ trackingLink, userId, activeTabUrl }: UrlBrand): string => {
+export const generateCommissionJunctionUrl = ({ trackingLink, userId, originalUrl }: UrlBrand): string => {
   let trackingUrl = trackingLink?.replace('defaultvalue', userId || 'defaultvalue');
-  trackingUrl = `${trackingUrl}/${activeTabUrl}`;
+  trackingUrl = `${trackingUrl}/${originalUrl}`;
   return trackingUrl;
 };
 
@@ -89,7 +89,7 @@ export const checkUrlNetwork = async (url: string, userId: string): Promise<stri
     trackingLink,
     brandId,
     userId,
-    activeTabUrl: url,
+    originalUrl: url,
   };
   const trackableLink: string = generateTrackableLink[network](data);
   return trackableLink;
