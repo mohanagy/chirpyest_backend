@@ -1,4 +1,4 @@
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
 import { constants, dto } from '../../helpers';
 import { Brands } from '../../database';
@@ -18,9 +18,10 @@ export const getBrands = (filter: any): Promise<Array<BrandsModel>> => {
  * @description createBrands is a service used to insert a list of the brands to the database
  * @return {Promise<Array<BrandsModel>>}
  */
-export const createBrands = (data: Array<BrandsAttributes>): Promise<Array<BrandsModel>> => {
+export const createBrands = (data: Array<BrandsAttributes>, transaction: Transaction): Promise<Array<BrandsModel>> => {
   return Brands.bulkCreate(data, {
-    updateOnDuplicate: ['brandName', 'category', 'updatedAt'],
+    updateOnDuplicate: ['brandName', 'category', 'updatedAt', 'isExpired'],
+    transaction,
   });
 };
 

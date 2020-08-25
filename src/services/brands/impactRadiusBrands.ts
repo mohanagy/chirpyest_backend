@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { constants, dto } from '../../helpers';
 import { BrandsAttributes } from '../../interfaces';
-import { createBrands } from './brands';
 
 export const getImpactRadiusBrands = async (): Promise<Array<BrandsAttributes>> => {
   const { data: campaignsEndpointData } = await axios.get(constants.campaignsEndpoint);
@@ -23,6 +22,5 @@ export const getImpactRadiusBrands = async (): Promise<Array<BrandsAttributes>> 
     });
   });
 
-  await createBrands(impactRadiusBrandsList);
   return impactRadiusBrandsList;
 };
