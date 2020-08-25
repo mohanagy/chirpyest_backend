@@ -5,7 +5,13 @@ import { constants, logger } from '../helpers';
 import { brandsService } from '../services';
 import database, { Brands } from '../database';
 
-const { brandsCronJobPattern } = constants;
+const {
+  brandsCronJobPattern,
+  campaignsEndpoint,
+  campaignsEndpoint2,
+  ir2CampaignsEndpoint,
+  ir2CampaignsEndpoint2,
+} = constants;
 
 export const getBrandsJob = new CronJob(
   brandsCronJobPattern,
@@ -13,11 +19,25 @@ export const getBrandsJob = new CronJob(
     logger.info('Brands cron job started');
     const transaction = await database.sequelize.transaction();
     const { getRakutenBrands, getImpactRadiusBrands, getCjBrands } = brandsService;
+    const impactRadiusAccount1Promies = getImpactRadiusBrands(campaignsEndpoint, campaignsEndpoint2);
+    const impactRadiusAccount2Promies = getImpactRadiusBrands(ir2CampaignsEndpoint, ir2CampaignsEndpoint2);
     try {
-      const brands = await Promise.all([getRakutenBrands(), getImpactRadiusBrands(), getCjBrands()]);
+      const brands = await Promise.all([
+        getRakutenBrands(),
+        impactRadiusAccount1Promies,
+        impactRadiusAccount2Promies,
+        getCjBrands(),
+      ]);
       const flatBrands = brands.flat();
-      const resp = await brandsService.createBrands(flatBrands, transaction);
-      const currentHour = moment(resp[0].updatedAt).startOf('hour').toJSON();
+      // filter duplicates
+      const cache: any = {};
+      flatBrands.forEach((brand) => {
+        if (!cache[brand.brandId]) {
+          cache[brand.brandId] = brand;
+        }
+      });
+      const createdBrands = await brandsService.createBrands(Object.values(cache), transaction);
+      const currentHour = moment(createdBrands[0].updatedAt).startOf('hour').toJSON();
       // decide deleted brands
       await Brands.update(
         { isExpired: true },

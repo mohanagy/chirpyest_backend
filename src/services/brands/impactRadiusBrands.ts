@@ -1,15 +1,21 @@
 import axios from 'axios';
-import { constants, dto } from '../../helpers';
+import { dto } from '../../helpers';
 import { BrandsAttributes } from '../../interfaces';
 
-export const getImpactRadiusBrands = async (): Promise<Array<BrandsAttributes>> => {
-  const { data: campaignsEndpointData } = await axios.get(constants.campaignsEndpoint);
-  const { data: campaignsEndpoint2Data } = await axios.get(constants.campaignsEndpoint2);
+export const getImpactRadiusBrands = async (
+  campaignsEndpoint: string,
+  cashbackEndpoint: string,
+): Promise<Array<BrandsAttributes>> => {
+  const { data: campaignsEndpointData } = await axios.get(campaignsEndpoint);
+  const { data: campaignsEndpoint2Data } = await axios.get(cashbackEndpoint);
   const impactRadiusBrandsList: BrandsAttributes[] = [];
   const obj: any = {};
   campaignsEndpointData.Campaigns.forEach((campaign: any) => {
     campaignsEndpoint2Data.Records.forEach((record: any) => {
-      if (record.Name === campaign.CampaignName) {
+      const isActiveAndExist =
+        campaign.ContractStatus === 'Active' &&
+        record.Name.toLowerCase().trim() === campaign.CampaignName.toLowerCase().trim();
+      if (isActiveAndExist) {
         const id = `${campaign.AdvertiserId}_${campaign.CampaignId}`;
         const updatedCampaign = { ...campaign };
         updatedCampaign.Payout = record.Payout;
