@@ -36,11 +36,16 @@ export const commissionJunctionBrandsUrl = `https://advertiser-lookup.api.cj.com
 
 export const rakutenBrandsUrl = `http://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=13`;
 
-const { accountSID, authToken } = config.affiliateNetworks.impactRadiusConfig;
+const { accountSID, authToken, account2SID, authToken2 } = config.affiliateNetworks.impactRadiusConfig;
 
 const baseImpactApiUrl = `https://${accountSID}:${authToken}@api.impact.com/Mediapartners/${accountSID}`;
 export const campaignsEndpoint = `${baseImpactApiUrl}/Campaigns.json`;
 export const campaignsEndpoint2 = `${baseImpactApiUrl}/Reports/4016?PageSize=20000&Page=1&contract_status=Active`;
+
+const baseImpactAccount2ApiUrl = `https://${account2SID}:${authToken2}@api.impact.com/Mediapartners/${account2SID}`;
+
+export const ir2CampaignsEndpoint = `${baseImpactAccount2ApiUrl}/Campaigns.json`;
+export const ir2CampaignsEndpoint2 = `${baseImpactAccount2ApiUrl}/Reports/4016?PageSize=20000&Page=1&contract_status=Active`;
 
 export const paymentReportEndpoint = `${baseImpactApiUrl}/Reports/mp_action_listing_sku.json?SUPERSTATUS_MS=APPROVED&SUPERSTATUS_MS=NA&SUPERSTATUS_MS=PENDING&PUB_CAMPAIGN_MS=0&MP_CATEGORY_LIST2=0&PAYSTUB_ID=0&MODIFIED_Y_N=0&PUB_ACTION_TRACKER=0&MP_ACTION_TYPE=0&ADV_PROMOCODE=0&SUBID1=0&SUBID2=0&SUBID3=0&SHAREDID=0&REFERRAL_TYPE=0&ACTION_ID=0&ADV_NOTE=0&SHOW_STATUS_DETAIL=1&START_DATE=2019-02-01&END_DATE=2019-12-07&timeRange=CUSTOM&compareEnabled=false`;
 

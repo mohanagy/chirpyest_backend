@@ -10,6 +10,8 @@ const envVarsSchema = joi
     IMPACT_RADIUS_TOKEN: joi.string().required(), // webhook token
     IMPACT_RADIUS_ACCOUNT_SID: joi.string().required(),
     IMPACT_RADIUS_AUTH_TOKEN: joi.string().required(),
+    IMPACT_RADIUS2_ACCOUNT_SID: joi.string().required(),
+    IMPACT_RADIUS2_AUTH_TOKEN: joi.string().required(),
   })
   .unknown()
   .required();
@@ -33,6 +35,8 @@ const config = (): AffiliateNetworksConfigs => {
       webhookToken: envVars.IMPACT_RADIUS_TOKEN, // TODO: rename this
       accountSID: envVars.IMPACT_RADIUS_ACCOUNT_SID, // TODO: rename this
       authToken: envVars.IMPACT_RADIUS_AUTH_TOKEN, // TODO: rename this
+      account2SID: envVars.IMPACT_RADIUS2_ACCOUNT_SID,
+      authToken2: envVars.IMPACT_RADIUS2_AUTH_TOKEN,
     },
   };
 };
