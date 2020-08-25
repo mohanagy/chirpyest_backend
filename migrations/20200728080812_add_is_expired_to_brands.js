@@ -54,6 +54,7 @@ module.exports = {
             is_deleted: false,
             is_trending: false,
           },
+          {},
           { transaction: t },
         ),
       ]);
