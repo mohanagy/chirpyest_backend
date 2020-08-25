@@ -5,7 +5,6 @@ import { Parser } from 'xml2js';
 import config from '../../config';
 import { constants, dto } from '../../helpers';
 import { BrandsAttributes } from '../../interfaces';
-import { createBrands } from './brands';
 
 const {
   commissionJunctionConfig: { cJPersonalKey },
@@ -41,8 +40,5 @@ export const getCjBrands = async (): Promise<Array<BrandsAttributes>> => {
     });
     allAdvertisers = allAdvertisers.concat(cleanData);
   } while (allAdvertisers.length < totalRecords);
-
-  // save to the db
-  await createBrands(allAdvertisers);
   return allAdvertisers;
 };
