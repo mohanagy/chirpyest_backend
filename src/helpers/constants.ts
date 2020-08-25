@@ -64,19 +64,19 @@ export const payPalEndpoint =
   process.env.NODE_ENV === 'production' ? 'https://api.paypal.com' : 'https://api.sandbox.paypal.com';
 
 export const trendingBrands = [
-  { id: '', name: 'Target' },
+  { id: '59720_2092', name: 'Target' },
   { id: '2423467', name: 'Revolve' },
   { id: '4942550', name: 'Nike' },
-  { id: '', name: 'Gap' },
+  { id: '396110_5553', name: 'Gap' },
   { id: '355678', name: 'Goop' },
-  { id: '', name: 'PacSun' },
   { id: '43728', name: 'UGG' },
-  { id: '', name: 'Athleta' },
-  { id: '', name: 'Intermix' },
+  { id: '396113_5556', name: 'Athleta' },
   { id: '40776', name: 'MOTHER Denim' },
   { id: '4258829', name: 'Barnes & Noble' },
   { id: '4964921', name: 'Kenneth Cole' },
-  { id: '', name: 'Lucky Brand' },
+  { id: '', name: 'Intermix' },
+  { id: '', name: 'PacSun' },
+  { id: '', name: 'LuckyBrand' },
 ];
 
 interface BrandsCategoreis {
@@ -115,9 +115,9 @@ export const brandsCategories: BrandsCategoreis = {
     id: '24765',
     category: 'beauty',
   },
-  'Sigma Beauty': {
+  '97526_2835': {
     name: 'Sigma Beauty',
-    id: '',
+    id: '97526_2835',
     category: 'beauty',
   },
   '36310': {
@@ -145,9 +145,9 @@ export const brandsCategories: BrandsCategoreis = {
     id: '1845109',
     category: 'home',
   },
-  'Home Depot': {
+  '1213441_8154': {
     name: 'Home Depot',
-    id: '',
+    id: '1213441_8154',
     category: 'home',
   },
   '2149': {
@@ -165,14 +165,14 @@ export const brandsCategories: BrandsCategoreis = {
     id: '1434782',
     category: 'lifestyle',
   },
-  QVC: {
+  '1355298_9368': {
     name: 'QVC',
-    id: '',
+    id: '1355298_9368',
     category: 'lifestyle',
   },
 };
 
-export const lifestyle = ['2149', '2149', '4836691', '1434782'];
-export const home = ['37353', '4867369', '1845109'];
-export const beauty = ['24765', '36310', '3009921'];
+export const lifestyle = ['2149', '2149', '4836691', '1434782', '1355298_9368'];
+export const home = ['37353', '4867369', '1845109', '1213441_8154'];
+export const beauty = ['24765', '36310', '3009921', '97526_2835'];
 export const fashion = ['1237', '43176', '5253058', '42004'];
