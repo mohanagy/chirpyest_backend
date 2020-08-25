@@ -12,10 +12,10 @@ export const getImpactRadiusBrands = async (
   const obj: any = {};
   campaignsEndpointData.Campaigns.forEach((campaign: any) => {
     campaignsEndpoint2Data.Records.forEach((record: any) => {
-      if (
+      const isActiveAndExist =
         campaign.ContractStatus === 'Active' &&
-        record.Name.toLowerCase().trim() === campaign.CampaignName.toLowerCase().trim()
-      ) {
+        record.Name.toLowerCase().trim() === campaign.CampaignName.toLowerCase().trim();
+      if (isActiveAndExist) {
         const id = `${campaign.AdvertiserId}_${campaign.CampaignId}`;
         const updatedCampaign = { ...campaign };
         updatedCampaign.Payout = record.Payout;

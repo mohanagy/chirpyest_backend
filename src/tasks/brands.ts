@@ -36,8 +36,8 @@ export const getBrandsJob = new CronJob(
           cache[brand.brandId] = brand;
         }
       });
-      const resp = await brandsService.createBrands(Object.values(cache), transaction);
-      const currentHour = moment(resp[0].updatedAt).startOf('hour').toJSON();
+      const createdBrands = await brandsService.createBrands(Object.values(cache), transaction);
+      const currentHour = moment(createdBrands[0].updatedAt).startOf('hour').toJSON();
       // decide deleted brands
       await Brands.update(
         { isExpired: true },
