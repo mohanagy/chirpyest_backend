@@ -12,6 +12,8 @@ export interface ImpactRadius {
   webhookToken: string;
   accountSID: string;
   authToken: string;
+  account2SID: string;
+  authToken2: string;
 }
 
 export interface AffiliateNetworksConfigs {

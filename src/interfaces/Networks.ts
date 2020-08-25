@@ -138,6 +138,10 @@ export interface BrandsAttributes {
   trackingLink: string;
   status: string;
   commission: string;
+  category?: string;
+  isTrending?: boolean;
+  isDeleted?: boolean;
+  isExpired?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

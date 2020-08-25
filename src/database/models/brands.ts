@@ -5,7 +5,7 @@ export function BrandsFactory(sequelize: Sequelize): BrandsStatic {
   return sequelize.define('brands', {
     brandId: {
       type: DataTypes.STRING,
-      primaryKey: true,
+      unique: true,
     },
     network: {
       type: DataTypes.STRING,
@@ -30,6 +30,21 @@ export function BrandsFactory(sequelize: Sequelize): BrandsStatic {
     commission: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    category: {
+      type: DataTypes.STRING,
+    },
+    isTrending: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isExpired: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   }) as BrandsStatic;
 }

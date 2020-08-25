@@ -41,9 +41,9 @@ export const impactRadiusBrands = (data: any): BrandsAttributes => {
     commission = data.Payout;
   }
   return {
-    brandName: data.AdvertiserName,
-    url: data.AdvertiserUrl,
-    brandId: data.AdvertiserId,
+    brandName: data.CampaignName,
+    url: data.CampaignUrl,
+    brandId: `${data.AdvertiserId}_${data.CampaignId}`,
     trackingLink: data.TrackingLink,
     status: data.ContractStatus,
     commission,

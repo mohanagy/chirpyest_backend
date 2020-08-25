@@ -1,6 +1,7 @@
 import express from 'express';
 import { affiliateNetworksController } from '../controllers';
-import { asyncHandler } from '../middleware';
+import { asyncHandler, validate } from '../middleware';
+import { brandsValidation } from '../validations';
 
 const router = express.Router();
 
@@ -14,6 +15,10 @@ router.post(
   asyncHandler(affiliateNetworksController.getCommissionJunction),
 );
 
-router.get('/affiliate-networks/brands', asyncHandler(affiliateNetworksController.getBrands));
+router.get(
+  '/affiliate-networks/brands',
+  validate.query(brandsValidation.brandsQuery),
+  asyncHandler(affiliateNetworksController.getBrands),
+);
 
 export default router;

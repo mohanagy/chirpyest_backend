@@ -36,11 +36,16 @@ export const commissionJunctionBrandsUrl = `https://advertiser-lookup.api.cj.com
 
 export const rakutenBrandsUrl = `http://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=13`;
 
-const { accountSID, authToken } = config.affiliateNetworks.impactRadiusConfig;
+const { accountSID, authToken, account2SID, authToken2 } = config.affiliateNetworks.impactRadiusConfig;
 
 const baseImpactApiUrl = `https://${accountSID}:${authToken}@api.impact.com/Mediapartners/${accountSID}`;
 export const campaignsEndpoint = `${baseImpactApiUrl}/Campaigns.json`;
 export const campaignsEndpoint2 = `${baseImpactApiUrl}/Reports/4016?PageSize=20000&Page=1&contract_status=Active`;
+
+const baseImpactAccount2ApiUrl = `https://${account2SID}:${authToken2}@api.impact.com/Mediapartners/${account2SID}`;
+
+export const ir2CampaignsEndpoint = `${baseImpactAccount2ApiUrl}/Campaigns.json`;
+export const ir2CampaignsEndpoint2 = `${baseImpactAccount2ApiUrl}/Reports/4016?PageSize=20000&Page=1&contract_status=Active`;
 
 export const paymentReportEndpoint = `${baseImpactApiUrl}/Reports/mp_action_listing_sku.json?SUPERSTATUS_MS=APPROVED&SUPERSTATUS_MS=NA&SUPERSTATUS_MS=PENDING&PUB_CAMPAIGN_MS=0&MP_CATEGORY_LIST2=0&PAYSTUB_ID=0&MODIFIED_Y_N=0&PUB_ACTION_TRACKER=0&MP_ACTION_TYPE=0&ADV_PROMOCODE=0&SUBID1=0&SUBID2=0&SUBID3=0&SHAREDID=0&REFERRAL_TYPE=0&ACTION_ID=0&ADV_NOTE=0&SHOW_STATUS_DETAIL=1&START_DATE=2019-02-01&END_DATE=2019-12-07&timeRange=CUSTOM&compareEnabled=false`;
 
@@ -57,3 +62,117 @@ export const PREPARING = 'preparing';
 
 export const payPalEndpoint =
   process.env.NODE_ENV === 'production' ? 'https://api.paypal.com' : 'https://api.sandbox.paypal.com';
+
+export const trendingBrands = [
+  { id: '59720_2092', name: 'Target' },
+  { id: '2423467', name: 'Revolve' },
+  { id: '4942550', name: 'Nike' },
+  { id: '396110_5553', name: 'Gap' },
+  { id: '355678', name: 'Goop' },
+  { id: '43728', name: 'UGG' },
+  { id: '396113_5556', name: 'Athleta' },
+  { id: '40776', name: 'MOTHER Denim' },
+  { id: '4258829', name: 'Barnes & Noble' },
+  { id: '4964921', name: 'Kenneth Cole' },
+  { id: '', name: 'Intermix' },
+  { id: '', name: 'PacSun' },
+  { id: '', name: 'LuckyBrand' },
+];
+
+interface BrandsCategoreis {
+  [key: string]: any;
+}
+
+export const brandsCategories: BrandsCategoreis = {
+  '1237': {
+    name: 'Nordstrom',
+    id: '1237',
+    category: 'fashion',
+  },
+  '43176': {
+    name: 'Urban Outfitters',
+    id: '43176',
+    category: 'fashion',
+  },
+  '5253058': {
+    name: 'Lacoste',
+    id: '5253058',
+    category: 'fashion',
+  },
+  '42004': {
+    name: 'Kate Spade',
+    id: '42004',
+    category: 'fashion',
+  },
+
+  'Beauty Counter': {
+    name: 'Beauty Counter',
+    id: '',
+    category: 'beauty',
+  },
+  '24765': {
+    name: 'Benefit',
+    id: '24765',
+    category: 'beauty',
+  },
+  '97526_2835': {
+    name: 'Sigma Beauty',
+    id: '97526_2835',
+    category: 'beauty',
+  },
+  '36310': {
+    name: 'Dyson',
+    id: '36310',
+    category: 'beauty',
+  },
+  '3009921': {
+    name: 'Stila',
+    id: '3009921',
+    category: 'beauty',
+  },
+  '37353': {
+    name: 'Container Store',
+    id: '37353',
+    category: 'home',
+  },
+  '4867369': {
+    name: 'One Kings Lane',
+    id: '4867369',
+    category: 'home',
+  },
+  '1845109': {
+    name: 'KitchenAid',
+    id: '1845109',
+    category: 'home',
+  },
+  '1213441_8154': {
+    name: 'Home Depot',
+    id: '1213441_8154',
+    category: 'home',
+  },
+  '2149': {
+    name: 'Walmart',
+    id: '2149',
+    category: 'lifestyle',
+  },
+  '4836691': {
+    name: 'CVS',
+    id: '4836691',
+    category: 'lifestyle',
+  },
+  '1434782': {
+    name: 'Best Buy',
+    id: '1434782',
+    category: 'lifestyle',
+  },
+  '1355298_9368': {
+    name: 'QVC',
+    id: '1355298_9368',
+    category: 'lifestyle',
+  },
+};
+
+export const lifestyle = ['2149', '2149', '4836691', '1434782', '1355298_9368'];
+export const home = ['37353', '4867369', '1845109', '1213441_8154'];
+export const beauty = ['24765', '36310', '3009921', '97526_2835'];
+export const fashion = ['1237', '43176', '5253058', '42004'];

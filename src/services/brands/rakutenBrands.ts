@@ -2,11 +2,11 @@ import csv from 'csvtojson';
 import request from 'request';
 import { constants, dto } from '../../helpers';
 import { BrandsAttributes } from '../../interfaces';
-import { createBrands } from './brands';
 
 export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
   return new Promise((resolve, reject) => {
     const rakutenBrands: Array<BrandsAttributes> = [];
+    const cache: any = {};
     const csvReq: any = request.get(constants.rakutenBrandsUrl);
 
     csv()
@@ -16,7 +16,10 @@ export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
         const json = JSON.parse(jsonString);
         if (json.Status === 'Active') {
           const cleanData: BrandsAttributes = dto.rakutenDTO.rakutenBrandsData(json);
-          rakutenBrands.push(cleanData);
+          if (!cache[json.MID]) {
+            rakutenBrands.push(cleanData);
+            cache[json.MID] = true;
+          }
         }
       })
       .on('done', async (error) => {
@@ -25,7 +28,6 @@ export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
           throw error;
         }
         try {
-          await createBrands(rakutenBrands);
           resolve(rakutenBrands);
         } catch (err) {
           reject(err);
