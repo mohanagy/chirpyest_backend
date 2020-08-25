@@ -36,9 +36,15 @@ export function BrandsFactory(sequelize: Sequelize): BrandsStatic {
     },
     isTrending: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    isExpired: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   }) as BrandsStatic;
 }

@@ -2,7 +2,6 @@ import csv from 'csvtojson';
 import request from 'request';
 import { constants, dto } from '../../helpers';
 import { BrandsAttributes } from '../../interfaces';
-import { createBrands } from './brands';
 
 export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
   return new Promise((resolve, reject) => {
@@ -29,7 +28,6 @@ export const getRakutenBrands = (): Promise<BrandsAttributes[]> => {
           throw error;
         }
         try {
-          await createBrands(rakutenBrands);
           resolve(rakutenBrands);
         } catch (err) {
           reject(err);

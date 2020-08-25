@@ -141,6 +141,7 @@ export interface BrandsAttributes {
   category?: string;
   isTrending?: boolean;
   isDeleted?: boolean;
+  isExpired?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
