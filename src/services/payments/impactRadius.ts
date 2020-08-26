@@ -4,11 +4,10 @@ import { URL } from 'url';
 import { constants, dto, convertToCents, getHalfMonthRange } from '../../helpers';
 import { ImpactRadiusPayment, IPaymentByUser } from '../../interfaces';
 
-const { paymentReportEndpoint } = constants;
+const { paymentReportEndpointAccount1, paymentReportEndpointAccount2 } = constants;
 
-const paymentReportEndpointParsed = new URL(paymentReportEndpoint);
-
-export const calculateImpactRadiusUserPayment = async (): Promise<any> => {
+export const calculateImpactRadiusUserPayment = async (paymentReportEndpoint: string, type: string): Promise<any> => {
+  const paymentReportEndpointParsed = new URL(paymentReportEndpoint);
   const { start, end, halfMonthId } = getHalfMonthRange();
   const startOfLastMonth = start.format('YYYY-MM-DD');
   const endOfLastMonth = end.format('YYYY-MM-DD');
@@ -42,8 +41,16 @@ export const calculateImpactRadiusUserPayment = async (): Promise<any> => {
   const formatedTotalPayments = Object.entries(paymentsByUser).reduce((acc: any, curr) => {
     const [userId, amount] = curr;
     const userCommission = convertToCents(Number(amount) / 2);
-    acc.push({ userId, amount: userCommission, type: 'IR', status: 'pending', halfMonthId });
+    acc.push({ userId, amount: userCommission, type, status: 'pending', halfMonthId });
     return acc;
   }, []);
   return formatedTotalPayments;
+};
+
+export const calculateImpactRadiusBothAccountsPayment = async () => {
+  const paymentsAccount1 = calculateImpactRadiusUserPayment(paymentReportEndpointAccount1, 'IR');
+  const paymentsAccount2 = calculateImpactRadiusUserPayment(paymentReportEndpointAccount2, 'IR2');
+  const bothPayments = await Promise.all([paymentsAccount1, paymentsAccount2]);
+  const allRakutenPayments = bothPayments.flat();
+  return allRakutenPayments;
 };

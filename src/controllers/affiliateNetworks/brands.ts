@@ -40,10 +40,14 @@ export const getPayments = async (
   transaction: Transaction,
 ): Promise<Response | void> => {
   try {
-    const { calculateRakutenUserPayment, calculateImpactRadiusUserPayment, calculateCjUserPayment } = paymentsService;
+    const {
+      calculateRakutenUserPayment,
+      calculateImpactRadiusBothAccountsPayment,
+      calculateCjUserPayment,
+    } = paymentsService;
     const paymentsArr = await Promise.all([
       calculateRakutenUserPayment(),
-      calculateImpactRadiusUserPayment(),
+      calculateImpactRadiusBothAccountsPayment(),
       calculateCjUserPayment(),
     ]);
     const flatPayments = paymentsArr.flat();
