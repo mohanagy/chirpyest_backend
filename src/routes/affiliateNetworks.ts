@@ -20,5 +20,10 @@ router.get(
   validate.query(brandsValidation.brandsQuery),
   asyncHandler(affiliateNetworksController.getBrands),
 );
+router.post(
+  '/brands/shortLinks',
+  validate.body(brandsValidation.shortLinksValidate),
+  asyncHandler(affiliateNetworksController.shortLinks),
+);
 
 export default router;
