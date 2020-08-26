@@ -11,10 +11,14 @@ export const calcPaymentsCronJob = new CronJob(
     logger.info('Calculate payment cronjob started');
     const transaction = await database.sequelize.transaction();
     try {
-      const { calculateRakutenUserPayment, calculateImpactRadiusUserPayment, calculateCjUserPayment } = paymentsService;
+      const {
+        calculateRakutenUserPayment,
+        calculateImpactRadiusBothAccountsPayment,
+        calculateCjUserPayment,
+      } = paymentsService;
       const paymentsArr = await Promise.all([
         calculateRakutenUserPayment(),
-        calculateImpactRadiusUserPayment(),
+        calculateImpactRadiusBothAccountsPayment(),
         calculateCjUserPayment(),
       ]);
       const flatPyaments = paymentsArr.flat();
