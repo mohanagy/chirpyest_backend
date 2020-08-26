@@ -68,6 +68,7 @@ export const updateUser = async (
 export const findAllUsers = async (transaction?: Transaction): Promise<UserModel[]> => {
   const data = await Users.findAll({
     transaction,
+    include: [FinancialDashboard],
   });
   return data;
 };

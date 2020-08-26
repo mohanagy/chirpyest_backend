@@ -17,6 +17,9 @@ export const messages = {
     userProfile: 'User Profile',
     updateUserProfileSuccess: 'User Profile Updated Successfully',
   },
+  brands: {
+    linkNotRelatedToOurNetwork: 'Sorry, this link is not in our network',
+  },
 };
 
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information

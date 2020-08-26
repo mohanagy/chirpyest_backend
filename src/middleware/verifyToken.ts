@@ -12,7 +12,7 @@ import { usersServices } from '../services';
  * @param  {Transaction} transaction
  * @returns Promise
  */
-export const verifyToken = async (
+export const verifyToken = (userTypes: Array<string>) => async (
   request: Request,
   response: Response,
   next: NextFunction,
@@ -38,6 +38,11 @@ export const verifyToken = async (
       const userData = await usersServices.getUser(filter, transaction);
 
       if (!userData) {
+        await transaction.rollback();
+        return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
+      }
+      const { type } = userData;
+      if (!userTypes.includes(type || '')) {
         await transaction.rollback();
         return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
       }
