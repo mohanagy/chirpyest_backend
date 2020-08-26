@@ -17,7 +17,7 @@ export const getBrands = (filter: any): Promise<Array<BrandsModel>> => {
  */
 export const createBrands = (data: Array<BrandsAttributes>, transaction: Transaction): Promise<Array<BrandsModel>> => {
   return Brands.bulkCreate(data, {
-    updateOnDuplicate: ['brandName', 'category', 'updatedAt', 'isExpired'],
+    updateOnDuplicate: ['brandName', 'commission', 'url', 'trackingLink', 'updatedAt', 'isExpired'],
     transaction,
   });
 };
