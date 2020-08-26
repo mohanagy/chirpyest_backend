@@ -6,6 +6,7 @@ import database from './database';
 import emails from './emails';
 import payPal from './payPal';
 import server from './server';
+import brands from './brands';
 
 if (!process.env.NODE_ENV) {
   throw new Error('You have to set NODE_ENV');
@@ -23,4 +24,5 @@ export default {
   affiliateNetworks: affiliateNetworks(),
   payPalConfig: payPal(),
   emailsConfig: emails(),
+  brandsConfig: brands(),
 };
