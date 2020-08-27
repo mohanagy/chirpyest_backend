@@ -10,8 +10,20 @@ import config from '../../config';
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
  */
-export const getBrands = (filter: any): Promise<Array<BrandsModel>> => {
-  return Brands.findAll(filter);
+export const getBrands = (filter: any, transaction: Transaction): Promise<Array<BrandsModel>> => {
+  return Brands.findAll({ ...filter, transaction });
+};
+
+/**
+ * @description getBrands is a service used to get a list of all the brands
+ * @return {Promise<Array<BrandsModel>>}
+ */
+export const getBrandsWithDetails = (filter: any, transaction: Transaction): Promise<Array<BrandsModel>> => {
+  return Brands.findAll({
+    ...filter,
+    transaction,
+    include: [{}],
+  });
 };
 
 /**
@@ -73,11 +85,11 @@ export const generateTrackableLink: GenerateTrackableLinkAttributes = {
  * @param  {string} userId
  * @returns Promise
  */
-export const checkUrlNetwork = async (url: string, userId: string): Promise<string> => {
+export const checkUrlNetwork = async (url: string, userId: string, transaction: Transaction): Promise<string> => {
   const filter = dto.generalDTO.filterData({
     isDeleted: { [Op.not]: true },
   });
-  const brands = await getBrands(filter);
+  const brands = await getBrands(filter, transaction);
   const brand = brands.find(({ url: urlBrand }) =>
     url.includes(
       urlBrand.toLowerCase().replace('http://', '').replace('https://', '').replace('www.', '').split(/[/?#]/)[0],
