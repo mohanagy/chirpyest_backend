@@ -7,6 +7,7 @@ export interface ErrnoException extends Error {
   status?: number;
   error?: ErrorDetails;
   value?: any;
+  errors?: any;
 }
 
 interface ErrorDetails extends Error {
