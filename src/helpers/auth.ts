@@ -39,7 +39,7 @@ export const createCognitoUser = (
  * @param {string} cognitoId  represent user id
  * @return {Promise<any>}
  */
-export const removeCognitoUser = (app: Application, cognitoId: string): Promise<any> => {
+export const removeCognitoUser = (app: Application, cognitoId?: string): Promise<any> => {
   const cognitoProvider = app.get('cognitoProvider');
   const {
     cognito: {

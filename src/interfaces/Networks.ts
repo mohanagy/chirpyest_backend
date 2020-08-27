@@ -108,7 +108,7 @@ export interface ImpactRadiusAttributes {
 }
 
 export interface FinancialDashboardAttributes {
-  userId: number;
+  userId?: number;
   pending: number;
   receivableMilestone: number;
   earnings: number;
@@ -144,4 +144,12 @@ export interface BrandsAttributes {
   isExpired?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface UrlBrand {
+  [key: string]: string | undefined;
+}
+
+export interface GenerateTrackableLinkAttributes {
+  [key: string]: (args: UrlBrand) => string;
 }

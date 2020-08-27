@@ -283,3 +283,32 @@ export const checkPayments = async (
   await transaction.commit();
   return httpResponse.ok(response, {});
 };
+
+/**
+ * @description getAllPayments is a controller used to get all payments
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} object contains success status
+ */
+
+export const getAllPayments = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const payments = await paymentsService.getAllPayments(
+    {
+      where: {
+        status: {
+          [Op.not]: null,
+        },
+      },
+    },
+    transaction,
+  );
+  await transaction.commit();
+  return httpResponse.ok(response, payments);
+};

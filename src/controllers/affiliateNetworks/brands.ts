@@ -28,8 +28,8 @@ export const getBrands = async (
       category,
     });
   }
-  const brands = await brandsService.getBrands(filter);
-  transaction.commit();
+  const brands = await brandsService.getBrands(filter, transaction);
+  await transaction.commit();
   return httpResponse.ok(response, brands);
 };
 
@@ -40,18 +40,69 @@ export const getPayments = async (
   transaction: Transaction,
 ): Promise<Response | void> => {
   try {
-    const { calculateRakutenUserPayment, calculateImpactRadiusUserPayment, calculateCjUserPayment } = paymentsService;
+    const {
+      calculateRakutenUserPayment,
+      calculateImpactRadiusBothAccountsPayment,
+      calculateCjUserPayment,
+    } = paymentsService;
     const paymentsArr = await Promise.all([
       calculateRakutenUserPayment(),
-      calculateImpactRadiusUserPayment(),
+      calculateImpactRadiusBothAccountsPayment(),
       calculateCjUserPayment(),
     ]);
-    const flatPyaments = paymentsArr.flat();
-    await paymentsTransitionsService.createPaymentsTransactions(flatPyaments, transaction);
-    transaction.commit();
-    return httpResponse.ok(response, flatPyaments);
+    const flatPayments = paymentsArr.flat();
+    await paymentsTransitionsService.createPaymentsTransactions(flatPayments, transaction);
+    await transaction.commit();
+    return httpResponse.ok(response, flatPayments);
   } catch (err) {
-    transaction.rollback();
+    await transaction.rollback();
     return next(err);
   }
+};
+
+/**
+ * @description shortLinks is a controller used to short network links
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} object contains success status
+ */
+
+export const shortLinks = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const userId = dto.usersDTO.userId(request);
+  const bodyData = dto.generalDTO.bodyData(request);
+  const { url } = bodyData;
+  const trackableLink = await brandsService.checkUrlNetwork(url, userId.id, transaction);
+  const { shortUrl } = await brandsService.convertLink(trackableLink);
+
+  await transaction.commit();
+  return httpResponse.ok(response, shortUrl);
+};
+
+export const getBrandsForAdmin = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const { isTrending, category } = request.query;
+  let filter = {};
+  if (isTrending === 'true') {
+    filter = dto.generalDTO.filterData({
+      isTrending: true,
+    });
+  } else if (category) {
+    filter = dto.generalDTO.filterData({
+      category,
+    });
+  }
+  const brands = await brandsService.getBrandsWithDetails(filter, transaction);
+  await transaction.commit();
+  return httpResponse.ok(response, brands);
 };

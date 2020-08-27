@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { createFinancialRecord } from '../services/cashback';
 import database from '../database';
 import { authHelpers, dto, httpResponse } from '../helpers';
 import { messages } from '../helpers/constants';
@@ -45,6 +46,16 @@ export const signUp = async (request: Request, response: Response, next: NextFun
     const filter = dto.generalDTO.filterData({ id: data.id });
 
     const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognitoId: userSub }, transaction);
+
+    const financialRecord = {
+      userId: data.id,
+      pending: 0.0,
+      receivableMilestone: 0.0,
+      earnings: 0.0,
+      lastClosedOut: 0.0,
+    };
+    await createFinancialRecord(financialRecord, transaction);
+
     await transaction.commit();
     if (userUpdatedData) responseData = userUpdatedData;
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
