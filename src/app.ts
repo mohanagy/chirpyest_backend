@@ -4,7 +4,7 @@ import express, { ErrorRequestHandler, NextFunction, Request, RequestHandler, Re
 import morgan from 'morgan';
 import fetch from 'node-fetch';
 import config from './config';
-import { expressWinstonLogger, httpResponse, logger } from './helpers';
+import { expressWinstonLogger, httpResponse, logger, errorMessageGenerator } from './helpers';
 import cognito from './helpers/cognito';
 import { messages } from './helpers/constants';
 import { ErrnoException } from './interfaces';
@@ -64,9 +64,11 @@ app.use(async (error: ErrnoException, request: Request, response: Response, _nex
     await transaction.rollback();
     app.set('transaction', undefined);
   }
-  response.status(error.status || error.value ? 400 : 500);
+  const errorStatus = error.status || error.value ? 400 : 500;
+  response.status(errorStatus);
+  // TODO: if error status is 500 , send email to the developer or to the admin
   return response.json({
-    message: error.message || (error.error ? error.error.details : null),
+    message: errorMessageGenerator(error),
   });
 });
 

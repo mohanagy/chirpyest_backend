@@ -29,7 +29,7 @@ export const getBrands = async (
     });
   }
   const brands = await brandsService.getBrands(filter);
-  transaction.commit();
+  await transaction.commit();
   return httpResponse.ok(response, brands);
 };
 
@@ -52,10 +52,10 @@ export const getPayments = async (
     ]);
     const flatPayments = paymentsArr.flat();
     await paymentsTransitionsService.createPaymentsTransactions(flatPayments, transaction);
-    transaction.commit();
+    await transaction.commit();
     return httpResponse.ok(response, flatPayments);
   } catch (err) {
-    transaction.rollback();
+    await transaction.rollback();
     return next(err);
   }
 };
