@@ -10,8 +10,20 @@ import config from '../../config';
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
  */
-export const getBrands = (filter: any): Promise<Array<BrandsModel>> => {
-  return Brands.findAll(filter);
+export const getBrands = (filter: any, transaction: Transaction): Promise<Array<BrandsModel>> => {
+  return Brands.findAll({ ...filter, transaction });
+};
+
+/**
+ * @description getBrands is a service used to get a list of all the brands
+ * @return {Promise<Array<BrandsModel>>}
+ */
+export const getBrandsWithDetails = (filter: any, transaction: Transaction): Promise<Array<BrandsModel>> => {
+  return Brands.findAll({
+    ...filter,
+    transaction,
+    include: [{}],
+  });
 };
 
 /**

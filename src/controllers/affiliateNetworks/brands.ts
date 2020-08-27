@@ -28,7 +28,7 @@ export const getBrands = async (
       category,
     });
   }
-  const brands = await brandsService.getBrands(filter);
+  const brands = await brandsService.getBrands(filter, transaction);
   await transaction.commit();
   return httpResponse.ok(response, brands);
 };
@@ -83,4 +83,26 @@ export const shortLinks = async (
 
   await transaction.commit();
   return httpResponse.ok(response, shortUrl);
+};
+
+export const getBrandsForAdmin = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const { isTrending, category } = request.query;
+  let filter = {};
+  if (isTrending === 'true') {
+    filter = dto.generalDTO.filterData({
+      isTrending: true,
+    });
+  } else if (category) {
+    filter = dto.generalDTO.filterData({
+      category,
+    });
+  }
+  const brands = await brandsService.getBrandsWithDetails(filter, transaction);
+  await transaction.commit();
+  return httpResponse.ok(response, brands);
 };
