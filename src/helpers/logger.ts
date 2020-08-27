@@ -18,7 +18,10 @@ const logger = winston.createLogger({
   ],
 });
 
-logger.add(DatadogWinstonTransport);
+if (process.env.NODE_ENV === 'production') {
+  logger.add(DatadogWinstonTransport);
+}
+
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
