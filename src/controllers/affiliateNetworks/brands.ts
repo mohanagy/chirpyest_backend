@@ -78,7 +78,7 @@ export const shortLinks = async (
   const userId = dto.usersDTO.userId(request);
   const bodyData = dto.generalDTO.bodyData(request);
   const { url } = bodyData;
-  const trackableLink = await brandsService.checkUrlNetwork(url, userId.id);
+  const trackableLink = await brandsService.checkUrlNetwork(url, userId.id, transaction);
   const { shortUrl } = await brandsService.convertLink(trackableLink);
 
   await transaction.commit();

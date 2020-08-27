@@ -85,11 +85,11 @@ export const generateTrackableLink: GenerateTrackableLinkAttributes = {
  * @param  {string} userId
  * @returns Promise
  */
-export const checkUrlNetwork = async (url: string, userId: string): Promise<string> => {
+export const checkUrlNetwork = async (url: string, userId: string, transaction: Transaction): Promise<string> => {
   const filter = dto.generalDTO.filterData({
     isDeleted: { [Op.not]: true },
   });
-  const brands = await getBrands(filter);
+  const brands = await getBrands(filter, transaction);
   const brand = brands.find(({ url: urlBrand }) =>
     url.includes(
       urlBrand.toLowerCase().replace('http://', '').replace('https://', '').replace('www.', '').split(/[/?#]/)[0],
