@@ -26,7 +26,7 @@ export const rakutenBrandsData = (data: any): any => {
   const cleanPercent = removeTrailingZeros(totalCommission);
   return {
     brandName: data['Advertiser Name'],
-    url: data['Advertiser URL'],
+    url: data['Advertiser URL'].toLowerCase(),
     brandId: data.MID,
     trackingLink: `https://click.linksynergy.com/deeplink?id=Aq5kmT*JPrM&mid=${data.MID}`,
     status: data.Status,

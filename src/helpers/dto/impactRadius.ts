@@ -42,7 +42,7 @@ export const impactRadiusBrands = (data: any): BrandsAttributes => {
   }
   return {
     brandName: data.CampaignName,
-    url: data.CampaignUrl,
+    url: data.CampaignUrl.toLowerCase(),
     brandId: `${data.AdvertiserId}_${data.CampaignId}`,
     trackingLink: data.TrackingLink,
     status: data.ContractStatus,

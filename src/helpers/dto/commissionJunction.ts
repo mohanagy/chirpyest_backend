@@ -92,7 +92,7 @@ const getCjCommissionPercent = (action: any): string => {
 export const commissionJunctionBrands = (data: any): BrandsAttributes => {
   return {
     brandName: data.advertiserName,
-    url: data.programUrl,
+    url: data.programUrl.toLowerCase(),
     brandId: data.advertiserId,
     trackingLink: commissionJunctionTrackingLink,
     status: data.accountStatus,
