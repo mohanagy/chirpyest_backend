@@ -1,29 +1,18 @@
 import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
 import { constants, dto } from '../../helpers';
-import { Brands } from '../../database';
+import database, { Brands } from '../../database';
 import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
 import config from '../../config';
+import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
 
 /**
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
  */
 export const getBrands = (filter: any, transaction: Transaction): Promise<Array<BrandsModel>> => {
-  return Brands.findAll({ ...filter, transaction });
-};
-
-/**
- * @description getBrands is a service used to get a list of all the brands
- * @return {Promise<Array<BrandsModel>>}
- */
-export const getBrandsWithDetails = (filter: any, transaction: Transaction): Promise<Array<BrandsModel>> => {
-  return Brands.findAll({
-    ...filter,
-    transaction,
-    include: [{}],
-  });
+  return Brands.findAll({ ...filter, transaction, raw: true });
 };
 
 /**
@@ -128,4 +117,81 @@ export const convertLink = async (url: string): Promise<any> => {
     headers: requestHeaders,
   });
   return data;
+};
+/**
+ * @description classifyBrands is a function used to classify the brands depends on network
+ * @param  {Array<BrandsModel>} brands all brands
+ * @returns {Object} Object contains three types of networks
+ */
+export const classifyBrands = (brands: Array<BrandsModel>): Record<string, any> =>
+  brands.reduce(
+    (acc: any, brand: BrandsModel) => {
+      const { network, brandId } = brand;
+      if (acc[network]) acc[network].push(brandId);
+      return acc;
+    },
+    {
+      impactRadius: [],
+      commissionJunction: [],
+      rakuten: [],
+    },
+  );
+
+/**
+ * @description getBrandsTransaction  this function will fetch all transaction for each brand
+ * @param param0
+ * @param {Transaction} transaction Transaction
+ * @returns {Array} list of transactions
+ */
+export const getBrandsTransaction = async (
+  { commissionJunction, impactRadius, rakuten }: any,
+  transaction: Transaction,
+): Promise<Array<any>> => {
+  const commissionJunctionTransactions = await commissionJunctionServices.findAllCommissionJunctionTransactions(
+    {
+      where: {
+        advertiserId: {
+          [Op.in]: commissionJunction,
+        },
+      },
+      attributes: [
+        ['advertiser_id', 'brandId'],
+        [database.sequelize.fn('sum', database.sequelize.col('pub_commission_amount_usd')), 'total'],
+      ],
+      group: ['advertiser_id'],
+    },
+    transaction,
+  );
+
+  const impactRadiusTransactions = await impactRadiusServices.findAllImpactRadiusTransactions(
+    {
+      where: {
+        campaignId: {
+          [Op.in]: impactRadius,
+        },
+      },
+      attributes: [
+        ['campaign_id', 'brandId'],
+        [database.sequelize.fn('sum', database.sequelize.col('amount')), 'total'],
+      ],
+      group: ['campaign_id'],
+    },
+    transaction,
+  );
+  const rakutenTransactions = await rakutenServices.findAllRakutenTransactions(
+    {
+      where: {
+        advertiserId: {
+          [Op.in]: rakuten,
+        },
+      },
+      attributes: [
+        ['advertiser_id', 'brandId'],
+        [database.sequelize.fn('sum', database.sequelize.col('commissions')), 'total'],
+      ],
+      group: ['advertiser_id'],
+    },
+    transaction,
+  );
+  return [...commissionJunctionTransactions, ...impactRadiusTransactions, ...rakutenTransactions];
 };

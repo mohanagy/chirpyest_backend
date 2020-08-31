@@ -2,6 +2,7 @@ export interface RakutenTransactionsAttributes {
   userId?: number;
   etransactionId: string;
   orderId: string;
+  advertiserId: string;
   offerId: string;
   skuNumber: string;
   saleAmount: number;
@@ -81,6 +82,7 @@ export interface ImpactRadiusAttributes {
   userId?: number;
   token?: string;
   campaignName: string;
+  campaignId: string;
   actionTrackerId: string;
   actionId: string;
   status: string;

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
+import { Op } from 'sequelize';
 import { httpResponse, dto } from '../../helpers';
 import { brandsService, paymentsService, paymentsTransitionsService } from '../../services';
 
@@ -86,24 +87,37 @@ export const shortLinks = async (
   return httpResponse.ok(response, shortUrl);
 };
 
+/**
+ *
+ * @param {Request} _request
+ * @param {Response} response
+ * @param {NextFunction} _next
+ * @param  {Transaction} transaction
+ */
 export const getBrandsForAdmin = async (
-  request: Request,
+  _request: Request,
   response: Response,
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
-  const { isTrending, category } = request.query;
-  let filter = {};
-  if (isTrending === 'true') {
-    filter = dto.generalDTO.filterData({
-      isTrending: true,
-    });
-  } else if (category) {
-    filter = dto.generalDTO.filterData({
-      category,
-    });
-  }
-  const brands = await brandsService.getBrandsWithDetails(filter, transaction);
+  const filter = dto.generalDTO.filterData({
+    isExpired: { [Op.not]: true },
+  });
+  const brands = await brandsService.getBrands(filter, transaction);
+
+  const classifiedBrands = brandsService.classifyBrands(brands);
+
+  const brandsTransactions = await brandsService.getBrandsTransaction(classifiedBrands, transaction);
+  const allBrands = brands.reduce((acc: any, brand) => {
+    const isBrandTransactionExist = brandsTransactions.find((element) => element.brandId === brand.brandId);
+    if (isBrandTransactionExist) {
+      acc.push({ ...brand, ...isBrandTransactionExist });
+    } else {
+      acc.push({ ...brand, total: 0 });
+    }
+    return acc;
+  }, []);
+
   await transaction.commit();
-  return httpResponse.ok(response, brands);
+  return httpResponse.ok(response, allBrands);
 };

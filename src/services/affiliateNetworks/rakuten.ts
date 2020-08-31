@@ -13,3 +13,19 @@ export const createRakutenTransaction = (
   data: RakutenTransactionsAttributes,
   transaction: Transaction,
 ): Promise<RakutenTransactionsModel> => RakutenTransactions.create(data, { transaction });
+
+/**
+ * @description findAllRakutenTransactions is a service used to get all Rakuten transactions
+ * @param {Object} filter filtration data
+ * @param {Transaction} transaction transaction
+ * @returns {Promise<RakutenTransactionsModel | null>}
+ */
+export const findAllRakutenTransactions = (
+  filter: any,
+  transaction: Transaction,
+): Promise<RakutenTransactionsModel[]> =>
+  RakutenTransactions.findAll({
+    ...filter,
+    transaction,
+    raw: true,
+  });

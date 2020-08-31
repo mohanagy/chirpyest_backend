@@ -85,7 +85,7 @@ export const calculateRakutenUserPayment = async (): Promise<Array<RakutenFinalU
     (acc: Array<RakutenFinalUserPayment>, curr) => {
       const [userId, amount] = curr;
       const userPayment = convertToCents(Number(amount) / 2);
-      acc.push({ userId, amount: userPayment, type: 'R', halfMonthId });
+      acc.push({ userId, amount: userPayment, type: 'rakuten', halfMonthId });
       return acc;
     },
     [],
