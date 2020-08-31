@@ -18,16 +18,17 @@ export const getBrands = async (
   transaction: Transaction,
 ): Promise<Response> => {
   const { isTrending, category } = request.query;
-  let filter = {};
+  const filterOptions: any = {
+    isDeleted: false,
+    isExpired: false,
+  };
   if (isTrending === 'true') {
-    filter = dto.generalDTO.filterData({
-      isTrending: true,
-    });
+    filterOptions.isTrending = true;
   } else if (category) {
-    filter = dto.generalDTO.filterData({
-      category,
-    });
+    filterOptions.category = category;
   }
+
+  const filter = dto.generalDTO.filterData(filterOptions);
   const brands = await brandsService.getBrands(filter, transaction);
   await transaction.commit();
   return httpResponse.ok(response, brands);
