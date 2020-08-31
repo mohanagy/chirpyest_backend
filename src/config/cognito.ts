@@ -11,6 +11,8 @@ const envVarsSchema = joi
     JWT_E: joi.string().required(),
     AWS_ACCESS_KEY_ID: joi.string().required(),
     AWS_SECRET_ACCESS_KEY: joi.string().required(),
+    AWS_S3_BUCKET_NAME: joi.string().required(),
+    COGNITO_IDENTITY_ID: joi.string().required(),
   })
   .unknown()
   .required();
@@ -34,8 +36,10 @@ const config = (): CognitoConfigs => {
     },
     awsConfigs: {
       accessKeyId: envVars.AWS_ACCESS_KEY_ID,
+      bucketName: envVars.AWS_S3_BUCKET_NAME,
       secretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
       region: envVars.COGNITO_REGION,
+      IdentityId: envVars.COGNITO_IDENTITY_ID,
     },
   };
 };
