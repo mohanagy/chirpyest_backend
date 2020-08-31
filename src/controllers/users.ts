@@ -28,6 +28,7 @@ export const getUserProfile = async (
   await transaction.commit();
   return httpResponse.ok(response, dto.usersDTO.userProfileResponse(user), constants.messages.users.userProfile);
 };
+
 /**
  * @description updateUserProfile is a controller used to update user profile data
  * @param {Request} request represents request object
@@ -148,5 +149,37 @@ export const updateUser = async (
     response,
     dto.usersDTO.userProfileResponse(updateUserDataResult),
     constants.messages.users.updateUserProfileSuccess,
+  );
+};
+
+/**
+ * @description getUserProfile is a controller used to fetch user profile data
+ * @param {Request} request represents request object
+ * @param {Response} response represents response object
+ * @param {NextFunction} _next middleware function
+ * @param {Transaction} transaction represent database transaction
+ * @return {Promise<Response>} object contains success status
+ */
+
+export const getUser = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const { id } = dto.generalDTO.paramsData(request);
+
+  const filter = dto.generalDTO.filterData({
+    id,
+  });
+
+  const user = await usersServices.findUser(filter, transaction).catch(async () => {
+    await transaction.rollback();
+  });
+  if (user) await transaction.commit();
+  return httpResponse.ok(
+    response,
+    user && dto.usersDTO.userProfileResponse(user),
+    constants.messages.users.userProfile,
   );
 };
