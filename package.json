@@ -83,6 +83,7 @@
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "@sentry/node": "^5.19.1",
+    "@types/lodash": "^4.14.161",
     "@types/nodemailer": "^6.4.0",
     "amazon-cognito-identity-js": "^4.3.2",
     "aws-sdk": "^2.708.0",
@@ -106,6 +107,7 @@
     "joi-password-complexity": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.4",
+    "lodash": "^4.17.20",
     "moment": "^2.27.0",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",

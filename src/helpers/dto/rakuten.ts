@@ -1,7 +1,7 @@
+import _ from 'lodash';
 import { RakutenTransactionsAttributes, UpdatePendingCashAttributes } from '../../interfaces/Networks';
 import { percentageRegx } from '../constants';
 import convertToCents from '../convertToCents';
-import { removeTrailingZeros } from '../removeTrailingZeros';
 
 export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
   userId: data.u1,
@@ -22,8 +22,19 @@ export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
 });
 
 export const rakutenBrandsData = (data: any): any => {
-  const totalCommission = data['Commission Terms'].match(percentageRegx)[0];
-  const cleanPercent = removeTrailingZeros(totalCommission);
+  const commissionTerms = data['Commission Terms'].match(percentageRegx);
+  const baselineCommissionTerms = data['Baseline Commission Terms'].match(percentageRegx);
+  const allCommistionsArr = commissionTerms.concat(baselineCommissionTerms);
+
+  const commissionsNumbers = allCommistionsArr.map((item: any) => {
+    if (!item) {
+      return 0;
+    }
+    return Number(item.split('%')[0]);
+  });
+  const finalCommission = _.max(commissionsNumbers);
+  const cleanPercent = `${Number(finalCommission) / 2}%`;
+
   return {
     brandName: data['Advertiser Name'],
     url: data['Advertiser URL'].toLowerCase(),
