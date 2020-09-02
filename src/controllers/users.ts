@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { authHelpers, constants, dto, httpResponse } from '../helpers';
+import { constants, dto, httpResponse } from '../helpers';
 
 import { usersServices } from '../services';
 
