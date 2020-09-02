@@ -1,6 +1,8 @@
 import DatadogWinston from 'datadog-winston';
 import expressWinston from 'express-winston';
 import winston from 'winston';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { S3StreamLogger } from 's3-streamlogger';
 import config from '../config';
 
