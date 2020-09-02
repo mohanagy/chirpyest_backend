@@ -20,6 +20,9 @@ export const messages = {
   brands: {
     linkNotRelatedToOurNetwork: 'Sorry, this link is not in our network',
   },
+  newsletter: {
+    userSubscribed: ' User has been Subscribed',
+  },
 };
 
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information

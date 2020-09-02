@@ -10,6 +10,7 @@ import {
   RakutenTransactionsAttributes,
   UserAttributes,
   UserTransactionsHistoryAttributes,
+  NewsletterAttributes,
 } from '../../interfaces';
 
 export interface UserModel extends Model<UserAttributes>, UserAttributes {}
@@ -70,4 +71,10 @@ export interface PaymentsTransactionsModel
 export class PaymentsTransactions extends Model<PaymentsTransactionsModel, PaymentsTransactionsAttributes> {}
 export type PaymentsTransactionsStatic = typeof Model & {
   new (values?: Record<string, unknown>, options?: BuildOptions): PaymentsTransactionsModel;
+};
+
+export interface NewsletterModel extends Model<NewsletterAttributes>, NewsletterAttributes {}
+export class Newsletter extends Model<NewsletterModel, NewsletterAttributes> {}
+export type NewsletterStatic = typeof Model & {
+  new (values?: Record<string, unknown>, options?: BuildOptions): NewsletterModel;
 };
