@@ -1,6 +1,6 @@
 import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
-import { constants, dto } from '../../helpers';
+import { dto } from '../../helpers';
 import { Brands } from '../../database';
 import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
