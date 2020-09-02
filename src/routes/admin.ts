@@ -1,5 +1,6 @@
 import express from 'express';
-import { usersControllers } from '../controllers';
+import { affiliateNetworksController, usersControllers } from '../controllers';
+
 import { asyncHandler, verifyToken } from '../middleware';
 import { UserTypes } from '../interfaces';
 
@@ -11,4 +12,5 @@ router
   .patch('/admin/users/:id', asyncHandler(verifyToken([UserTypes.Admin])), asyncHandler(usersControllers.updateUser))
   .delete('/admin/users/:id', asyncHandler(verifyToken([UserTypes.Admin])), asyncHandler(usersControllers.deleteUser));
 
+router.get('/admin/brands', asyncHandler(affiliateNetworksController.getBrandsForAdmin));
 export default router;

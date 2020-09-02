@@ -13,3 +13,19 @@ export const createImpactRadiusTransaction = (
   data: ImpactRadiusAttributes,
   transaction: Transaction,
 ): Promise<ImpactRadiusTransactionsModel> => ImpactRadiusTransactions.create(data, { transaction });
+
+/**
+ * @description findAllImpactRadiusTransactions is a service used to get all Impact Radius transactions
+ * @param {Object} filter filtration data
+ * @param {Transaction} transaction transaction
+ * @returns {Promise<ImpactRadiusTransactionsModel | null>}
+ */
+export const findAllImpactRadiusTransactions = (
+  filter: any,
+  transaction: Transaction,
+): Promise<ImpactRadiusTransactionsModel[]> =>
+  ImpactRadiusTransactions.findAll({
+    ...filter,
+    transaction,
+    raw: true,
+  });

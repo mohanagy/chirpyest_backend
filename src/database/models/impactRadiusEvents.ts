@@ -9,6 +9,9 @@ export function ImpactRadiusTransactionsFactory(sequelize: Sequelize): ImpactRad
     campaignName: {
       type: DataTypes.STRING,
     },
+    campaignId: {
+      type: DataTypes.STRING,
+    },
     actionTrackerId: {
       type: DataTypes.STRING,
     },

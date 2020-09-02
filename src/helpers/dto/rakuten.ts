@@ -8,6 +8,7 @@ export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
   etransactionId: data.etransaction_id,
   orderId: data.order_id,
   offerId: data.offer_id,
+  advertiserId: data.advertiser_id,
   skuNumber: data.sku_number,
   quantity: data.quantity,
   saleAmount: convertToCents(data.sale_amount),
