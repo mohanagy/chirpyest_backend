@@ -92,3 +92,19 @@ export const deleteUser = async (filter: Filter, transaction?: Transaction): Pro
   const user = await Users.destroy({ ...filter, transaction });
   return user;
 };
+
+/**
+ * @description disableUser is a service to  delete a user
+ * @param {Filter} filter filtration
+ * @param {Transaction} transaction
+ * @return {Promise<number>}
+ */
+export const disableUser = async (filter: Filter, transaction?: Transaction): Promise<[number, UserModel[]]> => {
+  const user = await Users.update(
+    {
+      isActive: false,
+    },
+    { ...filter, transaction },
+  );
+  return user;
+};

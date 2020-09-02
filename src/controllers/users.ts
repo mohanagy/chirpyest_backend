@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { authHelpers, constants, dto, httpResponse } from '../helpers';
+import { constants, dto, httpResponse } from '../helpers';
 
 import { usersServices } from '../services';
 
@@ -108,9 +108,7 @@ export const deleteUser = async (
     await transaction.commit();
     return httpResponse.notFound(response, constants.messages.general.notFound);
   }
-  await usersServices.deleteUser(filter, transaction);
-  await authHelpers.removeCognitoUser(request.app, user.cognitoId);
-
+  await usersServices.disableUser(filter, transaction);
   await transaction.commit();
   return httpResponse.ok(response, {}, 'user has been deleted');
 };
