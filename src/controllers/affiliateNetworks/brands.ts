@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import { Op } from 'sequelize';
-import { httpResponse, dto } from '../../helpers';
+import { httpResponse, dto, constants } from '../../helpers';
 import { brandsService, paymentsService, paymentsTransitionsService } from '../../services';
 
 /**
@@ -81,6 +81,10 @@ export const shortLinks = async (
   const bodyData = dto.generalDTO.bodyData(request);
   const { url } = bodyData;
   const trackableLink = await brandsService.checkUrlNetwork(url, userId.id, transaction);
+  if (!trackableLink) {
+    await transaction.rollback();
+    return httpResponse.forbidden(response, constants.messages.brands.linkNotRelatedToOurNetwork);
+  }
   const { shortUrl } = await brandsService.convertLink(trackableLink);
 
   await transaction.commit();

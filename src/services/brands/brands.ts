@@ -1,6 +1,6 @@
 import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
-import { constants, dto } from '../../helpers';
+import { dto } from '../../helpers';
 import database, { Brands } from '../../database';
 import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
@@ -74,7 +74,11 @@ export const generateTrackableLink: GenerateTrackableLinkAttributes = {
  * @param  {string} userId
  * @returns Promise
  */
-export const checkUrlNetwork = async (url: string, userId: string, transaction: Transaction): Promise<string> => {
+export const checkUrlNetwork = async (
+  url: string,
+  userId: string,
+  transaction: Transaction,
+): Promise<string | undefined> => {
   const filter = dto.generalDTO.filterData({
     isDeleted: { [Op.not]: true },
   });
@@ -84,7 +88,7 @@ export const checkUrlNetwork = async (url: string, userId: string, transaction: 
       urlBrand.toLowerCase().replace('http://', '').replace('https://', '').replace('www.', '').split(/[/?#]/)[0],
     ),
   );
-  if (!brand) throw new Error(constants.messages.brands.linkNotRelatedToOurNetwork);
+  if (!brand) return undefined;
   const { network, trackingLink, brandId } = brand;
   const data: UrlBrand = {
     trackingLink,
