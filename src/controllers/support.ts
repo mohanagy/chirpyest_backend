@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import { dto, httpResponse, sendGrid } from '../helpers';
+import config from '../config';
 
 /**
  * @description contactUs is a controller used to to send a message for the email support
@@ -21,8 +22,8 @@ export const contactUs = async (
   const { email, name, type, body } = dto.generalDTO.bodyData(request);
 
   const msg = {
-    to: 'naji@kiitos-tech.com',
-    from: 'naji@kiitos-tech.com',
+    to: config.emailsConfig.sendGridFrom,
+    from: config.emailsConfig.sendGridTo,
     subject: `Contact Us Ticket Type :${type}`,
     text: `
        From name: ${name}
