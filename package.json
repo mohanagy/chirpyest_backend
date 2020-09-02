@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@sendgrid/mail": "^7.2.4",
     "@sentry/node": "^5.19.1",
     "@types/lodash": "^4.14.161",
     "@types/nodemailer": "^6.4.0",

@@ -4,6 +4,8 @@ import * as DTO from './dto';
 import { expressWinstonLogger as expressWLogger } from './logger';
 import * as Mailer from './nodemailer';
 
+export { default as sendGrid } from './sendgrid';
+
 export { default as calculateUserPendingCash } from './calculateUserPendingCash';
 export { default as cognito } from './cognito';
 export { default as convertToCents } from './convertToCents';

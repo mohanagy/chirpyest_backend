@@ -11,5 +11,5 @@ export interface ErrnoException extends Error {
 }
 
 interface ErrorDetails extends Error {
-  details: string;
+  details: Array<Record<string, unknown>>;
 }
