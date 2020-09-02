@@ -116,6 +116,7 @@
     "pg-hstore": "^2.3.3",
     "qs": "^6.9.4",
     "request": "^2.88.2",
+    "s3-streamlogger": "^1.7.0",
     "sequelize": "^6.2.3",
     "typescript": "^3.9.5",
     "umzug": "^2.3.0",

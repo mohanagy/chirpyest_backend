@@ -7,6 +7,7 @@ import * as financialDashboard from './financialDashboard';
 import * as payments from './payments';
 import * as paymentsTransitions from './payments/paymentsTransitions';
 import * as Users from './users';
+import * as Newsletter from './newsletter';
 
 export const rakutenServices = rakuten;
 export const impactRadiusServices = impactRadius;
@@ -17,3 +18,4 @@ export const affiliateNetworksServices = AffiliateNetworks;
 export const brandsService = brands;
 export const paymentsService = payments;
 export const paymentsTransitionsService = paymentsTransitions;
+export const newsletterService = Newsletter;

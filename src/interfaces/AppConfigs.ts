@@ -23,6 +23,8 @@ export interface AwsConfigs {
   accessKeyId: string;
   secretAccessKey: string;
   region: string;
+  awsS3AccessKeyId: string;
+  awsS3SecretAccessKey: string;
 }
 export interface CognitoConfigs {
   cognitoPoolConfig: ICognitoUserPoolData;
