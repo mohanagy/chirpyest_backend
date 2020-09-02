@@ -7,10 +7,11 @@ import payments from './payments';
 import users from './users';
 import admin from './admin';
 import newsletter from './newsletter';
+import support from './support';
 
 const router = express.Router();
 
 router.use('/', [helloWorld]);
-router.use('/api/v1/', [auth, users, affiliateNetworks, financialDashboard, payments, admin, newsletter]);
+router.use('/api/v1/', [auth, users, affiliateNetworks, financialDashboard, payments, admin, newsletter, support]);
 
 export default router;

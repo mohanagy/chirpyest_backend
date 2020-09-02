@@ -7,6 +7,9 @@ const envVarsSchema = joi
     SMTP_USER: joi.string().required(),
     SMTP_PASSWORD: joi.string().required(),
     SMTP_PORT: joi.number().required(),
+    SEND_GRID_KEY: joi.string().required(),
+    SEND_GRID_FROM: joi.string().required(),
+    SEND_GRID_TO: joi.string().required(),
   })
   .unknown()
   .required();
@@ -22,6 +25,9 @@ const config = (): EmailsConfigs => {
     smtpUser: envVars.SMTP_USER,
     smtpPassword: envVars.SMTP_PASSWORD,
     smtpPort: envVars.SMTP_PORT,
+    sendGridKey: envVars.SEND_GRID_KEY,
+    sendGridFrom: envVars.SEND_GRID_FROM,
+    sendGridTo: envVars.SEND_GRID_TO,
   };
 };
 
