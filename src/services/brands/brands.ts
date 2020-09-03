@@ -88,9 +88,9 @@ export const checkUrlNetwork = async (
   });
   const brands = await getBrands(filter, transaction);
   const urlWithoutProtocol = parseUrl(url).resource.replace(/^https?:\/\//, '');
-  const domain = psl.get(urlWithoutProtocol) || '';
+  const domain: string = psl.get(urlWithoutProtocol) || '';
   if (!domain) return undefined;
-  const brand = brands.find(({ url: urlBrand }) => urlBrand.includes(domain));
+  const brand = brands.find(({ url: urlBrand }) => urlBrand.toLocaleLowerCase().includes(domain.toLocaleLowerCase()));
 
   if (!brand) return undefined;
   const { network, trackingLink, brandId } = brand;
