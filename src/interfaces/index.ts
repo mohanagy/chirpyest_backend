@@ -7,3 +7,4 @@ export * from './Networks';
 export * from './Payments';
 export * from './Time';
 export * from './Users';
+export * from './Newsletter';

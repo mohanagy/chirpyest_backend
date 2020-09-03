@@ -38,16 +38,16 @@ export const calculateImpactRadiusUserPayment = async (paymentReportEndpoint: st
     return acc;
   }, {});
 
-  const formatedTotalPayments = Object.entries(paymentsByUser).reduce((acc: any, curr) => {
+  const formattedTotalPayments = Object.entries(paymentsByUser).reduce((acc: any, curr) => {
     const [userId, amount] = curr;
     const userCommission = convertToCents(Number(amount) / 2);
     acc.push({ userId, amount: userCommission, type, status: 'pending', halfMonthId });
     return acc;
   }, []);
-  return formatedTotalPayments;
+  return formattedTotalPayments;
 };
 
-export const calculateImpactRadiusBothAccountsPayment = async () => {
+export const calculateImpactRadiusBothAccountsPayment = async (): Promise<Array<any>> => {
   const paymentsAccount1 = calculateImpactRadiusUserPayment(paymentReportEndpointAccount1, 'IR');
   const paymentsAccount2 = calculateImpactRadiusUserPayment(paymentReportEndpointAccount2, 'IR2');
   const bothPayments = await Promise.all([paymentsAccount1, paymentsAccount2]);

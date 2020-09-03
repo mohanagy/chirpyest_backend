@@ -13,6 +13,10 @@ export default (app: Application): void => {
   } = config;
   const cognitoPool = new AmazonCognitoIdentity.CognitoUserPool(cognitoPoolConfig);
   const cognitoProvider = new aws.CognitoIdentityServiceProvider(awsConfigs);
+  const cognitoIdentity = new aws.CognitoIdentity({
+    region: awsConfigs.region,
+  });
   app.set('cognito', cognitoPool);
   app.set('cognitoProvider', cognitoProvider);
+  app.set('cognitoIdentity', cognitoIdentity);
 };

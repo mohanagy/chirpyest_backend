@@ -3,4 +3,7 @@ export interface EmailsConfigs {
   smtpUser: string;
   smtpPassword: string;
   smtpPort: number;
+  sendGridKey: string;
+  sendGridFrom: string;
+  sendGridTo: string;
 }

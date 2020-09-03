@@ -10,6 +10,7 @@ import { PaymentsTransactionsFactory } from './models/paymentsTransactions';
 import { RakutenTransactionsFactory } from './models/rakutenTransactions';
 import { UserFactory } from './models/users';
 import { UserTransactionsHistoryFactory } from './models/userTransactionsHistory';
+import { NewsletterFactory } from './models/newsletter';
 
 export const dbConfig = new Sequelize(config.database.url, {
   define: { underscored: true, timestamps: true },
@@ -31,6 +32,7 @@ export const CommissionJunctionTransactions = CommissionJunctionTransactionsFact
 export const Brands = BrandsFactory(dbConfig);
 export const Payments = PaymentsFactory(dbConfig);
 export const PaymentsTransactions = PaymentsTransactionsFactory(dbConfig);
+export const Newsletter = NewsletterFactory(dbConfig);
 // relations
 Users.hasOne(FinancialDashboard);
 Users.hasMany(RakutenTransactions);

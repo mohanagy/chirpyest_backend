@@ -76,7 +76,7 @@ export const calculateCjUserPayment = async (): Promise<any> => {
   const formatedTotalPayments = Object.entries(paymentsByUser).reduce((acc: any, curr) => {
     const [userId, amount] = curr;
     const userCommission: any = convertToCents(Number(amount) / 2);
-    acc.push({ userId, amount: userCommission, type: 'CJ', status: 'pending', halfMonthId });
+    acc.push({ userId, amount: userCommission, type: 'commissionJunction', status: 'pending', halfMonthId });
     return acc;
   }, []);
 

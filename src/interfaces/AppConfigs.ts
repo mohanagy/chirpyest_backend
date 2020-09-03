@@ -21,8 +21,12 @@ export interface JWT {
 }
 export interface AwsConfigs {
   accessKeyId: string;
+  bucketName: string;
   secretAccessKey: string;
   region: string;
+  IdentityId: string;
+  awsS3AccessKeyId: string;
+  awsS3SecretAccessKey: string;
 }
 export interface CognitoConfigs {
   cognitoPoolConfig: ICognitoUserPoolData;
@@ -34,6 +38,7 @@ export interface CognitoAttributes {
   name: string;
   email: string;
   'custom:user_id': string;
+  'custom:user_role': string;
   picture: string;
 }
 

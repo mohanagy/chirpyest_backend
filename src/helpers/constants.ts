@@ -20,6 +20,9 @@ export const messages = {
   brands: {
     linkNotRelatedToOurNetwork: 'Sorry, this link is not in our network',
   },
+  newsletter: {
+    userSubscribed: ' User has been Subscribed',
+  },
 };
 
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
@@ -55,7 +58,7 @@ export const paymentReportEndpointAccount1 = `${baseImpactApiUrl}/Reports/mp_act
 export const paymentReportEndpointAccount2 = `${baseImpactAccount2ApiUrl}/Reports/mp_action_listing_sku.json?SUPERSTATUS_MS=APPROVED&SUPERSTATUS_MS=NA&SUPERSTATUS_MS=PENDING&PUB_CAMPAIGN_MS=0&MP_CATEGORY_LIST2=0&PAYSTUB_ID=0&MODIFIED_Y_N=0&PUB_ACTION_TRACKER=0&MP_ACTION_TYPE=0&ADV_PROMOCODE=0&SUBID1=0&SUBID2=0&SUBID3=0&SHAREDID=0&REFERRAL_TYPE=0&ACTION_ID=0&ADV_NOTE=0&SHOW_STATUS_DETAIL=1&timeRange=CUSTOM&compareEnabled=false`;
 
 // match 0% to 100%
-export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/;
+export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/g;
 
 export const paymentSummaryEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&nid=1&reportid=1`;
 export const paymentHistoryEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=2`;
