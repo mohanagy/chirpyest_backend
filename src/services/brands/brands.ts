@@ -12,6 +12,19 @@ import config from '../../config';
 import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
 
 /**
+ * @description addProtocol this function will add a http protocol in case there is no protocol
+ * @param {string} url string
+ * @returns {string}
+ */
+const addProtocol = (url: string) => {
+  const pattern = /^https?:\/\//i;
+  if (!pattern.test(url)) {
+    return `http://${url}`;
+  }
+  return url;
+};
+
+/**
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
  */
@@ -87,7 +100,9 @@ export const checkUrlNetwork = async (
     isDeleted: { [Op.not]: true },
   });
   const brands = await getBrands(filter, transaction);
-  const urlWithoutProtocol = parseUrl(url).resource.replace(/^https?:\/\//, '');
+  const urlWithProtocol = addProtocol(url);
+
+  const urlWithoutProtocol = parseUrl(urlWithProtocol).resource.replace(/^https?:\/\//, '');
   const domain: string = psl.get(urlWithoutProtocol) || '';
   if (!domain) return undefined;
   const brand = brands.find(({ url: urlBrand }) => urlBrand.toLocaleLowerCase().includes(domain.toLocaleLowerCase()));
