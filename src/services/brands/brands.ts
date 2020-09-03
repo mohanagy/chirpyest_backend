@@ -1,6 +1,8 @@
 import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
 import psl from 'psl';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import parseUrl from 'parse-url';
 import { dto } from '../../helpers';
 import database, { Brands } from '../../database';
