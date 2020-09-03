@@ -1,12 +1,12 @@
 import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
+import psl from 'psl';
 import { dto } from '../../helpers';
 import database, { Brands } from '../../database';
 import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
 import config from '../../config';
 import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
-
 /**
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
@@ -83,11 +83,10 @@ export const checkUrlNetwork = async (
     isDeleted: { [Op.not]: true },
   });
   const brands = await getBrands(filter, transaction);
-  const brand = brands.find(({ url: urlBrand }) =>
-    url.includes(
-      urlBrand.toLowerCase().replace('http://', '').replace('https://', '').replace('www.', '').split(/[/?#]/)[0],
-    ),
-  );
+  const urlWithoutProtocol = url.replace(/^https?:\/\//, '');
+  const domain = psl.get(urlWithoutProtocol);
+  const brand = brands.find(({ url: urlBrand }) => urlBrand.includes(domain));
+
   if (!brand) return undefined;
   const { network, trackingLink, brandId } = brand;
   const data: UrlBrand = {
