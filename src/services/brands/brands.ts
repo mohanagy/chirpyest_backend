@@ -1,12 +1,14 @@
 import { Op, Transaction } from 'sequelize';
 import axios from 'axios';
 import psl from 'psl';
+import parseUrl from 'parse-url';
 import { dto } from '../../helpers';
 import database, { Brands } from '../../database';
 import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
 import config from '../../config';
 import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
+
 /**
  * @description getBrands is a service used to get a list of all the brands
  * @return {Promise<Array<BrandsModel>>}
@@ -83,8 +85,8 @@ export const checkUrlNetwork = async (
     isDeleted: { [Op.not]: true },
   });
   const brands = await getBrands(filter, transaction);
-  const urlWithoutProtocol = url.replace(/^https?:\/\//, '');
-  const domain = psl.get(urlWithoutProtocol);
+  const urlWithoutProtocol = parseUrl(url).resource.replace(/^https?:\/\//, '');
+  const domain = psl.get(urlWithoutProtocol) || '';
   if (!domain) return undefined;
   const brand = brands.find(({ url: urlBrand }) => urlBrand.includes(domain));
 
