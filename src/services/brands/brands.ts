@@ -85,6 +85,7 @@ export const checkUrlNetwork = async (
   const brands = await getBrands(filter, transaction);
   const urlWithoutProtocol = url.replace(/^https?:\/\//, '');
   const domain = psl.get(urlWithoutProtocol);
+  if (!domain) return undefined;
   const brand = brands.find(({ url: urlBrand }) => urlBrand.includes(domain));
 
   if (!brand) return undefined;
