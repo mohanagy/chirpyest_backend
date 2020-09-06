@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { Moment } from 'moment';
 import camelcaseKeys from 'camelcase-keys';
+import { Op } from 'sequelize';
 import { dto, constants } from '../../../helpers';
+import database, { ImpactRadiusTransactions } from '../../../database';
 
 const { dailyReportsEndPoint1, dailyReportsEndPoint2 } = constants;
 
@@ -38,4 +40,27 @@ export const getImpactRadiusTotalRevnues = async (from: Moment, to: Moment): Pro
   }, []);
 
   return totalImpactBothAccountsRevnuesByDay;
+};
+
+export const getImpactClosedRevenues = async (from: Moment, to: Moment): Promise<any> => {
+  const startDate = new Date(from.format('YYYY-MM-DD'));
+  const endDate = new Date(to.format('YYYY-MM-DD'));
+
+  const allTransactions = await ImpactRadiusTransactions.findAll({
+    where: {
+      eventDate: {
+        [Op.between]: [startDate, endDate],
+      },
+      status: 'approved',
+      statusDetail: 'paid',
+    },
+    attributes: [
+      [database.sequelize.literal(`DATE("event_date")`), 'date'],
+      [database.sequelize.fn('sum', database.sequelize.col('payout')), 'revenues'],
+    ],
+    group: ['date'],
+    raw: true,
+  });
+
+  return allTransactions;
 };

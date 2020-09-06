@@ -21,6 +21,7 @@ export interface RakutenTransactionsAttributes {
 export interface CommissionJunctionTransactionsAttributes {
   actionTrackerId: number;
   advertiserId: number;
+  actionStatus: string;
   actionTrackerName: string;
   advertiserName: string;
   postingDate: string;

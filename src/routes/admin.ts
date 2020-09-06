@@ -21,4 +21,10 @@ router.get(
   asyncHandler(adminController.revenuesService.getTotalRevenues),
 );
 
+router.get(
+  '/admin/revenues/closed',
+  asyncHandler(verifyToken([UserTypes.Admin])),
+  asyncHandler(adminController.revenuesService.getClosedRevenues),
+);
+
 export default router;

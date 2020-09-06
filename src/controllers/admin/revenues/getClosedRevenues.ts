@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import moment from 'moment';
-import { getImpactRadiusTotalRevnues, getCJTotalRevnues, getRakutenTotalRevnues } from '../../../services/admin';
+import { getRakutenClosedRevenues, getImpactClosedRevenues, getCJClosedRevnues } from '../../../services/admin';
 import { httpResponse } from '../../../helpers';
 
-export const getTotalRevenues = async (
+export const getClosedRevenues = async (
   _request: Request,
   response: Response,
   _next: NextFunction,
@@ -21,9 +21,9 @@ export const getTotalRevenues = async (
     day = before30daysCopy.add(1, 'd');
   }
 
-  const impactRadiusData = await getImpactRadiusTotalRevnues(before30days, today);
-  const rakutenData = await getRakutenTotalRevnues(before30days, today);
-  const cjData = await getCJTotalRevnues(before30days, today);
+  const impactRadiusData = await getRakutenClosedRevenues(before30days, today);
+  const rakutenData = await getImpactClosedRevenues(before30days, today);
+  const cjData = await getCJClosedRevnues(before30days, today);
 
   cjData.forEach((item: any) => {
     obj[item.date] += Number(item.revenues / 100);
@@ -35,9 +35,9 @@ export const getTotalRevenues = async (
     obj[item.date] += Number(item.revenues / 100);
   });
 
-  const totalRevnuesByDay = Object.entries(obj).reduce((acc: any, [date, revenues]) => {
+  const totalClosedRevnuesByDay = Object.entries(obj).reduce((acc: any, [date, revenues]) => {
     acc.push({ date, revenues });
     return acc;
   }, []);
-  return httpResponse.ok(response, totalRevnuesByDay);
+  return httpResponse.ok(response, totalClosedRevnuesByDay);
 };
