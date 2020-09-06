@@ -6,6 +6,7 @@ export interface CommissionJunction {
 export interface Rakuten {
   securityToken: string;
   webhookToken: string;
+  rakutenReportToken: string;
 }
 
 export interface ImpactRadius {

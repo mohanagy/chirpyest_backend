@@ -3,6 +3,7 @@ import { affiliateNetworksController, usersControllers } from '../controllers';
 
 import { asyncHandler, verifyToken } from '../middleware';
 import { UserTypes } from '../interfaces';
+import * as adminController from '../controllers/admin';
 
 const router = express.Router();
 
@@ -13,4 +14,17 @@ router
   .delete('/admin/users/:id', asyncHandler(verifyToken([UserTypes.Admin])), asyncHandler(usersControllers.deleteUser));
 
 router.get('/admin/brands', asyncHandler(affiliateNetworksController.getBrandsForAdmin));
+
+router.get(
+  '/admin/revenues',
+  asyncHandler(verifyToken([UserTypes.Admin])),
+  asyncHandler(adminController.revenuesService.getTotalRevenues),
+);
+
+router.get(
+  '/admin/revenues/closed',
+  asyncHandler(verifyToken([UserTypes.Admin])),
+  asyncHandler(adminController.revenuesService.getClosedRevenues),
+);
+
 export default router;
