@@ -1,6 +1,5 @@
 import { Moment } from 'moment';
 import { Op } from 'sequelize';
-import _ from 'lodash';
 import database, { CommissionJunctionTransactions } from '../../../database';
 
 export const getCJTotalRevnues = async (from: Moment, to: Moment): Promise<any> => {
