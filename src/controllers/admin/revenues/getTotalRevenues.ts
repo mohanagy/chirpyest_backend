@@ -29,13 +29,13 @@ export const getTotalRevenues = async (
     obj[item.date] += Number(item.revenues / 100);
   });
   impactRadiusData.forEach((item: any) => {
-    obj[item.date] += Number(item.revenues / 100);
+    obj[item.date] += Number(item.revenues);
   });
   rakutenData.forEach((item: any) => {
-    obj[item.date] += Number(item.revenues / 100);
+    obj[item.date] += Number(item.revenues);
   });
 
-  const totalRevnuesByDay = Object.entries(obj).reduce((acc: any, [date, revenues]) => {
+  const totalRevnuesByDay = Object.entries(obj).reduce((acc: any, [date, revenues]: any) => {
     acc.push({ date, revenues });
     return acc;
   }, []);
