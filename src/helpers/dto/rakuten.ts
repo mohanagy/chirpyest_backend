@@ -51,3 +51,10 @@ export const updatePendingCashData = (data: any): UpdatePendingCashAttributes =>
   commissions: data.commissions,
   saleAmount: data.saleAmount,
 });
+
+export const rakutenTotalRevenuesData = (data: any): any => {
+  return {
+    date: data.transactionDate,
+    revenues: Number(data.totalCommission).toFixed(2),
+  };
+};

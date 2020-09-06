@@ -44,3 +44,10 @@ export const impactRadiusBrands = (data: any): BrandsAttributes => {
     network: 'impactRadius',
   };
 };
+
+export const impactRaduisDailyRevenues = (data: any): any => {
+  return {
+    date: data.dateDisplay,
+    revenues: Number(data.totalCost).toFixed(2),
+  };
+};

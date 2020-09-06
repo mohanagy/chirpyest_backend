@@ -57,12 +57,18 @@ export const paymentReportEndpointAccount1 = `${baseImpactApiUrl}/Reports/mp_act
 
 export const paymentReportEndpointAccount2 = `${baseImpactAccount2ApiUrl}/Reports/mp_action_listing_sku.json?SUPERSTATUS_MS=APPROVED&SUPERSTATUS_MS=NA&SUPERSTATUS_MS=PENDING&PUB_CAMPAIGN_MS=0&MP_CATEGORY_LIST2=0&PAYSTUB_ID=0&MODIFIED_Y_N=0&PUB_ACTION_TRACKER=0&MP_ACTION_TYPE=0&ADV_PROMOCODE=0&SUBID1=0&SUBID2=0&SUBID3=0&SHAREDID=0&REFERRAL_TYPE=0&ACTION_ID=0&ADV_NOTE=0&SHOW_STATUS_DETAIL=1&timeRange=CUSTOM&compareEnabled=false`;
 
+export const dailyReportsEndPoint1 = `${baseImpactApiUrl}/Reports/mp_performance_by_day.json?PUB_CAMPAIGN=0&timeRange=CUSTOM&compareEnabled=false`;
+export const dailyReportsEndPoint2 = `${baseImpactAccount2ApiUrl}/Reports/mp_performance_by_day.json?PUB_CAMPAIGN=0&timeRange=CUSTOM&compareEnabled=false`;
+
 // match 0% to 100%
 export const percentageRegx = /(100(\.0{1,2})?|[1-9]?\d(\.\d{1,2})?)%/g;
 
 export const paymentSummaryEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&nid=1&reportid=1`;
 export const paymentHistoryEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=2`;
 export const paymentDetailsReportEndpoint = `https://reportws.linksynergy.com/downloadreport.php?token=${config.affiliateNetworks.rakutenConfig.securityToken}&reportid=3&invoiceid=1142851`;
+
+export const rakutenByDayReport = `https://ran-reporting.rakutenmarketing.com/en/reports/revenue-report-by-day/filters?start_date=2020-08-01&end_date=2020-08-31&include_summary=N&network=1&tz=GMT&date_type=transaction&token=${config.affiliateNetworks.rakutenConfig.rakutenReportToken}`;
+
 export const PENDING = 'pending';
 export const PROCESSING = 'processing';
 export const SUCCESS = 'success';

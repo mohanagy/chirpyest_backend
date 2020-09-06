@@ -74,6 +74,18 @@ export interface CommissionJunctionPayloadItem {
   commissionId: number;
   saleAmountPubCurrency: string;
   orderDiscountPubCurrency: string;
+  eventDate: string;
+  lockingDate: string;
+  validationStatus: string;
+  reviewedStatus: string;
+  actionType: string;
+  source: string;
+  websiteId: string;
+  websiteName: string;
+  lockingMethod: string;
+  original: boolean;
+  originalActionId: string;
+  siteToStoreOffer: string;
 }
 
 export type CommissionJunctionPayload = Array<CommissionJunctionPayloadItem>;
