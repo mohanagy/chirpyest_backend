@@ -16,6 +16,7 @@ const envVarsSchema = joi
     RAKUTEN_ACCOUNT_PASSWORD: joi.string().required(),
     RAKUTEN_SCOPE: joi.string().required(),
     RAKUTEN_EVENTS_API_TOKEN: joi.string().required(),
+    RAKUTEN_REPORT_TOKEN: joi.string().required(),
   })
   .unknown()
   .required();
@@ -38,6 +39,7 @@ const config = (): AffiliateNetworksConfigs => {
       accountPassword: envVars.RAKUTEN_ACCOUNT_PASSWORD,
       apiScope: envVars.RAKUTEN_SCOPE,
       webApiToken: envVars.RAKUTEN_EVENTS_API_TOKEN,
+      rakutenReportToken: envVars.RAKUTEN_REPORT_TOKEN,
     },
     impactRadiusConfig: {
       webhookToken: envVars.IMPACT_RADIUS_TOKEN,

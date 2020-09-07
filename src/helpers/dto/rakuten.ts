@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import { RakutenTransactionsAttributes, UpdatePendingCashAttributes } from '../../interfaces/Networks';
 import { percentageRegx } from '../constants';
 import convertToCents from '../convertToCents';
@@ -51,3 +52,10 @@ export const updatePendingCashData = (data: any): UpdatePendingCashAttributes =>
   commissions: data.commissions,
   saleAmount: data.saleAmount,
 });
+
+export const rakutenTotalRevenuesData = (data: any): any => {
+  return {
+    date: moment(data.transactionDate, 'MM/DD/YYYY').format('YYYY-MM-DD'),
+    revenues: Number(data.totalCommission),
+  };
+};

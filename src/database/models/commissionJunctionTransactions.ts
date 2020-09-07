@@ -7,6 +7,48 @@ export function CommissionJunctionTransactionsFactory(sequelize: Sequelize): Com
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    actionStatus: {
+      type: DataTypes.STRING,
+    },
+    eventDate: {
+      type: DataTypes.DATE,
+    },
+    lockingDate: {
+      type: DataTypes.DATE,
+    },
+    validationStatus: {
+      type: DataTypes.STRING,
+    },
+    reviewedStatus: {
+      type: DataTypes.STRING,
+    },
+    actionType: {
+      type: DataTypes.STRING,
+    },
+    source: {
+      type: DataTypes.STRING,
+    },
+    websiteId: {
+      type: DataTypes.STRING,
+    },
+    shopperId: {
+      type: DataTypes.STRING,
+    },
+    websiteName: {
+      type: DataTypes.STRING,
+    },
+    lockingMethod: {
+      type: DataTypes.STRING,
+    },
+    original: {
+      type: DataTypes.BOOLEAN,
+    },
+    originalActionId: {
+      type: DataTypes.STRING,
+    },
+    siteToStoreOffer: {
+      type: DataTypes.STRING,
+    },
     actionTrackerId: {
       type: DataTypes.STRING,
       allowNull: false,

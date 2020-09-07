@@ -10,6 +10,7 @@ export interface Rakuten {
   accountPassword: string;
   apiScope: string;
   webApiToken: string;
+  rakutenReportToken: string;
 }
 
 export interface ImpactRadius {
