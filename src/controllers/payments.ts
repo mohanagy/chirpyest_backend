@@ -23,16 +23,19 @@ export const preparePayments = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
-  logger.info(`receive Cron Job`);
+  logger.info(`preparePayments : started ,cron Job received`);
 
   const paymentsTransitionsFilter = dto.generalDTO.filterData({ status: constants.PENDING });
+  logger.info(`preparePayments : paymentsTransitionsFilter ${paymentsTransitionsFilter}`);
 
   const paymentsTransactions = await paymentsTransitionsService.getAllPaymentsTransactions(
     paymentsTransitionsFilter,
     transaction,
   );
+  logger.info(`preparePayments : paymentsTransactions ${paymentsTransactions}`);
 
   const pendingTransactions = paymentsTransactions.filter((result) => result.status === constants.PENDING);
+  logger.info(`preparePayments : pendingTransactions ${pendingTransactions}`);
 
   const classifiedResponseByUserId = pendingTransactions.reduce(
     (acc: ClassifiedResponseByUserIdAttributes, element) => {
@@ -51,15 +54,17 @@ export const preparePayments = async (
     },
     {},
   );
+  logger.info(`preparePayments : classifiedResponseByUserId ${classifiedResponseByUserId}`);
 
-  logger.info(`fetch all users from database to match response`);
   const users = await usersServices.findAllUsers();
+  logger.info(`preparePayments : fetch all users from database to match response`);
   const usersObject = users.reduce((acc: any, user) => {
     if (user.id && !acc[user.id]) acc[user.id] = user;
     return acc;
   }, {});
+  logger.info(`preparePayments : usersObject ${usersObject}`);
 
-  logger.info(`manipulate affiliate networks services response to fit payments service`);
+  logger.info(`preparePayments : manipulate affiliate networks services response to fit payments service`);
   const paymentsDraftPayload: Array<PaymentsAttributes> = Object.keys(classifiedResponseByUserId)
     .filter(
       (key) =>
@@ -74,9 +79,11 @@ export const preparePayments = async (
         transactionId: uuid(),
       };
     });
+  logger.info(`preparePayments : paymentsDraftPayload ${paymentsDraftPayload}`);
 
-  logger.info(`creat new payment records`);
+  logger.info(`preparePayments : creat new payment records`);
   const paymentsData = await paymentsService.createBulkPayments(paymentsDraftPayload, transaction);
+  logger.info(`preparePayments : paymentsData ${paymentsData}`);
 
   for await (const { id, userId } of paymentsData) {
     const filter = dto.generalDTO.filterData({
@@ -92,7 +99,7 @@ export const preparePayments = async (
     await paymentsTransitionsService.updatePaymentsTransactions(filter, data, transaction);
   }
 
-  logger.info(`process done`);
+  logger.info(`preparePayments : ended`);
 
   await transaction.commit();
   return httpResponse.ok(response, paymentsData);
@@ -143,6 +150,8 @@ export const sendPayments = async (
       };
     }),
   );
+  logger.info(`sendPayments: pendingPayments ${pendingPayments}`);
+
   if (!pendingPayments.length) {
     await transaction.rollback();
     logger.info(`sendPayments: no pending payments`);
@@ -167,15 +176,16 @@ export const sendPayments = async (
   const updatePaymentsFilter = dto.generalDTO.filterData({
     status: constants.PENDING,
   });
+  logger.info(`sendPayments: updatePaymentsFilter ${updatePaymentsFilter}`);
 
   const updatePaymentsData = {
     status: constants.PROCESSING,
     payoutBatchId,
   };
-  logger.info(`sendPayments: change pending payments status to PROCESSING`);
+  logger.info(`sendPayments: change pending payments status to PROCESSING :${updatePaymentsData}`);
   await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData, transaction);
 
-  logger.info(`sendPayments: done`);
+  logger.info(`sendPayments: ended`);
   await transaction.commit();
   return httpResponse.ok(response, {});
 };
@@ -195,6 +205,7 @@ export const checkPayments = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
+  logger.info(`checkPayments: started`);
   const filter = dto.generalDTO.filterData({
     status: constants.PROCESSING,
     payoutBatchId: {
@@ -202,8 +213,8 @@ export const checkPayments = async (
     },
   });
 
-  logger.info(`sendPayments: get all pending payments`);
   const processedPayments = await paymentsService.getAllPayments(filter, transaction);
+  logger.info(`checkPayments: get all pending processedPayments ${processedPayments}`);
 
   const payoutsBatchIds = processedPayments.reduce((acc: PayoutsBatchIdsAttributes, payment) => {
     const { payoutBatchId, closedOut, id } = payment;
@@ -214,6 +225,7 @@ export const checkPayments = async (
       };
     return acc;
   }, {});
+  logger.info(`checkPayments: get all payoutsBatchIds ${payoutsBatchIds}`);
   const finishedPayouts: Array<string> = [];
   for await (const payoutBatchId of Object.keys(payoutsBatchIds)) {
     const {
@@ -232,18 +244,12 @@ export const checkPayments = async (
     const data = {
       status,
     };
+    logger.info(`checkPayments:  updatePaymentsTransactions ${updatePaymentsTransactionsFilter} data :${data}`);
 
     await paymentsTransitionsService.updatePaymentsTransactions(updatePaymentsTransactionsFilter, data, transaction);
     if (status === constants.SUCCESS) {
       finishedPayouts.push(payoutBatchId);
     }
-
-    // await mailer.transporter.sendMail({
-    //   from: '"Mohammed Naji" <naji@kiitos-tech.com>', // sender address
-    //   to: 'naji@kiitos-tech.com', // list of receivers
-    //   subject: 'Payment Error',
-    //   text: `this payout Batch Id ${payoutBatchId} has status :${status}`, // plain text body
-    // });
   }
 
   const filteredProcessedPayments = processedPayments.filter((payment) =>
@@ -260,6 +266,8 @@ export const checkPayments = async (
         const incrementUserFinicalDashboardFilter = dto.generalDTO.filterData({
           userId,
         });
+        logger.info(`checkPayments:  increment user money for userId :${userId}  data :${incrementUserFinicalData}`);
+
         await financialDashboardService.incrementUserFinicalDashboard(
           incrementUserFinicalData,
           incrementUserFinicalDashboardFilter,
@@ -281,6 +289,7 @@ export const checkPayments = async (
     }),
   );
   await transaction.commit();
+  logger.info(`checkPayments:  ended`);
   return httpResponse.ok(response, {});
 };
 
@@ -299,6 +308,7 @@ export const getAllPayments = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
+  logger.info(`getAllPayments:  started`);
   const payments = await paymentsService.getAllPayments(
     {
       where: {
@@ -309,6 +319,7 @@ export const getAllPayments = async (
     },
     transaction,
   );
+  logger.info(`getAllPayments:  ended with  : ${payments}`);
   await transaction.commit();
   return httpResponse.ok(response, payments);
 };

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { createFinancialRecord } from '../services/cashback';
 import database from '../database';
-import { authHelpers, dto, httpResponse } from '../helpers';
+import { authHelpers, dto, httpResponse, logger } from '../helpers';
 import { messages } from '../helpers/constants';
 import { CognitoUser } from '../interfaces';
 import { usersServices } from '../services';
@@ -15,56 +15,70 @@ import { usersServices } from '../services';
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const signUp = async (request: Request, response: Response, next: NextFunction): Promise<Response | void> => {
+  logger.info(`signUp : started`);
   const transaction = await database.sequelize.transaction();
   let userSub;
   try {
     const body = dto.generalDTO.bodyData(request);
+    logger.info(`signUp : body: ${body}`);
 
     const { password, ...userData } = dto.usersDTO.userData(body);
     let responseData = {};
 
     const emailExists = await usersServices.isEmailExists(userData.email, transaction);
+    logger.info(`signUp : emailExists: ${emailExists}`);
     if (emailExists) {
+      logger.info(`signUp : the user is exist: rollback`);
       await transaction.rollback();
       return httpResponse.conflict(response, messages.auth.userAlreadyExists);
     }
 
-    const data = await usersServices.createUser(userData, transaction);
+    const createdUserData = await usersServices.createUser(userData, transaction);
+    logger.info(`signUp : createdUserData: ${createdUserData}`);
 
-    const attributes = dto.authDTO.cognitoAttributes({ ...userData, id: data.id });
-    const attributeList = authHelpers.generateCognitoAttributes(attributes);
+    const cognitoAttributes = dto.authDTO.cognitoAttributes({ ...userData, id: createdUserData.id });
+    const cognitoAttributesList = authHelpers.generateCognitoAttributes(cognitoAttributes);
+    logger.info(`signUp : cognitoAttributes: ${cognitoAttributes}`);
+    logger.info(`signUp : cognitoAttributesList: ${cognitoAttributesList}`);
 
     const cognitoUser: CognitoUser = await authHelpers.createCognitoUser(
       request.app,
       userData.email,
       password,
-      attributeList,
+      cognitoAttributesList,
     );
+    logger.info(`signUp : cognitoUser: ${cognitoUser}`);
 
     ({ userSub } = cognitoUser);
 
-    const filter = dto.generalDTO.filterData({ id: data.id });
+    const filter = dto.generalDTO.filterData({ id: createdUserData.id });
 
+    logger.info(`signUp : updateUser With userSub: ${userSub}`);
     const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognitoId: userSub }, transaction);
+    logger.info(`signUp : userUpdated: ${userUpdatedData}`);
 
     const financialRecord = {
-      userId: data.id,
+      userId: createdUserData.id,
       pending: 0.0,
       receivableMilestone: 0.0,
       earnings: 0.0,
       lastClosedOut: 0.0,
     };
+    logger.info(`signUp : create financial Record for the user: ${financialRecord}`);
     await createFinancialRecord(financialRecord, transaction);
 
     await transaction.commit();
-    if (userUpdatedData) responseData = userUpdatedData;
+    if (userUpdatedData) responseData = { ...userUpdatedData };
+    logger.info(`signUp : ended with response : ${responseData} `);
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {
+    logger.info(`signUp : error happens : ${error} `);
     await transaction.rollback();
     if (userSub) {
+      logger.info(`signUp : remove user from cognito when error happens `);
       await authHelpers.removeCognitoUser(request.app, userSub);
     }
-
+    logger.info(`signUp : ended with internal Server Error `);
     return httpResponse.internalServerError(next, error);
   }
 };
