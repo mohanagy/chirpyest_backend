@@ -68,7 +68,7 @@ export const signUp = async (request: Request, response: Response, next: NextFun
     await createFinancialRecord(financialRecord, transaction);
 
     await transaction.commit();
-    if (userUpdatedData) responseData = { ...userUpdatedData };
+    if (userUpdatedData) responseData = userUpdatedData;
     logger.info(`signUp : ended with response : ${JSON.stringify(responseData)} `);
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {

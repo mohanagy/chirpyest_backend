@@ -1,8 +1,10 @@
+import { expect } from 'chai';
 import { CommissionJunctionPayload } from 'src/interfaces';
 import request from 'supertest';
 import app from '../../app';
 import config from '../../config';
-import { authHelpers, dto } from '../../helpers';
+import * as db from '../../database';
+import { authHelpers, convertToCents, dto } from '../../helpers';
 import { usersServices } from '../../services';
 
 const commissionJunctionResponse: CommissionJunctionPayload = [
@@ -43,16 +45,16 @@ const commissionJunctionResponse: CommissionJunctionPayload = [
     orderDiscountPubCurrency: '0',
   },
 ];
-// const financialDashboard = {
-//   id: 1,
-//   userId: 1,
-//   pending: Number(commissionJunctionResponse[0].pubCommissionAmountUsd),
-//   receivableMilestone: 0,
-//   earnings: 0,
-//   lastClosedOut: 0,
-//   createdAt: '2020-07-22T13:06:14.333Z',
-//   updatedAt: '2020-07-22T13:06:14.333Z',
-// };
+const financialDashboard = {
+  id: 1,
+  userId: 1,
+  pending: Number(commissionJunctionResponse[0].pubCommissionAmountUsd),
+  receivableMilestone: 0,
+  earnings: 0,
+  lastClosedOut: 0,
+  createdAt: '2020-07-22T13:06:14.333Z',
+  updatedAt: '2020-07-22T13:06:14.333Z',
+};
 const {
   affiliateNetworks: { commissionJunctionConfig },
 } = config;
@@ -96,33 +98,32 @@ describe('Test Commission Junction webhook controller', () => {
       .expect(409);
   });
 
-  // it('Should allow any request does have  secret key and body and it will be stored', async () => {
-  //   await request(app)
-  //     .post(`/api/v1/affiliate-networks/commission-junction/webhook`)
-  //     .expect('Content-Type', /json/)
-  //     .set('x-webhook-secret', commissionJunctionConfig.cJPersonalKey)
-  //     .send(commissionJunctionResponse)
-  //     .expect(200);
+  it('Should allow any request does have  secret key and body and it will be stored', async () => {
+    await request(app)
+      .post(`/api/v1/affiliate-networks/commission-junction/webhook`)
+      .expect('Content-Type', /json/)
+      .set('x-webhook-secret', commissionJunctionConfig.cJPersonalKey)
+      .send(commissionJunctionResponse)
+      .expect(200);
 
-  //   const cJTransactions = await db.CommissionJunctionTransactions.findAll({
-  //     raw: true,
-  //   });
-  //   console.log({ commissionJunctionResponse });
-  //   const financialDashboardData = await db.FinancialDashboard.findOne({
-  //     where: { userId: commissionJunctionResponse[0].shopperId },
-  //     raw: true,
-  //   });
-  //   expect(cJTransactions.length).equal(commissionJunctionResponse.length);
-  //   expect(Number(cJTransactions[0].commissionId)).equal(commissionJunctionResponse[0].commissionId);
-  //   expect(financialDashboardData?.pending).equal(convertToCents(financialDashboard.pending));
+    const cJTransactions = await db.CommissionJunctionTransactions.findAll({
+      raw: true,
+    });
+    const financialDashboardData = await db.FinancialDashboard.findOne({
+      where: { userId: commissionJunctionResponse[0].shopperId },
+      raw: true,
+    });
+    expect(cJTransactions.length).equal(commissionJunctionResponse.length);
+    expect(Number(cJTransactions[0].commissionId)).equal(commissionJunctionResponse[0].commissionId);
+    expect(financialDashboardData?.pending).equal(convertToCents(financialDashboard.pending));
 
-  //   await db.CommissionJunctionTransactions.destroy({
-  //     where: {
-  //       advertiserName: commissionJunctionResponse[0].advertiserName,
-  //     },
-  //   });
-  //   await db.FinancialDashboard.destroy({
-  //     where: { userId: commissionJunctionResponse[0].shopperId },
-  //   });
-  // });
+    await db.CommissionJunctionTransactions.destroy({
+      where: {
+        advertiserName: commissionJunctionResponse[0].advertiserName,
+      },
+    });
+    await db.FinancialDashboard.destroy({
+      where: { userId: commissionJunctionResponse[0].shopperId },
+    });
+  });
 });
