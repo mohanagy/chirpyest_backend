@@ -1,10 +1,8 @@
-import { expect } from 'chai';
 import { CommissionJunctionPayload } from 'src/interfaces';
 import request from 'supertest';
 import app from '../../app';
 import config from '../../config';
-import * as db from '../../database';
-import { authHelpers, convertToCents, dto } from '../../helpers';
+import { authHelpers, dto } from '../../helpers';
 import { usersServices } from '../../services';
 
 const commissionJunctionResponse: CommissionJunctionPayload = [
