@@ -21,6 +21,7 @@ export interface RakutenTransactionsAttributes {
 export interface CommissionJunctionTransactionsAttributes {
   actionTrackerId: number;
   advertiserId: number;
+  actionStatus: string;
   actionTrackerName: string;
   advertiserName: string;
   postingDate: string;
@@ -74,6 +75,18 @@ export interface CommissionJunctionPayloadItem {
   commissionId: number;
   saleAmountPubCurrency: string;
   orderDiscountPubCurrency: string;
+  eventDate?: string;
+  lockingDate?: string;
+  validationStatus?: string;
+  reviewedStatus?: string;
+  actionType?: string;
+  source?: string;
+  websiteId?: string;
+  websiteName?: string;
+  lockingMethod?: string;
+  original?: boolean;
+  originalActionId?: string;
+  siteToStoreOffer?: string;
 }
 
 export type CommissionJunctionPayload = Array<CommissionJunctionPayloadItem>;

@@ -117,6 +117,7 @@ export const authenticateUser = (
     });
   });
 };
+
 /**
  * @description confirmCognitoUser is a function used to confirm cognito user
  * @param  {Application} app represents express app
@@ -138,6 +139,33 @@ export const confirmCognitoUser = async (app: Application, email: string): Promi
       Username: email,
     };
     cognitoProvider.adminConfirmSignUp(confirmParams, (error: any, data: any) => {
+      if (error) reject(error.message);
+      resolve(data);
+    });
+  });
+
+/**
+ * @description updateUserAttributes is a function used to update cognito user attributes
+ * @param  {Application} app represents express app
+ * @param  {string} email represents user email
+ * @returns {Promise<string>}
+ */
+export const updateCognitoAttributes = async (app: Application, cognitoId: string, attributes: any): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const cognitoProvider = app.get('cognitoProvider');
+
+    const {
+      cognito: {
+        cognitoPoolConfig: { UserPoolId },
+      },
+    } = config;
+
+    const params = {
+      UserAttributes: attributes,
+      UserPoolId,
+      Username: cognitoId,
+    };
+    cognitoProvider.adminUpdateUserAttributes(params, (error: any, data: any) => {
       if (error) reject(error.message);
       resolve(data);
     });

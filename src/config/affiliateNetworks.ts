@@ -12,6 +12,7 @@ const envVarsSchema = joi
     IMPACT_RADIUS_AUTH_TOKEN: joi.string().required(),
     IMPACT_RADIUS2_ACCOUNT_SID: joi.string().required(),
     IMPACT_RADIUS2_AUTH_TOKEN: joi.string().required(),
+    RAKUTEN_REPORT_TOKEN: joi.string().required(),
   })
   .unknown()
   .required();
@@ -30,6 +31,7 @@ const config = (): AffiliateNetworksConfigs => {
     rakutenConfig: {
       securityToken: envVars.RAKUTEN_SECURITY_TOKEN,
       webhookToken: envVars.RAKUTEN_TOKEN, // TODO: rename this
+      rakutenReportToken: envVars.RAKUTEN_REPORT_TOKEN,
     },
     impactRadiusConfig: {
       webhookToken: envVars.IMPACT_RADIUS_TOKEN, // TODO: rename this

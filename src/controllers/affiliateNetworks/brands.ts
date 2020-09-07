@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
 import { Op } from 'sequelize';
-import { httpResponse, dto, constants } from '../../helpers';
+import { httpResponse, dto, constants, logger } from '../../helpers';
 import { brandsService, paymentsService, paymentsTransitionsService } from '../../services';
 
 /**
@@ -18,6 +18,8 @@ export const getBrands = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
+  logger.info(`getBrands : started`);
+
   const { isTrending, category } = request.query;
   const filterOptions: any = {
     isDeleted: false,
@@ -28,38 +30,41 @@ export const getBrands = async (
   } else if (category) {
     filterOptions.category = category;
   }
-
+  logger.info(`getBrands : filterOptions : ${JSON.stringify(filterOptions)}`);
   const filter = dto.generalDTO.filterData(filterOptions);
   const brands = await brandsService.getBrands(filter, transaction);
+  logger.info(`getBrands : brands result : ${JSON.stringify(filterOptions)}`);
   await transaction.commit();
+  logger.info(`getBrands : ended`);
+
   return httpResponse.ok(response, brands);
 };
 
 export const getPayments = async (
   _request: Request,
   response: Response,
-  next: NextFunction,
+  _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response | void> => {
-  try {
-    const {
-      calculateRakutenUserPayment,
-      calculateImpactRadiusBothAccountsPayment,
-      calculateCjUserPayment,
-    } = paymentsService;
-    const paymentsArr = await Promise.all([
-      calculateRakutenUserPayment(),
-      calculateImpactRadiusBothAccountsPayment(),
-      calculateCjUserPayment(),
-    ]);
-    const flatPayments = paymentsArr.flat();
-    await paymentsTransitionsService.createPaymentsTransactions(flatPayments, transaction);
-    await transaction.commit();
-    return httpResponse.ok(response, flatPayments);
-  } catch (err) {
-    await transaction.rollback();
-    return next(err);
-  }
+  logger.info(`getPayments : started`);
+  const {
+    calculateRakutenUserPayment,
+    calculateImpactRadiusBothAccountsPayment,
+    calculateCjUserPayment,
+  } = paymentsService;
+
+  logger.info(`getPayments : start gathering affiliate networks payments `);
+  const affiliateNetworksPayments = await Promise.all([
+    calculateRakutenUserPayment(),
+    calculateImpactRadiusBothAccountsPayment(),
+    calculateCjUserPayment(),
+  ]);
+  const flatPayments = affiliateNetworksPayments.flat();
+  logger.info(`getPayments : create payment transactions with data : ${JSON.stringify(flatPayments)} `);
+  await paymentsTransitionsService.createPaymentsTransactions(flatPayments, transaction);
+  await transaction.commit();
+  logger.info(`getPayments : ended`);
+  return httpResponse.ok(response, flatPayments);
 };
 
 /**
@@ -77,15 +82,21 @@ export const shortLinks = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
+  logger.info(`shortLinks : started`);
   const userId = dto.usersDTO.userId(request);
   const bodyData = dto.generalDTO.bodyData(request);
+  logger.info(`shortLinks : userId : ${userId} , bodyData : ${JSON.stringify(bodyData)}`);
   const { url } = bodyData;
   const trackableLink = await brandsService.checkUrlNetwork(url, userId.id, transaction);
+  logger.info(`shortLinks : trackableLink ${JSON.stringify(trackableLink)}`);
   if (!trackableLink) {
+    logger.info(`shortLinks : no Trackable link `);
     await transaction.rollback();
     return httpResponse.forbidden(response, constants.messages.brands.linkNotRelatedToOurNetwork);
   }
+
   const { shortUrl } = await brandsService.convertLink(trackableLink);
+  logger.info(`shortLinks : generated shortUrl :${JSON.stringify(shortUrl)} `);
 
   await transaction.commit();
   return httpResponse.ok(response, shortUrl);
@@ -104,14 +115,23 @@ export const getBrandsForAdmin = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
+  logger.info(`getBrandsForAdmin : started`);
   const filter = dto.generalDTO.filterData({
     isExpired: { [Op.not]: true },
   });
+  logger.info(`getBrandsForAdmin : filter ${JSON.stringify(filter)}`);
   const brands = await brandsService.getBrands(filter, transaction);
+
+  logger.info(`getBrandsForAdmin : brands ${JSON.stringify(brands)}`);
 
   const classifiedBrands = brandsService.classifyBrands(brands);
 
+  logger.info(`getBrandsForAdmin : classifiedBrands ${JSON.stringify(classifiedBrands)}`);
+
   const brandsTransactions = await brandsService.getBrandsTransaction(classifiedBrands, transaction);
+
+  logger.info(`getBrandsForAdmin : brandsTransactions ${JSON.stringify(brandsTransactions)}`);
+
   const allBrands = brands.reduce((acc: any, brand) => {
     const isBrandTransactionExist = brandsTransactions.find((element) => element.brandId === brand.brandId);
     if (isBrandTransactionExist) {
@@ -121,6 +141,8 @@ export const getBrandsForAdmin = async (
     }
     return acc;
   }, []);
+
+  logger.info(`getBrandsForAdmin : allBrands ${JSON.stringify(allBrands)}`);
 
   await transaction.commit();
   return httpResponse.ok(response, allBrands);

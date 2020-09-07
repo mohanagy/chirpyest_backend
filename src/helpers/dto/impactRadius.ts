@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { BrandsAttributes, ImpactRadiusAttributes } from '../../interfaces/Networks';
 import convertToCents from '../convertToCents';
 import isValidDate from '../isValidDate';
@@ -42,5 +43,12 @@ export const impactRadiusBrands = (data: any): BrandsAttributes => {
     status: data.ContractStatus,
     commission: data.payout,
     network: 'impactRadius',
+  };
+};
+
+export const impactRaduisDailyRevenues = (data: any): any => {
+  return {
+    date: moment(data.dateDisplay, 'MMM DD, YYYY').format('YYYY-MM-DD'),
+    revenues: Number(data.totalCost),
   };
 };
