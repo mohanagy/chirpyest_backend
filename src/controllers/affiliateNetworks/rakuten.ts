@@ -21,10 +21,10 @@ export const getRakutenWebhookData = async (
 ): Promise<Response | void> => {
   logger.info(`getRakutenWebhookData : started`);
   const queryData = dto.generalDTO.queryData(request);
-  logger.info(`getRakutenWebhookData : queryData ${queryData}`);
+  logger.info(`getRakutenWebhookData : queryData ${JSON.stringify(queryData)}`);
   const rakutenTransactionData: RakutenTransactionsAttributes = dto.rakutenDTO.rakutenData(queryData);
   const { userId } = rakutenTransactionData;
-  logger.info(`getRakutenWebhookData : rakutenTransactionData ${rakutenTransactionData}`);
+  logger.info(`getRakutenWebhookData : rakutenTransactionData ${JSON.stringify(rakutenTransactionData)}`);
   let user;
 
   if (userId && Number.isInteger(+userId)) {
@@ -47,7 +47,9 @@ export const getRakutenWebhookData = async (
     }
 
     const filter = dto.generalDTO.filterData({ userId });
-    logger.info(`getRakutenWebhookData : update the pending cash for the user ${transactionCommission} `);
+    logger.info(
+      `getRakutenWebhookData : update the pending cash for the user ${JSON.stringify(transactionCommission)} `,
+    );
     await cashBackService.updatePendingCash(userId, filter, transactionCommission, transaction);
     await transaction.commit();
     logger.info(`getRakutenWebhookData : ended with user`);

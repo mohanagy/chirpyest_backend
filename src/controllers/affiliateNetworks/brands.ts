@@ -30,10 +30,10 @@ export const getBrands = async (
   } else if (category) {
     filterOptions.category = category;
   }
-  logger.info(`getBrands : filterOptions : ${filterOptions}`);
+  logger.info(`getBrands : filterOptions : ${JSON.stringify(filterOptions)}`);
   const filter = dto.generalDTO.filterData(filterOptions);
   const brands = await brandsService.getBrands(filter, transaction);
-  logger.info(`getBrands : brands result : ${filterOptions}`);
+  logger.info(`getBrands : brands result : ${JSON.stringify(filterOptions)}`);
   await transaction.commit();
   logger.info(`getBrands : ended`);
 
@@ -60,7 +60,7 @@ export const getPayments = async (
     calculateCjUserPayment(),
   ]);
   const flatPayments = affiliateNetworksPayments.flat();
-  logger.info(`getPayments : create payment transactions with data : ${flatPayments} `);
+  logger.info(`getPayments : create payment transactions with data : ${JSON.stringify(flatPayments)} `);
   await paymentsTransitionsService.createPaymentsTransactions(flatPayments, transaction);
   await transaction.commit();
   logger.info(`getPayments : ended`);
@@ -85,10 +85,10 @@ export const shortLinks = async (
   logger.info(`shortLinks : started`);
   const userId = dto.usersDTO.userId(request);
   const bodyData = dto.generalDTO.bodyData(request);
-  logger.info(`shortLinks : userId : ${userId} , bodyData : ${bodyData}`);
+  logger.info(`shortLinks : userId : ${userId} , bodyData : ${JSON.stringify(bodyData)}`);
   const { url } = bodyData;
   const trackableLink = await brandsService.checkUrlNetwork(url, userId.id, transaction);
-  logger.info(`shortLinks : trackableLink ${trackableLink}`);
+  logger.info(`shortLinks : trackableLink ${JSON.stringify(trackableLink)}`);
   if (!trackableLink) {
     logger.info(`shortLinks : no Trackable link `);
     await transaction.rollback();
@@ -96,7 +96,7 @@ export const shortLinks = async (
   }
 
   const { shortUrl } = await brandsService.convertLink(trackableLink);
-  logger.info(`shortLinks : generated shortUrl :${shortUrl} `);
+  logger.info(`shortLinks : generated shortUrl :${JSON.stringify(shortUrl)} `);
 
   await transaction.commit();
   return httpResponse.ok(response, shortUrl);
@@ -119,18 +119,18 @@ export const getBrandsForAdmin = async (
   const filter = dto.generalDTO.filterData({
     isExpired: { [Op.not]: true },
   });
-  logger.info(`getBrandsForAdmin : filter ${filter}`);
+  logger.info(`getBrandsForAdmin : filter ${JSON.stringify(filter)}`);
   const brands = await brandsService.getBrands(filter, transaction);
 
-  logger.info(`getBrandsForAdmin : brands ${brands}`);
+  logger.info(`getBrandsForAdmin : brands ${JSON.stringify(brands)}`);
 
   const classifiedBrands = brandsService.classifyBrands(brands);
 
-  logger.info(`getBrandsForAdmin : classifiedBrands ${classifiedBrands}`);
+  logger.info(`getBrandsForAdmin : classifiedBrands ${JSON.stringify(classifiedBrands)}`);
 
   const brandsTransactions = await brandsService.getBrandsTransaction(classifiedBrands, transaction);
 
-  logger.info(`getBrandsForAdmin : brandsTransactions ${brandsTransactions}`);
+  logger.info(`getBrandsForAdmin : brandsTransactions ${JSON.stringify(brandsTransactions)}`);
 
   const allBrands = brands.reduce((acc: any, brand) => {
     const isBrandTransactionExist = brandsTransactions.find((element) => element.brandId === brand.brandId);
@@ -142,7 +142,7 @@ export const getBrandsForAdmin = async (
     return acc;
   }, []);
 
-  logger.info(`getBrandsForAdmin : allBrands ${allBrands}`);
+  logger.info(`getBrandsForAdmin : allBrands ${JSON.stringify(allBrands)}`);
 
   await transaction.commit();
   return httpResponse.ok(response, allBrands);

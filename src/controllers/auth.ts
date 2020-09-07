@@ -20,13 +20,13 @@ export const signUp = async (request: Request, response: Response, next: NextFun
   let userSub;
   try {
     const body = dto.generalDTO.bodyData(request);
-    logger.info(`signUp : body: ${body}`);
+    logger.info(`signUp : body: ${JSON.stringify(body)}`);
 
     const { password, ...userData } = dto.usersDTO.userData(body);
     let responseData = {};
 
     const emailExists = await usersServices.isEmailExists(userData.email, transaction);
-    logger.info(`signUp : emailExists: ${emailExists}`);
+    logger.info(`signUp : emailExists: ${JSON.stringify(emailExists)}`);
     if (emailExists) {
       logger.info(`signUp : the user is exist: rollback`);
       await transaction.rollback();
@@ -34,12 +34,12 @@ export const signUp = async (request: Request, response: Response, next: NextFun
     }
 
     const createdUserData = await usersServices.createUser(userData, transaction);
-    logger.info(`signUp : createdUserData: ${createdUserData}`);
+    logger.info(`signUp : createdUserData: ${JSON.stringify(createdUserData)}`);
 
     const cognitoAttributes = dto.authDTO.cognitoAttributes({ ...userData, id: createdUserData.id });
     const cognitoAttributesList = authHelpers.generateCognitoAttributes(cognitoAttributes);
-    logger.info(`signUp : cognitoAttributes: ${cognitoAttributes}`);
-    logger.info(`signUp : cognitoAttributesList: ${cognitoAttributesList}`);
+    logger.info(`signUp : cognitoAttributes: ${JSON.stringify(cognitoAttributes)}`);
+    logger.info(`signUp : cognitoAttributesList: ${JSON.stringify(cognitoAttributesList)}`);
 
     const cognitoUser: CognitoUser = await authHelpers.createCognitoUser(
       request.app,
@@ -55,7 +55,7 @@ export const signUp = async (request: Request, response: Response, next: NextFun
 
     logger.info(`signUp : updateUser With userSub: ${userSub}`);
     const [, [userUpdatedData]] = await usersServices.updateUser(filter, { cognitoId: userSub }, transaction);
-    logger.info(`signUp : userUpdated: ${userUpdatedData}`);
+    logger.info(`signUp : userUpdated: ${JSON.stringify(userUpdatedData)}`);
 
     const financialRecord = {
       userId: createdUserData.id,
@@ -64,15 +64,15 @@ export const signUp = async (request: Request, response: Response, next: NextFun
       earnings: 0.0,
       lastClosedOut: 0.0,
     };
-    logger.info(`signUp : create financial Record for the user: ${financialRecord}`);
+    logger.info(`signUp : create financial Record for the user: ${JSON.stringify(financialRecord)}`);
     await createFinancialRecord(financialRecord, transaction);
 
     await transaction.commit();
     if (userUpdatedData) responseData = { ...userUpdatedData };
-    logger.info(`signUp : ended with response : ${responseData} `);
+    logger.info(`signUp : ended with response : ${JSON.stringify(responseData)} `);
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {
-    logger.info(`signUp : error happens : ${error} `);
+    logger.info(`signUp : error happens : ${JSON.stringify(error)} `);
     await transaction.rollback();
     if (userSub) {
       logger.info(`signUp : remove user from cognito when error happens `);

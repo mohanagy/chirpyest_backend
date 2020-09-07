@@ -29,13 +29,13 @@ export const getUserFinancialData = async (
   }
   const filter = dto.generalDTO.filterData({ userId: userId.id });
   const data = await financialDashboardService.getUserFinancialDashboard(filter, transaction);
-  logger.info(`getUserFinancialData : financialData for user  : ${userId} ${data} `);
+  logger.info(`getUserFinancialData : financialData for user  : ${userId} ${JSON.stringify(data)} `);
   if (data) {
     const pendingDollars = calculateUserPendingCash(data.pending);
     data.pending = pendingDollars;
-    logger.info(`getUserFinancialData : calculate pending  pendingDollars ${pendingDollars}`);
+    logger.info(`getUserFinancialData : calculate pending  pendingDollars ${JSON.stringify(pendingDollars)}`);
   }
   await transaction.commit();
-  logger.info(`getUserFinancialData : ended with response :  ${data}`);
+  logger.info(`getUserFinancialData : ended with response :  ${JSON.stringify(data)}`);
   return response.send(data);
 };

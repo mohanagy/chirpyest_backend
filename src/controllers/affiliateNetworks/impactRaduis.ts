@@ -23,7 +23,9 @@ export const getImpactRadiusWebhookData = async (
   const queryData = dto.generalDTO.queryData(request);
   logger.info(`getImpactRadiusWebhookData : started`);
   const impactRadiusTransactionData: ImpactRadiusAttributes = dto.impactRadiusDTO.impactRadiusData(queryData);
-  logger.info(`getImpactRadiusWebhookData : impactRadiusTransactionData ${impactRadiusTransactionData}`);
+  logger.info(
+    `getImpactRadiusWebhookData : impactRadiusTransactionData ${JSON.stringify(impactRadiusTransactionData)}`,
+  );
 
   // Check if the url has the correct token
   if (impactRadiusTransactionData.token !== config.affiliateNetworks.impactRadiusConfig.webhookToken) {
@@ -38,7 +40,7 @@ export const getImpactRadiusWebhookData = async (
   if (userId && Number.isInteger(+userId)) {
     const filter = dto.generalDTO.filterData({ id: userId });
     user = await usersServices.findUser(filter, transaction);
-    logger.info(`getImpactRadiusWebhookData : get user data for userId ${userId}  `);
+    logger.info(`getImpactRadiusWebhookData : get user data for userId ${userId}`);
   }
 
   if (userId && user) {
@@ -46,7 +48,7 @@ export const getImpactRadiusWebhookData = async (
     // TODO: Handle the case when the commission is zero or less than 2 cents
     await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
     const transactionCommission = +impactRadiusTransactionData.payout;
-    logger.info(`getImpactRadiusWebhookData : transactionCommission ${transactionCommission} `);
+    logger.info(`getImpactRadiusWebhookData : transactionCommission ${JSON.stringify(transactionCommission)} `);
     if (Number.isNaN(transactionCommission)) {
       logger.info(`getImpactRadiusWebhookData : transactionCommission `);
       await transaction.commit();

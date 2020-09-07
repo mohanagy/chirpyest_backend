@@ -26,16 +26,16 @@ export const preparePayments = async (
   logger.info(`preparePayments : started ,cron Job received`);
 
   const paymentsTransitionsFilter = dto.generalDTO.filterData({ status: constants.PENDING });
-  logger.info(`preparePayments : paymentsTransitionsFilter ${paymentsTransitionsFilter}`);
+  logger.info(`preparePayments : paymentsTransitionsFilter ${JSON.stringify(paymentsTransitionsFilter)}`);
 
   const paymentsTransactions = await paymentsTransitionsService.getAllPaymentsTransactions(
     paymentsTransitionsFilter,
     transaction,
   );
-  logger.info(`preparePayments : paymentsTransactions ${paymentsTransactions}`);
+  logger.info(`preparePayments : paymentsTransactions ${JSON.stringify(paymentsTransactions)}`);
 
   const pendingTransactions = paymentsTransactions.filter((result) => result.status === constants.PENDING);
-  logger.info(`preparePayments : pendingTransactions ${pendingTransactions}`);
+  logger.info(`preparePayments : pendingTransactions ${JSON.stringify(pendingTransactions)}`);
 
   const classifiedResponseByUserId = pendingTransactions.reduce(
     (acc: ClassifiedResponseByUserIdAttributes, element) => {
@@ -54,7 +54,7 @@ export const preparePayments = async (
     },
     {},
   );
-  logger.info(`preparePayments : classifiedResponseByUserId ${classifiedResponseByUserId}`);
+  logger.info(`preparePayments : classifiedResponseByUserId ${JSON.stringify(classifiedResponseByUserId)}`);
 
   const users = await usersServices.findAllUsers();
   logger.info(`preparePayments : fetch all users from database to match response`);
@@ -62,7 +62,7 @@ export const preparePayments = async (
     if (user.id && !acc[user.id]) acc[user.id] = user;
     return acc;
   }, {});
-  logger.info(`preparePayments : usersObject ${usersObject}`);
+  logger.info(`preparePayments : usersObject ${JSON.stringify(usersObject)}`);
 
   logger.info(`preparePayments : manipulate affiliate networks services response to fit payments service`);
   const paymentsDraftPayload: Array<PaymentsAttributes> = Object.keys(classifiedResponseByUserId)
@@ -79,11 +79,11 @@ export const preparePayments = async (
         transactionId: uuid(),
       };
     });
-  logger.info(`preparePayments : paymentsDraftPayload ${paymentsDraftPayload}`);
+  logger.info(`preparePayments : paymentsDraftPayload ${JSON.stringify(paymentsDraftPayload)}`);
 
   logger.info(`preparePayments : creat new payment records`);
   const paymentsData = await paymentsService.createBulkPayments(paymentsDraftPayload, transaction);
-  logger.info(`preparePayments : paymentsData ${paymentsData}`);
+  logger.info(`preparePayments : paymentsData ${JSON.stringify(paymentsData)}`);
 
   for await (const { id, userId } of paymentsData) {
     const filter = dto.generalDTO.filterData({
@@ -124,7 +124,7 @@ export const sendPayments = async (
 
   logger.info(`sendPayments: get all pending  payments`);
   const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
-  logger.info(`sendPayments: pending payments ${pendingPayments}`);
+  logger.info(`sendPayments: pending payments ${JSON.stringify(pendingPayments)}`);
 
   logger.info(`sendPayments: convert data to paypal shape`);
   const payoutsReceiversData = await Promise.all(
@@ -150,7 +150,7 @@ export const sendPayments = async (
       };
     }),
   );
-  logger.info(`sendPayments: pendingPayments ${pendingPayments}`);
+  logger.info(`sendPayments: pendingPayments ${JSON.stringify(pendingPayments)}`);
 
   if (!pendingPayments.length) {
     await transaction.rollback();
@@ -167,7 +167,7 @@ export const sendPayments = async (
     },
     items: payoutsReceiversData,
   };
-  logger.info(`sendPayments: payoutsRequestData ${payoutsRequestData}`);
+  logger.info(`sendPayments: payoutsRequestData ${JSON.stringify(payoutsRequestData)}`);
 
   const {
     batch_header: { payout_batch_id: payoutBatchId },
@@ -176,13 +176,13 @@ export const sendPayments = async (
   const updatePaymentsFilter = dto.generalDTO.filterData({
     status: constants.PENDING,
   });
-  logger.info(`sendPayments: updatePaymentsFilter ${updatePaymentsFilter}`);
+  logger.info(`sendPayments: updatePaymentsFilter ${JSON.stringify(updatePaymentsFilter)}`);
 
   const updatePaymentsData = {
     status: constants.PROCESSING,
     payoutBatchId,
   };
-  logger.info(`sendPayments: change pending payments status to PROCESSING :${updatePaymentsData}`);
+  logger.info(`sendPayments: change pending payments status to PROCESSING :${JSON.stringify(updatePaymentsData)}`);
   await paymentsService.updatePayments(updatePaymentsFilter, updatePaymentsData, transaction);
 
   logger.info(`sendPayments: ended`);
@@ -214,7 +214,7 @@ export const checkPayments = async (
   });
 
   const processedPayments = await paymentsService.getAllPayments(filter, transaction);
-  logger.info(`checkPayments: get all pending processedPayments ${processedPayments}`);
+  logger.info(`checkPayments: get all pending processedPayments ${JSON.stringify(processedPayments)}`);
 
   const payoutsBatchIds = processedPayments.reduce((acc: PayoutsBatchIdsAttributes, payment) => {
     const { payoutBatchId, closedOut, id } = payment;
@@ -225,7 +225,7 @@ export const checkPayments = async (
       };
     return acc;
   }, {});
-  logger.info(`checkPayments: get all payoutsBatchIds ${payoutsBatchIds}`);
+  logger.info(`checkPayments: get all payoutsBatchIds ${JSON.stringify(payoutsBatchIds)}`);
   const finishedPayouts: Array<string> = [];
   for await (const payoutBatchId of Object.keys(payoutsBatchIds)) {
     const {
@@ -244,7 +244,11 @@ export const checkPayments = async (
     const data = {
       status,
     };
-    logger.info(`checkPayments:  updatePaymentsTransactions ${updatePaymentsTransactionsFilter} data :${data}`);
+    logger.info(
+      `checkPayments:  updatePaymentsTransactions ${JSON.stringify(
+        updatePaymentsTransactionsFilter,
+      )} data :${JSON.stringify(data)}`,
+    );
 
     await paymentsTransitionsService.updatePaymentsTransactions(updatePaymentsTransactionsFilter, data, transaction);
     if (status === constants.SUCCESS) {
@@ -266,7 +270,11 @@ export const checkPayments = async (
         const incrementUserFinicalDashboardFilter = dto.generalDTO.filterData({
           userId,
         });
-        logger.info(`checkPayments:  increment user money for userId :${userId}  data :${incrementUserFinicalData}`);
+        logger.info(
+          `checkPayments:  increment user money for userId :${userId}  data :${JSON.stringify(
+            incrementUserFinicalData,
+          )}`,
+        );
 
         await financialDashboardService.incrementUserFinicalDashboard(
           incrementUserFinicalData,
@@ -319,7 +327,7 @@ export const getAllPayments = async (
     },
     transaction,
   );
-  logger.info(`getAllPayments:  ended with  : ${payments}`);
+  logger.info(`getAllPayments:  ended with  : ${JSON.stringify(payments)}`);
   await transaction.commit();
   return httpResponse.ok(response, payments);
 };
