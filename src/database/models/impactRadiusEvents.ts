@@ -17,6 +17,7 @@ export function ImpactRadiusTransactionsFactory(sequelize: Sequelize): ImpactRad
     },
     actionId: {
       type: DataTypes.STRING,
+      unique: true,
     },
     status: {
       type: DataTypes.STRING,

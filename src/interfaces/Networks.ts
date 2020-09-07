@@ -86,7 +86,8 @@ export interface ImpactRadiusAttributes {
   actionTrackerId: string;
   actionId: string;
   status: string;
-  statusDetail: string;
+  statusDetail?: string;
+  orderId?: string;
   adId: string;
   payout: number;
   deltaPayout: number;
@@ -95,18 +96,20 @@ export interface ImpactRadiusAttributes {
   deltaAmount: number;
   intendedAmount: number;
   currency: string;
-  originalCurrency: string;
-  originalAmount: number;
-  eventDate: Date;
-  creationDate: Date;
-  lockingDate: Date;
-  clearedDate: Date;
+  originalCurrency?: string;
+  originalAmount?: number;
+  eventDate: Date | undefined;
+  creationDate: Date | undefined;
+  lockingDate: Date | undefined;
+  clearedDate: Date | undefined;
   referringDomain: string;
-  landingPageUrl: string;
+  landingPageUrl?: string;
   subId1: string;
   subId2: string;
   subId3: string;
   promoCode: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface FinancialDashboardAttributes {
