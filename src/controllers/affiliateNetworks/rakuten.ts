@@ -19,33 +19,47 @@ export const getRakutenWebhookData = async (
   next: NextFunction,
   transaction: Transaction,
 ): Promise<Response | void> => {
+  logger.info(`getRakutenWebhookData : started`);
   const queryData = dto.generalDTO.queryData(request);
+  logger.info(`getRakutenWebhookData : queryData ${JSON.stringify(queryData)}`);
   const rakutenTransactionData: RakutenTransactionsAttributes = dto.rakutenDTO.rakutenData(queryData);
   const { userId } = rakutenTransactionData;
-
+  logger.info(`getRakutenWebhookData : rakutenTransactionData ${JSON.stringify(rakutenTransactionData)}`);
   let user;
 
   if (userId && Number.isInteger(+userId)) {
+    logger.info(`getRakutenWebhookData : userId ${userId}`);
     const filter = dto.generalDTO.filterData({ id: userId });
     user = await usersServices.findUser(filter, transaction);
+    logger.info(`getRakutenWebhookData : user ${user}`);
   }
 
   if (userId && user) {
+    logger.info(`getRakutenWebhookData : user found `);
     await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
+    logger.info(`getRakutenWebhookData : create rakuten transaction for the user `);
 
     const transactionCommission = Number(rakutenTransactionData.commissions);
     if (Number.isNaN(transactionCommission)) {
+      logger.info(`getRakutenWebhookData : transaction commission is not a number `);
+      await transaction.rollback();
       return httpResponse.internalServerError(next, new Error(constants.messages.general.commissionTypeError));
     }
+
     const filter = dto.generalDTO.filterData({ userId });
+    logger.info(
+      `getRakutenWebhookData : update the pending cash for the user ${JSON.stringify(transactionCommission)} `,
+    );
     await cashBackService.updatePendingCash(userId, filter, transactionCommission, transaction);
     await transaction.commit();
+    logger.info(`getRakutenWebhookData : ended with user`);
     return httpResponse.ok(response);
   }
   // The record is not linked to a current user
-  logger.log('warn', 'Rakuten: Url has no userId', request.query);
+  logger.info(`getRakutenWebhookData : creat transaction but without user `);
   rakutenTransactionData.userId = undefined;
   await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
   await transaction.commit();
+  logger.info(`getRakutenWebhookData : ended without user`);
   return httpResponse.ok(response);
 };

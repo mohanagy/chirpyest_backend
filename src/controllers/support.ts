@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { dto, httpResponse, sendGrid } from '../helpers';
+import { dto, httpResponse, sendGrid, constants } from '../helpers';
 import config from '../config';
-
 /**
  * @description contactUs is a controller used to to send a message for the email support
  * when someone uses the contact us form
@@ -21,7 +20,7 @@ export const contactUs = async (
 ): Promise<Response> => {
   const { email, name, type, body } = dto.generalDTO.bodyData(request);
 
-  const msg = {
+  const adminMessage = {
     to: config.emailsConfig.sendGridFrom,
     from: config.emailsConfig.sendGridTo,
     subject: `Contact Us Ticket Type :${type}`,
@@ -31,8 +30,17 @@ export const contactUs = async (
        body: ${body}`,
   };
 
-  const [emailStatus] = await sendGrid.send(msg);
-
+  const [emailStatus] = await sendGrid.send(adminMessage);
+  const userMessage = {
+    to: email,
+    from: config.emailsConfig.sendGridTo,
+    subject: `Contact Form`,
+    templateId: constants.emailTemplates.contactForm,
+    dynamicTemplateData: {
+      email,
+    },
+  };
+  await sendGrid.send(userMessage);
   await transaction.commit();
   return httpResponse.ok(response, { status: emailStatus.statusCode }, '');
 };

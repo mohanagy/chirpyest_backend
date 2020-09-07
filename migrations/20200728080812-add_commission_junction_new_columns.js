@@ -72,7 +72,7 @@ module.exports = {
         ),
         queryInterface.addColumn(
           'commission_junction_transactions',
-          'original_actionId',
+          'original_action_id',
           {
             type: Sequelize.DataTypes.STRING,
           },
