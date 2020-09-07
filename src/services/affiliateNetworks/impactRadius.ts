@@ -38,7 +38,7 @@ export const findAllImpactRadiusTransactions = (
 
 const { impactRadiusActionsListEndpint1, impactRadiusActionsListEndpint2 } = constants;
 
-export const getImpactRadiusActions = async (paymentReportEndpoint: string, type: string): Promise<any> => {
+export const getImpactRadiusActions = async (paymentReportEndpoint: string, _type: string): Promise<any> => {
   const paymentReportEndpointParsed = new URL(paymentReportEndpoint);
   const last30Days = moment().startOf('day').subtract(30, 'days').format('YYYY-MM-DD');
   const today = moment().format('YYYY-MM-DD');
