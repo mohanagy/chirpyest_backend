@@ -43,16 +43,16 @@ const commissionJunctionResponse: CommissionJunctionPayload = [
     orderDiscountPubCurrency: '0',
   },
 ];
-const financialDashboard = {
-  id: 1,
-  userId: 1,
-  pending: Number(commissionJunctionResponse[0].pubCommissionAmountUsd),
-  receivableMilestone: 0,
-  earnings: 0,
-  lastClosedOut: 0,
-  createdAt: '2020-07-22T13:06:14.333Z',
-  updatedAt: '2020-07-22T13:06:14.333Z',
-};
+// const financialDashboard = {
+//   id: 1,
+//   userId: 1,
+//   pending: Number(commissionJunctionResponse[0].pubCommissionAmountUsd),
+//   receivableMilestone: 0,
+//   earnings: 0,
+//   lastClosedOut: 0,
+//   createdAt: '2020-07-22T13:06:14.333Z',
+//   updatedAt: '2020-07-22T13:06:14.333Z',
+// };
 const {
   affiliateNetworks: { commissionJunctionConfig },
 } = config;
