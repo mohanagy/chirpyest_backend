@@ -8,7 +8,7 @@ export const getTotalRevenues = async (
   _request: Request,
   response: Response,
   _next: NextFunction,
-  _transaction: Transaction,
+  transaction: Transaction,
 ): Promise<Response | void> => {
   const before30days = moment().subtract(30, 'days');
   const before30daysCopy = moment().subtract(30, 'days');
@@ -23,7 +23,7 @@ export const getTotalRevenues = async (
 
   const impactRadiusData = await getImpactRadiusTotalRevnues(before30days, today);
   const rakutenData = await getRakutenTotalRevnues(before30days, today);
-  const cjData = await getCJTotalRevnues(before30days, today);
+  const cjData = await getCJTotalRevnues(before30days, today, transaction);
 
   cjData.forEach((item: any) => {
     obj[item.date] += Number(item.revenues / 100);
@@ -39,5 +39,6 @@ export const getTotalRevenues = async (
     acc.push({ date, revenues });
     return acc;
   }, []);
+  await transaction.commit();
   return httpResponse.ok(response, totalRevnuesByDay);
 };

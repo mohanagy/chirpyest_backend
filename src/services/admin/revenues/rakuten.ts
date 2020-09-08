@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Moment } from 'moment';
 import camelcaseKeys from 'camelcase-keys';
 import csv from 'csvtojson';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { dto, constants } from '../../../helpers';
 import database, { RakutenTransactions } from '../../../database';
 
@@ -21,7 +21,7 @@ export const getRakutenTotalRevnues = async (from: Moment, to: Moment): Promise<
   return cleanData;
 };
 
-export const getRakutenClosedRevenues = async (from: Moment, to: Moment): Promise<any> => {
+export const getRakutenClosedRevenues = async (from: Moment, to: Moment, transaction: Transaction): Promise<any> => {
   const startDate = new Date(from.format('YYYY-MM-DD'));
   const endDate = new Date(to.format('YYYY-MM-DD'));
 
@@ -37,6 +37,7 @@ export const getRakutenClosedRevenues = async (from: Moment, to: Moment): Promis
     ],
     group: ['date'],
     raw: true,
+    transaction,
   });
 
   return allTransactions;

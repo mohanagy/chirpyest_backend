@@ -1,8 +1,8 @@
 import { Moment } from 'moment';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import database, { CommissionJunctionTransactions } from '../../../database';
 
-export const getCJTotalRevnues = async (from: Moment, to: Moment): Promise<any> => {
+export const getCJTotalRevnues = async (from: Moment, to: Moment, transaction: Transaction): Promise<any> => {
   const startDate = new Date(from.format('YYYY-MM-DD'));
   const endDate = new Date(to.format('YYYY-MM-DD'));
 
@@ -18,12 +18,13 @@ export const getCJTotalRevnues = async (from: Moment, to: Moment): Promise<any> 
     ],
     group: ['date'],
     raw: true,
+    transaction,
   });
 
   return allTransactions;
 };
 
-export const getCJClosedRevnues = async (from: Moment, to: Moment): Promise<any> => {
+export const getCJClosedRevnues = async (from: Moment, to: Moment, transaction: Transaction): Promise<any> => {
   const startDate = new Date(from.format('YYYY-MM-DD'));
   const endDate = new Date(to.format('YYYY-MM-DD'));
 
@@ -42,6 +43,7 @@ export const getCJClosedRevnues = async (from: Moment, to: Moment): Promise<any>
     ],
     group: ['date'],
     raw: true,
+    transaction,
   });
 
   return allTransactions;
