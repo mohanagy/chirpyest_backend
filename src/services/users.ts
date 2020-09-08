@@ -102,7 +102,7 @@ export const deleteUser = async (filter: Filter, transaction?: Transaction): Pro
 export const disableUser = async (filter: Filter, transaction?: Transaction): Promise<[number, UserModel[]]> => {
   const user = await Users.update(
     {
-      isActive: false,
+      isActive: database.default.Sequelize.literal('NOT is_active'),
     },
     { ...filter, transaction },
   );
