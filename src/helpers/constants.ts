@@ -194,3 +194,22 @@ export const lifestyle = ['2149', '2149', '4836691', '1434782', '1355298_9368'];
 export const home = ['37353', '4867369', '1845109', '1213441_8154'];
 export const beauty = ['24765', '36310', '3009921', '97526_2835'];
 export const fashion = ['1237', '43176', '5253058', '42004'];
+
+export const emailTemplates = {
+  contactForm: 'd-25453c7c6d9a4040b4e5b08834a0a313',
+  joinChirpyest: 'd-d87fffa6cd9e4e9787eb1aac48f67094',
+  reminder: 'd-1c26c4d6b74649a78ac490ef0998a1ac',
+  partiallyJoinedToChirpyest: 'd-a3089d3089264ab78b4e55d26201b72b',
+  howItWorks: 'd-bc1174663afa410d895eff907f49bb2d',
+  brandsHighlight: ' d-9788ed8d38bd41f6b080bb77ae501242',
+  completeProfile: 'd-822636d5b3914e8ba8c2ba18c9b8256d',
+  discountHighlights: 'd-05e90d45bf66495a99594d503f6ba989',
+  extensionReminder: 'd-e4899b14194e409683fea4c9fd9f28ed',
+  gotCashCongrats: 'd-589929026e184bf1aa607e70eb0dced6',
+  hotList: 'd-71d615d1e00b4ac88b8cb84e1d7d2fd6',
+  joinReminder: 'd-fddb26c02a60481587d8167fcc1387af',
+  newsletter: 'd-f10aa006c65d4a7bae1f5a6d1bd3a64f',
+  passwordReset: 'd-ae8a0411c08b406494417929444fb82c',
+  welcomeNeedExtension1: 'd-f5676d228f364b32a5801e337fc120ee',
+  welcomeNeedExtension2: 'd-67e9e1ff8fad4bfd8e6f8b295769d01e',
+};
