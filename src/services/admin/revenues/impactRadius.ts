@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Moment } from 'moment';
 import camelcaseKeys from 'camelcase-keys';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { dto, constants } from '../../../helpers';
 import database, { ImpactRadiusTransactions } from '../../../database';
 
@@ -42,7 +42,7 @@ export const getImpactRadiusTotalRevnues = async (from: Moment, to: Moment): Pro
   return totalImpactBothAccountsRevnuesByDay;
 };
 
-export const getImpactClosedRevenues = async (from: Moment, to: Moment): Promise<any> => {
+export const getImpactClosedRevenues = async (from: Moment, to: Moment, transaction: Transaction): Promise<any> => {
   const startDate = new Date(from.format('YYYY-MM-DD'));
   const endDate = new Date(to.format('YYYY-MM-DD'));
 
@@ -60,6 +60,7 @@ export const getImpactClosedRevenues = async (from: Moment, to: Moment): Promise
     ],
     group: ['date'],
     raw: true,
+    transaction,
   });
 
   return allTransactions;

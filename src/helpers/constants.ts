@@ -28,6 +28,7 @@ export const messages = {
 export const commissionJunctionCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
 export const brandsCronJobPattern = '0 0 * * *'; // check https://crontab.guru/ for more information
 export const calculatePaymentsCronJobPattern = '0 0 1,16 * *'; // check https://crontab.guru/ for more information
+export const syncTransactionsCronJobPattern = '0 1 * * *'; // check https://crontab.guru/ for more information
 export const preparingPaymentsCronJobPattern = '0 3 1,16 * *'; // check https://crontab.guru/ for more information
 export const sendingPaymentsCronJobPattern = '0 0 4,20 * *'; // check https://crontab.guru/ for more information
 export const checkingPaymentsCronJobPattern = '0 4 * * *'; // check https://crontab.guru/ for more information
@@ -57,6 +58,9 @@ export const paymentReportEndpointAccount1 = `${baseImpactApiUrl}/Reports/mp_act
 
 export const paymentReportEndpointAccount2 = `${baseImpactAccount2ApiUrl}/Reports/mp_action_listing_sku.json?SUPERSTATUS_MS=APPROVED&SUPERSTATUS_MS=NA&SUPERSTATUS_MS=PENDING&PUB_CAMPAIGN_MS=0&MP_CATEGORY_LIST2=0&PAYSTUB_ID=0&MODIFIED_Y_N=0&PUB_ACTION_TRACKER=0&MP_ACTION_TYPE=0&ADV_PROMOCODE=0&SUBID1=0&SUBID2=0&SUBID3=0&SHAREDID=0&REFERRAL_TYPE=0&ACTION_ID=0&ADV_NOTE=0&SHOW_STATUS_DETAIL=1&timeRange=CUSTOM&compareEnabled=false`;
 
+export const impactRadiusActionsListEndpint1 = `${baseImpactApiUrl}/Actions.json?SHOW_STATUS_DETAIL=1`;
+
+export const impactRadiusActionsListEndpint2 = `${baseImpactAccount2ApiUrl}/Actions.json?SHOW_STATUS_DETAIL=1`;
 export const dailyReportsEndPoint1 = `${baseImpactApiUrl}/Reports/mp_performance_by_day.json?PUB_CAMPAIGN=0&timeRange=CUSTOM&compareEnabled=false`;
 export const dailyReportsEndPoint2 = `${baseImpactAccount2ApiUrl}/Reports/mp_performance_by_day.json?PUB_CAMPAIGN=0&timeRange=CUSTOM&compareEnabled=false`;
 
