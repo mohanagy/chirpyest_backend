@@ -64,7 +64,7 @@ export const createBulkImpactRadiusTransactions = (
   data: ImpactRadiusAttributes[],
   transaction: Transaction,
 ): Promise<ImpactRadiusTransactionsModel[]> =>
-  ImpactRadiusTransactions.bulkCreate(data, { transaction, updateOnDuplicate: ['updatedAt'] });
+  ImpactRadiusTransactions.bulkCreate(data, { transaction, ignoreDuplicates: true });
 
 export const saveImpactRadiusActionsToDatabase = async (transaction: Transaction): Promise<any> => {
   const actions = await getImpactRadiusBothAccountsActions();

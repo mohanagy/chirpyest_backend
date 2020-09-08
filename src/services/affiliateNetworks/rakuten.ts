@@ -76,8 +76,7 @@ export const getRakutenEvents = async (): Promise<any> => {
 export const createBulkRakutenTransactions = (
   data: RakutenTransactionsAttributes[],
   transaction: Transaction,
-): Promise<RakutenTransactionsModel[]> =>
-  RakutenTransactions.bulkCreate(data, { transaction, updateOnDuplicate: ['updatedAt'] });
+): Promise<RakutenTransactionsModel[]> => RakutenTransactions.bulkCreate(data, { transaction, ignoreDuplicates: true });
 
 export const saveRakutenEventsToDatabase = async (transaction: Transaction): Promise<any> => {
   const actions = await getRakutenEvents();
