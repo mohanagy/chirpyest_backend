@@ -1,7 +1,35 @@
 import moment from 'moment';
 import { BrandsAttributes, ImpactRadiusAttributes } from '../../interfaces/Networks';
 import convertToCents from '../convertToCents';
-import isValidDate from '../isValidDate';
+
+export const impactRadiusActions = (data: any): ImpactRadiusAttributes => {
+  return {
+    userId: data.subId1,
+    campaignName: data.campaignName,
+    campaignId: data.campaignId,
+    actionTrackerId: data.actionTrackerId,
+    actionId: data.id, // The unique ID that Impact Radius has assigned to the action.
+    status: data.state?.toLowerCase(),
+    adId: data.adId,
+    orderId: data.oid,
+    payout: convertToCents(Number(data.payout)),
+    deltaPayout: convertToCents(Number(data.deltaPayout)),
+    intendedPayout: convertToCents(Number(data.intendedPayout)),
+    amount: convertToCents(Number(data.amount)),
+    deltaAmount: convertToCents(Number(data.deltaAmount)),
+    intendedAmount: convertToCents(Number(data.intendedAmount)),
+    currency: data.currency,
+    eventDate: data.eventDate ? new Date(data.eventDate) : undefined,
+    creationDate: data.creationDate ? new Date(data.creationDate) : undefined,
+    lockingDate: data.lockingDate ? new Date(data.lockingDate) : undefined,
+    clearedDate: data.clearedDate ? new Date(data.clearedDate) : undefined,
+    referringDomain: data.referringDomain,
+    subId1: data.subId1,
+    subId2: data.subId2,
+    subId3: data.subId3,
+    promoCode: data.promoCode,
+  };
+};
 
 export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   userId: data.subId1,
@@ -13,19 +41,19 @@ export const impactRadiusData = (data: any): ImpactRadiusAttributes => ({
   status: data.status,
   statusDetail: data.statusDetail,
   adId: data.adId,
-  payout: convertToCents(data.payout),
-  deltaPayout: convertToCents(data.deltaPayout),
-  intendedPayout: convertToCents(data.intendedPayout),
-  amount: convertToCents(data.amount),
-  deltaAmount: convertToCents(data.deltaAmount),
-  intendedAmount: convertToCents(data.intendedAmount),
+  payout: convertToCents(Number(data.payout)),
+  deltaPayout: convertToCents(Number(data.deltaPayout)),
+  intendedPayout: convertToCents(Number(data.intendedPayout)),
+  amount: convertToCents(Number(data.amount)),
+  deltaAmount: convertToCents(Number(data.deltaAmount)),
+  intendedAmount: convertToCents(Number(data.intendedAmount)),
   currency: data.currency,
   originalCurrency: data.originalCurrency,
-  originalAmount: convertToCents(data.originalAmount),
-  eventDate: isValidDate(data.eventDate) ? data.eventDate : undefined,
-  creationDate: isValidDate(data.creationDate) ? data.creationDate : undefined,
-  lockingDate: isValidDate(data.lockingDate) ? data.lockingDate : undefined,
-  clearedDate: isValidDate(data.clearedDate) ? data.clearedDate : undefined,
+  originalAmount: convertToCents(Number(data.originalAmount)),
+  eventDate: data.eventDate ? new Date(data.eventDate) : undefined,
+  creationDate: data.creationDate ? new Date(data.creationDate) : undefined,
+  lockingDate: data.lockingDate ? new Date(data.lockingDate) : undefined,
+  clearedDate: data.clearedDate ? new Date(data.clearedDate) : undefined,
   referringDomain: data.referringDomain,
   landingPageUrl: data.landingPageUrl,
   subId1: data.subId1,

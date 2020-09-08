@@ -51,10 +51,11 @@ export const getCommissionJunction = async (
     const modifiedRow = { ...row };
     if (row.userId && Number.isInteger(+row.userId)) {
       const userData = users.find((user) => user.id === row.userId);
-      if (!userData) {
-        modifiedRow.userId = undefined;
+      if (userData) {
+        return modifiedRow;
       }
     }
+    modifiedRow.userId = undefined;
     return modifiedRow;
   });
   logger.info(

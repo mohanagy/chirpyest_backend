@@ -6,13 +6,13 @@ import * as db from '../../database';
 import buildDb from '../../database/build';
 import { dto } from '../../helpers';
 
-const mockHookData = (userId: string): any => {
+const mockHookData = (userId: string, actionId: string): any => {
   return {
     token: config.affiliateNetworks.impactRadiusConfig.webhookToken,
     campaignName: 'Best Buy U.S',
     actionTrackerId: '17897',
     campaignId: '10014',
-    actionId: '10014.4579.3292',
+    actionId,
     status: 'PENDING',
     statusDetail: '',
     adId: '614286',
@@ -48,7 +48,7 @@ describe('Test Impact Radius webhook controller', () => {
 
   it('Should create a new Impact raduis transaction and update related user credit', async () => {
     const { user1 } = dummyData.users;
-    const hookData = mockHookData(user1.id);
+    const hookData = mockHookData(user1.id, '10014.4579.3292');
     const impactRadiusTransactionData = dto.impactRadiusDTO.impactRadiusData(hookData);
 
     const impactRadiusTransactions = await db.ImpactRadiusTransactions.findAll();
@@ -72,7 +72,7 @@ describe('Test Impact Radius webhook controller', () => {
 
   it('Should create a new Impact Radius transaction and if user first it should create new dashboard record and store the correct value', async () => {
     const { user2 } = dummyData.users;
-    const hookData = mockHookData(user2.id);
+    const hookData = mockHookData(user2.id, '10014.4579.3293');
 
     const impactRadiusTransactionData = dto.impactRadiusDTO.impactRadiusData(hookData);
 
@@ -98,7 +98,7 @@ describe('Test Impact Radius webhook controller', () => {
   });
 
   it('Should create a new Impact Radius transaction without a user and mark as zombie', async () => {
-    const hookData = mockHookData('100');
+    const hookData = mockHookData('100', '10014.4579.3295');
     const impactRadiusTransactions = await db.ImpactRadiusTransactions.findAll();
     await request(app)
       .get(`/api/v1/affiliate-networks/impact-radius/webhook`)
@@ -112,7 +112,7 @@ describe('Test Impact Radius webhook controller', () => {
   });
 
   it('Should create a new Impact Radius transaction even with the a wrong userId', async () => {
-    const hookData = mockHookData('afcg');
+    const hookData = mockHookData('afcg', '10014.4579.3299');
     const impactRadiusTransactions = await db.ImpactRadiusTransactions.findAll();
     await request(app)
       .get(`/api/v1/affiliate-networks/impact-radius/webhook`)
