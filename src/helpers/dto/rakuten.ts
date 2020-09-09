@@ -5,7 +5,7 @@ import { percentageRegx } from '../constants';
 import convertToCents from '../convertToCents';
 
 export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
-  userId: data.u1,
+  userId: Number(data.u1),
   etransactionId: data.etransaction_id,
   orderId: data.order_id,
   offerId: data.offer_id,
