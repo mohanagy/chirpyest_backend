@@ -8,6 +8,7 @@ import { dto } from '../../helpers';
 const transactionId1 = '11F79TL62R1GA54DAB3F3E6BADA181C8F';
 const transactionId2 = '32F72NL19EFEB54CEFB3C3E6BADA181C8F';
 const transactionId3 = '43F72NL19EFEB54CEFB3C3E6BADA181C8F';
+const transactionId4 = '43F72NL19EFEB54CEFB3C3E6BADA181C8H';
 
 const rakutenHookResponse = (transactionId: string, userId?: string) => {
   const data = {
@@ -62,7 +63,7 @@ describe('Test Rakuten webhook controller', () => {
 
   it('Should create a new rakuten transaction and if user first it should create new dashboard record and store the correct value', async () => {
     const { user2 } = dummyData.users;
-    const hookData = rakutenHookResponse(transactionId1, user2.id);
+    const hookData = rakutenHookResponse(transactionId4, user2.id);
     const rakutenTransactionData = dto.rakutenDTO.rakutenData(hookData);
 
     const rakutenTransactions = await db.RakutenTransactions.findAll();
