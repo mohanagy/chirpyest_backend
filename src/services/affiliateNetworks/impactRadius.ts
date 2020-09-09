@@ -18,7 +18,7 @@ import * as usersServices from '../users';
 export const createImpactRadiusTransaction = (
   data: ImpactRadiusAttributes,
   transaction: Transaction,
-): Promise<ImpactRadiusTransactionsModel | any> => ImpactRadiusTransactions.upsert(data, { transaction });
+): Promise<ImpactRadiusTransactionsModel | any> => ImpactRadiusTransactions.create(data, { transaction });
 
 /**
  * @description findAllImpactRadiusTransactions is a service used to get all Impact Radius transactions

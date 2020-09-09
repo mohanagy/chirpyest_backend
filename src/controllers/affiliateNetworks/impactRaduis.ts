@@ -45,8 +45,16 @@ export const getImpactRadiusWebhookData = async (
 
   if (userId && user) {
     logger.info(`getImpactRadiusWebhookData : user exist for the user id ${userId}  `);
-    // TODO: Handle the case when the commission is zero or less than 2 cents
-    await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
+    try {
+      await impactRadiusServices.createImpactRadiusTransaction(impactRadiusTransactionData, transaction);
+    } catch (err) {
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        await transaction.rollback();
+        return httpResponse.ok(response);
+      }
+      throw err;
+    }
+
     const transactionCommission = +impactRadiusTransactionData.payout;
     logger.info(`getImpactRadiusWebhookData : transactionCommission ${JSON.stringify(transactionCommission)} `);
     if (Number.isNaN(transactionCommission)) {
