@@ -32,8 +32,14 @@ export const getUserFinancialData = async (
   logger.info(`getUserFinancialData : financialData for user  : ${userId} ${JSON.stringify(data)} `);
   if (data) {
     const pendingDollars = calculateUserPendingCash(data.pending);
+    const earningsDollars = calculateUserPendingCash(data.earnings);
+    const lastClosedOutDollars = calculateUserPendingCash(data.lastClosedOut);
+    const receivableMilestoneDollars = calculateUserPendingCash(data.receivableMilestone);
     data.pending = pendingDollars;
-    logger.info(`getUserFinancialData : calculate pending  pendingDollars ${JSON.stringify(pendingDollars)}`);
+    data.earnings = earningsDollars;
+    data.lastClosedOut = lastClosedOutDollars;
+    data.receivableMilestone = receivableMilestoneDollars;
+    logger.info(`getUserFinancialData : calculate data ${JSON.stringify(data)}`);
   }
   await transaction.commit();
   logger.info(`getUserFinancialData : ended with response :  ${JSON.stringify(data)}`);
