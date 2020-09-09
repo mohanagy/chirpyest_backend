@@ -4,7 +4,7 @@ import convertToCents from '../convertToCents';
 
 export const impactRadiusActions = (data: any): ImpactRadiusAttributes => {
   return {
-    userId: data.subId1,
+    userId: Number(data.subId1),
     campaignName: data.campaignName,
     campaignId: data.campaignId,
     actionTrackerId: data.actionTrackerId,
