@@ -36,7 +36,16 @@ export const getRakutenWebhookData = async (
 
   if (userId && user) {
     logger.info(`getRakutenWebhookData : user found `);
-    await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
+    try {
+      await rakutenServices.createRakutenTransaction(rakutenTransactionData, transaction);
+    } catch (err) {
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        logger.info(`getRakutenWebhookData : duplicated transaction event`);
+        await transaction.rollback();
+        return httpResponse.ok(response);
+      }
+      throw err;
+    }
     logger.info(`getRakutenWebhookData : create rakuten transaction for the user `);
 
     const transactionCommission = Number(rakutenTransactionData.commissions);
