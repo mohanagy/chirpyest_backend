@@ -10,6 +10,7 @@ export function RakutenTransactionsFactory(sequelize: Sequelize): RakutenTransac
     etransactionId: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     advertiserId: {
       type: DataTypes.STRING,

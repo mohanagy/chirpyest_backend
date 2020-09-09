@@ -8,11 +8,16 @@ const { syncTransactionsCronJobPattern } = constants;
 export const impactRadiusRakutenCronJob = new CronJob(
   syncTransactionsCronJobPattern,
   async () => {
-    logger.info('Sync transactions cron started');
+    logger.info('impactRadiusRakutenCronJob: Sync transactions cron started');
     const transaction = await database.sequelize.transaction();
     try {
       const rakutenTransactions = await rakutenServices.saveRakutenEventsToDatabase(transaction);
       const impactRadiusTransactions = await impactRadiusServices.saveImpactRadiusActionsToDatabase(transaction);
+      logger.info(
+        `impactRadiusRakutenCronJob: data rakutenTransactions: ${JSON.stringify(
+          rakutenTransactions,
+        )} impactRadiusTransactions:${impactRadiusTransactions}`,
+      );
 
       const createdImpactRadiusTransaction = impactRadiusTransactions
         .filter((row: any) => row.dataValues.id)
@@ -34,7 +39,7 @@ export const impactRadiusRakutenCronJob = new CronJob(
         return modifiedRow;
       });
 
-      logger.info(`getCommissionJunction : modifiedCommissionJunctionData ${JSON.stringify(modifiedData)}`);
+      logger.info(`impactRadiusRakutenCronJob : modifiedCommissionJunctionData ${JSON.stringify(modifiedData)}`);
 
       const dataForUpdatingPendingCash = modifiedData.reduce((acc: any, row) => {
         if (row.userId) {
@@ -46,7 +51,9 @@ export const impactRadiusRakutenCronJob = new CronJob(
         }
         return acc;
       }, {});
-      logger.info(`getCommissionJunction : dataForUpdatingPendingCash ${JSON.stringify(dataForUpdatingPendingCash)}`);
+      logger.info(
+        `impactRadiusRakutenCronJob : dataForUpdatingPendingCash ${JSON.stringify(dataForUpdatingPendingCash)}`,
+      );
 
       await Promise.all(
         Object.keys(dataForUpdatingPendingCash).map((userId) => {
@@ -60,10 +67,14 @@ export const impactRadiusRakutenCronJob = new CronJob(
         }),
       );
       await transaction.commit();
-      logger.info('Sync transactions cron succeeded');
+      logger.info('impactRadiusRakutenCronJob: Sync transactions cron succeeded');
     } catch (error) {
       await transaction.rollback();
-      logger.error(`Sync transactions cron error: ${error.response ? error.response.data.errors : error.message}`);
+      logger.error(
+        `impactRadiusRakutenCronJob: Sync transactions cron error: ${
+          error.response ? error.response.data.errors : error.message
+        }`,
+      );
     }
   },
   null,

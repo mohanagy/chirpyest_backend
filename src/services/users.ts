@@ -16,7 +16,13 @@ export const getUser = async (filter: Filter, transaction?: Transaction): Promis
   const user = await Users.findOne({ ...filter, transaction, include: [FinancialDashboard] });
   if (user && user.financialDashboard) {
     const pendingDollars = calculateUserPendingCash(user.financialDashboard.pending);
+    const earningsDollars = calculateUserPendingCash(user.financialDashboard.earnings);
+    const lastClosedOutDollars = calculateUserPendingCash(user.financialDashboard.lastClosedOut);
+    const receivableMilestoneDollars = calculateUserPendingCash(user.financialDashboard.receivableMilestone);
     user.financialDashboard.pending = pendingDollars;
+    user.financialDashboard.earnings = earningsDollars;
+    user.financialDashboard.lastClosedOut = lastClosedOutDollars;
+    user.financialDashboard.receivableMilestone = receivableMilestoneDollars;
   }
   return user;
 };
