@@ -42,7 +42,7 @@ export const verifyToken = (userTypes: Array<string>) => async (
         return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
       }
       const { type } = userData;
-      if (!userTypes.includes(type || '')) {
+      if (!userTypes.includes(type || '') || !userData.isActive) {
         await transaction.rollback();
         return httpResponse.unAuthorized(response, messages.auth.notAuthorized);
       }
