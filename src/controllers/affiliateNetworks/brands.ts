@@ -192,7 +192,7 @@ export const updateBrandNameForAdmin = async (
   _next: NextFunction,
   transaction: Transaction,
 ): Promise<Response> => {
-  logger.info(`deleteBrandsForAdmin : started`);
+  logger.info(`updateBrandNameForAdmin : started`);
 
   const { id } = dto.generalDTO.paramsData(request);
   const data = dto.generalDTO.bodyData(request);
