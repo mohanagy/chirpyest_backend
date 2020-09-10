@@ -5,13 +5,11 @@ import psl from 'psl';
 // @ts-ignore
 import parseUrl from 'parse-url';
 import { dto } from '../../helpers';
-import * as database from '../../database';
+import database, { Brands } from '../../database';
 import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand, Filter } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
 import config from '../../config';
 import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
-
-const { Brands } = database;
 
 /**
  * @description addProtocol this function will add a http protocol in case there is no protocol
@@ -67,7 +65,7 @@ export const updateBrand = (filter: Filter, data: any, transaction: Transaction)
 export const disableBrand = async (filter: Filter, transaction?: Transaction): Promise<[number, BrandsModel[]]> => {
   const brand = await Brands.update(
     {
-      isDeleted: database.default.Sequelize.literal('NOT is_deleted'),
+      isDeleted: database.Sequelize.literal('NOT is_deleted'),
     },
     { ...filter, transaction },
   );
