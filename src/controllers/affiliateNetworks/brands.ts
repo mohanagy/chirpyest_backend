@@ -147,3 +147,58 @@ export const getBrandsForAdmin = async (
   await transaction.commit();
   return httpResponse.ok(response, allBrands);
 };
+
+/**
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @param {NextFunction} _next
+ * @param  {Transaction} transaction
+ */
+export const deleteBrandsForAdmin = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  logger.info(`deleteBrandsForAdmin : started`);
+
+  const { id } = dto.generalDTO.paramsData(request);
+
+  const filter = dto.generalDTO.filterData({ id });
+
+  const brand = await brandsService.getBrandById(id, transaction);
+  if (!brand) {
+    await transaction.commit();
+    return httpResponse.notFound(response, constants.messages.general.notFound);
+  }
+
+  await brandsService.disableBrand(filter, transaction);
+
+  await transaction.commit();
+  return httpResponse.ok(response, {}, 'brand has been deleted');
+};
+
+/**
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @param {NextFunction} _next
+ * @param  {Transaction} transaction
+ */
+export const updateBrandNameForAdmin = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  logger.info(`deleteBrandsForAdmin : started`);
+
+  const { id } = dto.generalDTO.paramsData(request);
+  const data = dto.generalDTO.bodyData(request);
+  const filter = dto.generalDTO.filterData({ id });
+
+  const brand = await brandsService.updateBrand(filter, data, transaction);
+  await transaction.commit();
+  return httpResponse.ok(response, brand, 'brand has been updated');
+};

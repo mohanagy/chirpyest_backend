@@ -7,6 +7,10 @@ export const brandsQuery = joi.object({
   category: joi.valid(...categories),
 });
 
+export const updateBrandNameBody = joi.object({
+  brandName: joi.string().required(),
+});
+
 const urlPattern = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([-.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 export const shortLinksValidate = joi.object({
   url: joi

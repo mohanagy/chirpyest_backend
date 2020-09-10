@@ -5,11 +5,13 @@ import psl from 'psl';
 // @ts-ignore
 import parseUrl from 'parse-url';
 import { dto } from '../../helpers';
-import database, { Brands } from '../../database';
-import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
+import * as database from '../../database';
+import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand, Filter } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
 import config from '../../config';
 import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
+
+const { Brands } = database;
 
 /**
  * @description addProtocol this function will add a http protocol in case there is no protocol
@@ -33,14 +35,43 @@ export const getBrands = (filter: any, transaction: Transaction): Promise<Array<
 };
 
 /**
+ * @description getBrands is a service used to get brand by id
+ * @return {Promise<Array<BrandsModel>>}
+ */
+export const getBrandById = (id: number, transaction: Transaction): Promise<BrandsModel | null> => {
+  return Brands.findByPk(id, { transaction });
+};
+
+/**
  * @description createBrands is a service used to insert a list of the brands to the database
  * @return {Promise<Array<BrandsModel>>}
  */
 export const createBrands = (data: Array<BrandsAttributes>, transaction: Transaction): Promise<Array<BrandsModel>> => {
   return Brands.bulkCreate(data, {
-    updateOnDuplicate: ['brandName', 'commission', 'url', 'trackingLink', 'updatedAt', 'isExpired'],
+    updateOnDuplicate: ['commission', 'url', 'trackingLink', 'updatedAt', 'isExpired'],
     transaction,
   });
+};
+
+/**
+ * @description updateBrands is a service used to update a brand
+ * @return {Promise<BrandsModel>}
+ */
+export const updateBrand = (filter: Filter, data: any, transaction: Transaction): Promise<[number, BrandsModel[]]> => {
+  return Brands.update(data, {
+    ...filter,
+    transaction,
+  });
+};
+
+export const disableBrand = async (filter: Filter, transaction?: Transaction): Promise<[number, BrandsModel[]]> => {
+  const brand = await Brands.update(
+    {
+      isDeleted: database.default.Sequelize.literal('NOT is_deleted'),
+    },
+    { ...filter, transaction },
+  );
+  return brand;
 };
 
 /**
