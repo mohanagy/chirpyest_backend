@@ -210,7 +210,7 @@ export const updateBrandNameForAdmin = async (
  * @param  {Transaction} transaction
  */
 export const getTopPerformingBrandsForAdmin = async (
-  request: Request,
+  _request: Request,
   response: Response,
   _next: NextFunction,
   transaction: Transaction,
