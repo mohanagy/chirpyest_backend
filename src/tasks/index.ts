@@ -1,3 +1,4 @@
+import { sendReminderToUseChirpyestJob } from './ReminderToUseChirpyest';
 import { getBrandsJob } from './brands';
 import { checkPaymentsJob } from './checkPayments';
 import { commissionJunctionJob } from './commissionJunction';
@@ -14,6 +15,7 @@ const startTasks = (): void => {
   checkPaymentsJob.start();
   calcPaymentsCronJob.start();
   impactRadiusRakutenCronJob.start();
+  sendReminderToUseChirpyestJob.start();
 };
 
 export default startTasks;

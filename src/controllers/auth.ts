@@ -69,6 +69,7 @@ export const signUp = async (request: Request, response: Response, next: NextFun
 
     await transaction.commit();
     if (userUpdatedData) responseData = userUpdatedData;
+    // await usersServices.sendEmailForNewMembers(userData.email, '', {});
     logger.info(`signUp : ended with response : ${JSON.stringify(responseData)} `);
     return httpResponse.created(response, responseData, messages.auth.userHasBeenCreated);
   } catch (error) {

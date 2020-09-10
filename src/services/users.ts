@@ -1,11 +1,11 @@
 import { Transaction } from 'sequelize';
 import * as database from '../database';
-import { calculateUserPendingCash } from '../helpers';
+import { calculateUserPendingCash, constants, sendGrid } from '../helpers';
 import { EditUserAttributes, Filter, UserAttributes } from '../interfaces';
 import { UserModel } from '../types/sequelize';
 
 const { Users, FinancialDashboard } = database;
-
+const { emailTemplates } = constants;
 /**
  * @description getUser is a service used to find the user using filters
  * @param {Filter} filter filters applied on search
@@ -80,6 +80,24 @@ export const findAllUsers = async (transaction?: Transaction): Promise<UserModel
 };
 
 /**
+ * @description getAllUsersWithConditions service used to get all users
+ * @param {Transaction} transaction
+ * @return {Promise<UserModel[]>} list of all users
+ */
+export const getAllUsersWithConditions = async (
+  options: any,
+  filter?: Filter,
+  transaction?: Transaction,
+): Promise<any[]> => {
+  const data = await Users.findAll({
+    transaction,
+    ...filter,
+    ...options,
+  });
+  return data;
+};
+
+/**
  * @description findUser is a service to get user by conditions
  * @param {Filter} filter filtration
  * @param {Transaction} transaction
@@ -113,4 +131,33 @@ export const disableUser = async (filter: Filter, transaction?: Transaction): Pr
     { ...filter, transaction },
   );
   return user;
+};
+
+export const sendEmailForNewMembers = async (
+  email: string,
+  action: string,
+  dynamicTemplateData: any,
+): Promise<void> => {
+  const emailDetails = {
+    to: email,
+    from: emailTemplates.welcomeNeedExtension1.from,
+    subject: emailTemplates.welcomeNeedExtension1.subject,
+    templateId: emailTemplates.welcomeNeedExtension1.templateId,
+    dynamicTemplateData: {
+      email,
+      ...dynamicTemplateData,
+    },
+  };
+
+  if (action === 'extensionDownloaded') {
+    emailDetails.from = emailTemplates.welcomeNeedExtension1.from;
+    emailDetails.subject = emailTemplates.welcomeNeedExtension1.subject;
+    emailDetails.templateId = emailTemplates.welcomeNeedExtension1.templateId;
+  }
+  if (action === 'extensionDownloaded') {
+    emailDetails.from = emailTemplates.welcomeNeedExtension1.from;
+    emailDetails.subject = emailTemplates.welcomeNeedExtension1.subject;
+    emailDetails.templateId = emailTemplates.welcomeNeedExtension1.templateId;
+  }
+  await sendGrid.send(emailDetails);
 };

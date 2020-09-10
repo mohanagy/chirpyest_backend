@@ -149,6 +149,7 @@ export interface UpdatePendingCashAttributes {
 }
 
 export interface BrandsAttributes {
+  id?: string;
   brandName: string;
   network: string;
   url: string;

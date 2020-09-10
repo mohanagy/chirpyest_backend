@@ -147,3 +147,103 @@ export const getBrandsForAdmin = async (
   await transaction.commit();
   return httpResponse.ok(response, allBrands);
 };
+
+/**
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @param {NextFunction} _next
+ * @param  {Transaction} transaction
+ */
+export const deleteBrandsForAdmin = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  logger.info(`deleteBrandsForAdmin : started`);
+
+  const { id } = dto.generalDTO.paramsData(request);
+
+  const filter = dto.generalDTO.filterData({ id });
+
+  const brand = await brandsService.getBrandById(id, transaction);
+  if (!brand) {
+    await transaction.commit();
+    return httpResponse.notFound(response, constants.messages.general.notFound);
+  }
+
+  await brandsService.disableBrand(filter, transaction);
+
+  await transaction.commit();
+  return httpResponse.ok(response, {}, 'brand has been deleted');
+};
+
+/**
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @param {NextFunction} _next
+ * @param  {Transaction} transaction
+ */
+export const updateBrandNameForAdmin = async (
+  request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  logger.info(`updateBrandNameForAdmin : started`);
+
+  const { id } = dto.generalDTO.paramsData(request);
+  const data = dto.generalDTO.bodyData(request);
+  const filter = dto.generalDTO.filterData({ id });
+
+  const brand = await brandsService.updateBrand(filter, data, transaction);
+  await transaction.commit();
+  return httpResponse.ok(response, brand, 'brand has been updated');
+};
+/**
+ *
+ * @param {Request} request
+ * @param {Response} response
+ * @param {NextFunction} _next
+ * @param  {Transaction} transaction
+ */
+export const getTopPerformingBrandsForAdmin = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  logger.info(`getTopPerformingBrandsForAdmin : started`);
+  const filter = dto.generalDTO.filterData({
+    isExpired: { [Op.not]: true },
+  });
+  logger.info(`getTopPerformingBrandsForAdmin : filter ${JSON.stringify(filter)}`);
+  const brands = await brandsService.getBrands(filter, transaction);
+
+  logger.info(`getTopPerformingBrandsForAdmin : brands ${JSON.stringify(brands)}`);
+
+  const classifiedBrands = brandsService.classifyBrands(brands);
+
+  logger.info(`getTopPerformingBrandsForAdmin : classifiedBrands ${JSON.stringify(classifiedBrands)}`);
+
+  const brandsTransactions = await brandsService.getBrandsTransaction(classifiedBrands, transaction);
+
+  logger.info(`getTopPerformingBrandsForAdmin : brandsTransactions ${JSON.stringify(brandsTransactions)}`);
+
+  const allBrands = brands.reduce((acc: any, brand) => {
+    const isBrandTransactionExist = brandsTransactions.find((element) => element.brandId === brand.brandId);
+    if (isBrandTransactionExist) {
+      acc.push({ ...brand, ...isBrandTransactionExist });
+    } else {
+      acc.push({ ...brand, revenue: 0 });
+    }
+    return acc;
+  }, []);
+
+  logger.info(`getTopPerformingBrandsForAdmin : allBrands ${JSON.stringify(allBrands)}`);
+
+  await transaction.commit();
+  return httpResponse.ok(response, allBrands);
+};

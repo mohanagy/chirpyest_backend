@@ -32,6 +32,7 @@ export const syncTransactionsCronJobPattern = '0 4 * * *'; // check https://cron
 export const preparingPaymentsCronJobPattern = '0 3 1,16 * *'; // check https://crontab.guru/ for more information
 export const sendingPaymentsCronJobPattern = '0 5 4,20 * *'; // check https://crontab.guru/ for more information
 export const checkingPaymentsCronJobPattern = '0 6 * * *'; // check https://crontab.guru/ for more information
+export const sendReminderToUseChirpyestCronJobPattern = '0 6 * * *'; // check https://crontab.guru/ for more information
 
 export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
 
@@ -90,11 +91,20 @@ export const trendingBrands = [
   { id: '43728', name: 'UGG' },
   { id: '396113_5556', name: 'Athleta' },
   { id: '40776', name: 'MOTHER Denim' },
-  { id: '4258829', name: 'Barnes & Noble' },
+  // { id: '4258829', name: 'Barnes & Noble' },
   { id: '4964921', name: 'Kenneth Cole' },
-  { id: '', name: 'Intermix' },
-  { id: '', name: 'PacSun' },
-  { id: '', name: 'LuckyBrand' },
+  { id: '1463156', name: 'Oakley' },
+  { id: '225976_4270', name: 'Adidas' },
+  { id: '1237', name: 'Nordstrom' },
+  { id: '5206455', name: 'Wayfair' },
+  { id: '37723', name: 'Zadig & Voltaire' },
+  { id: '97526_2835', name: 'Sigma beauty' },
+  { id: '5253058', name: 'LaCoste' },
+  { id: '2954255', name: 'Sonos' },
+  { id: '2568723', name: 'Walgreens' },
+  { id: '355678_5118', name: 'Goop' },
+  { id: '1244771_8471', name: 'Arhaus' },
+  { id: '1225650_8270', name: 'The RealReal' },
 ];
 
 interface BrandsCategoreis {
@@ -196,20 +206,84 @@ export const beauty = ['24765', '36310', '3009921', '97526_2835'];
 export const fashion = ['1237', '43176', '5253058', '42004'];
 
 export const emailTemplates = {
-  contactForm: 'd-25453c7c6d9a4040b4e5b08834a0a313',
-  joinChirpyest: 'd-d87fffa6cd9e4e9787eb1aac48f67094',
-  reminder: 'd-1c26c4d6b74649a78ac490ef0998a1ac',
-  partiallyJoinedToChirpyest: 'd-a3089d3089264ab78b4e55d26201b72b',
-  howItWorks: 'd-bc1174663afa410d895eff907f49bb2d',
-  brandsHighlight: ' d-9788ed8d38bd41f6b080bb77ae501242',
-  completeProfile: 'd-822636d5b3914e8ba8c2ba18c9b8256d',
-  discountHighlights: 'd-05e90d45bf66495a99594d503f6ba989',
-  extensionReminder: 'd-e4899b14194e409683fea4c9fd9f28ed',
-  gotCashCongrats: 'd-589929026e184bf1aa607e70eb0dced6',
-  hotList: 'd-71d615d1e00b4ac88b8cb84e1d7d2fd6',
-  joinReminder: 'd-fddb26c02a60481587d8167fcc1387af',
-  newsletter: 'd-f10aa006c65d4a7bae1f5a6d1bd3a64f',
-  passwordReset: 'd-ae8a0411c08b406494417929444fb82c',
-  welcomeNeedExtension1: 'd-f5676d228f364b32a5801e337fc120ee',
-  welcomeNeedExtension2: 'd-67e9e1ff8fad4bfd8e6f8b295769d01e',
+  contactForm: {
+    templateId: 'd-25453c7c6d9a4040b4e5b08834a0a313',
+    subject: 'Thanks for contacting us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  joinChirpyest: {
+    templateId: 'd-d87fffa6cd9e4e9787eb1aac48f67094',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  reminder: {
+    templateId: 'd-1c26c4d6b74649a78ac490ef0998a1ac',
+    subject: 'Chirp chirp...where are you...',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  partiallyJoinedToChirpyest: {
+    templateId: 'd-a3089d3089264ab78b4e55d26201b72b',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  howItWorks: {
+    templateId: 'd-bc1174663afa410d895eff907f49bb2d',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  brandsHighlight: {
+    templateId: ' d-9788ed8d38bd41f6b080bb77ae501242',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  completeProfile: {
+    templateId: 'd-822636d5b3914e8ba8c2ba18c9b8256d',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  discountHighlights: {
+    templateId: 'd-05e90d45bf66495a99594d503f6ba989',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  extensionReminder: {
+    templateId: 'd-e4899b14194e409683fea4c9fd9f28ed',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  gotCashCongrats: {
+    templateId: 'd-589929026e184bf1aa607e70eb0dced6',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  hotList: {
+    templateId: 'd-71d615d1e00b4ac88b8cb84e1d7d2fd6',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  joinReminder: {
+    templateId: 'd-fddb26c02a60481587d8167fcc1387af',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  newsletter: {
+    templateId: 'd-f10aa006c65d4a7bae1f5a6d1bd3a64f',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  passwordReset: {
+    templateId: 'd-ae8a0411c08b406494417929444fb82c',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  welcomeNeedExtension1: {
+    templateId: 'd-f5676d228f364b32a5801e337fc120ee',
+    subject: 'Welcome to chirpyest!',
+    from: config.emailsConfig.sendGridFrom,
+  },
+  welcomeNeedExtension2: {
+    templateId: 'd-67e9e1ff8fad4bfd8e6f8b295769d01e',
+    subject: 'Contact Us',
+    from: config.emailsConfig.sendGridFrom,
+  },
 };

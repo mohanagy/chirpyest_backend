@@ -6,7 +6,7 @@ import psl from 'psl';
 import parseUrl from 'parse-url';
 import { dto } from '../../helpers';
 import database, { Brands } from '../../database';
-import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand } from '../../interfaces';
+import { BrandsAttributes, GenerateTrackableLinkAttributes, UrlBrand, Filter } from '../../interfaces';
 import { BrandsModel } from '../../types/sequelize';
 import config from '../../config';
 import { commissionJunctionServices, impactRadiusServices, rakutenServices } from '../affiliateNetworks';
@@ -33,14 +33,43 @@ export const getBrands = (filter: any, transaction: Transaction): Promise<Array<
 };
 
 /**
+ * @description getBrands is a service used to get brand by id
+ * @return {Promise<Array<BrandsModel>>}
+ */
+export const getBrandById = (id: number, transaction: Transaction): Promise<BrandsModel | null> => {
+  return Brands.findByPk(id, { transaction });
+};
+
+/**
  * @description createBrands is a service used to insert a list of the brands to the database
  * @return {Promise<Array<BrandsModel>>}
  */
 export const createBrands = (data: Array<BrandsAttributes>, transaction: Transaction): Promise<Array<BrandsModel>> => {
   return Brands.bulkCreate(data, {
-    updateOnDuplicate: ['brandName', 'commission', 'url', 'trackingLink', 'updatedAt', 'isExpired'],
+    updateOnDuplicate: ['commission', 'url', 'trackingLink', 'updatedAt', 'isExpired'],
     transaction,
   });
+};
+
+/**
+ * @description updateBrands is a service used to update a brand
+ * @return {Promise<BrandsModel>}
+ */
+export const updateBrand = (filter: Filter, data: any, transaction: Transaction): Promise<[number, BrandsModel[]]> => {
+  return Brands.update(data, {
+    ...filter,
+    transaction,
+  });
+};
+
+export const disableBrand = async (filter: Filter, transaction?: Transaction): Promise<[number, BrandsModel[]]> => {
+  const brand = await Brands.update(
+    {
+      isDeleted: database.Sequelize.literal('NOT is_deleted'),
+    },
+    { ...filter, transaction },
+  );
+  return brand;
 };
 
 /**
@@ -179,7 +208,7 @@ export const getBrandsTransaction = async (
       },
       attributes: [
         ['advertiser_id', 'brandId'],
-        [database.sequelize.fn('sum', database.sequelize.col('pub_commission_amount_usd')), 'total'],
+        [database.sequelize.fn('sum', database.sequelize.col('pub_commission_amount_usd')), 'revenue'],
       ],
       group: ['advertiser_id'],
     },
@@ -195,7 +224,7 @@ export const getBrandsTransaction = async (
       },
       attributes: [
         ['campaign_id', 'brandId'],
-        [database.sequelize.fn('sum', database.sequelize.col('amount')), 'total'],
+        [database.sequelize.fn('sum', database.sequelize.col('amount')), 'revenue'],
       ],
       group: ['campaign_id'],
     },
@@ -210,7 +239,7 @@ export const getBrandsTransaction = async (
       },
       attributes: [
         ['advertiser_id', 'brandId'],
-        [database.sequelize.fn('sum', database.sequelize.col('commissions')), 'total'],
+        [database.sequelize.fn('sum', database.sequelize.col('commissions')), 'revenue'],
       ],
       group: ['advertiser_id'],
     },

@@ -4,10 +4,11 @@ import moment from 'moment';
 import { Op } from 'sequelize';
 import { Transaction } from 'sequelize/types';
 import { v4 as uuid } from 'uuid';
-import { constants, dto, httpResponse, logger } from '../helpers';
+import { constants, dto, httpResponse, logger, sendGrid } from '../helpers';
 import { ClassifiedResponseByUserIdAttributes, PaymentsAttributes, PayoutsBatchIdsAttributes } from '../interfaces';
 import { financialDashboardService, paymentsService, paymentsTransitionsService, usersServices } from '../services';
 
+const { emailTemplates } = constants;
 /**
  * @description preparePayments is a controller used to prepare payments for users before releasing
  * @param {Request} request represents request object
@@ -123,12 +124,23 @@ export const sendPayments = async (
   const filter = dto.generalDTO.filterData({ status: constants.PENDING });
 
   logger.info(`sendPayments: get all pending  payments`);
-  const pendingPayments = await paymentsService.getAllPayments(filter, transaction);
-  logger.info(`sendPayments: pending payments ${JSON.stringify(pendingPayments)}`);
+  const pendingPayments = await await paymentsService.getAllPayments(filter, transaction);
+  const { PaymentsWithPayPal, PaymentsWithoutPayPal } = pendingPayments.reduce(
+    (acc: Record<string, Array<PaymentsAttributes>>, payment) => {
+      if (payment.paypalAccount) acc.PaymentsWithPayPal.push(payment);
+      else acc.PaymentsWithoutPayPal.push(payment);
+      return acc;
+    },
+    {
+      PaymentsWithPayPal: [] as Array<PaymentsAttributes>,
+      PaymentsWithoutPayPal: [] as Array<PaymentsAttributes>,
+    },
+  );
+  logger.info(`sendPayments: pending payments ${JSON.stringify(PaymentsWithPayPal)}`);
 
   logger.info(`sendPayments: convert data to paypal shape`);
   const payoutsReceiversData = await Promise.all(
-    pendingPayments.map(({ paypalAccount, closedOut, transactionId, id }) => {
+    PaymentsWithPayPal.map(({ paypalAccount, closedOut, transactionId, id }) => {
       const updatePaymentsTransactionsFilter = dto.generalDTO.filterData({
         paymentId: id,
       });
@@ -150,9 +162,54 @@ export const sendPayments = async (
       };
     }),
   );
-  logger.info(`sendPayments: pendingPayments ${JSON.stringify(pendingPayments)}`);
+  logger.info(`sendPayments: PaymentsWithPayPal ${JSON.stringify(PaymentsWithPayPal)}`);
 
-  if (!pendingPayments.length) {
+  const usersWithoutPayPal = PaymentsWithoutPayPal.map(({ userId, closedOut }) => ({ userId, closedOut }));
+  const users = await usersServices.findAllUsers(transaction);
+  const userWithoutPayPalRecords = users.filter((userRecord) =>
+    usersWithoutPayPal.find(({ userId }) => userId === userRecord.id),
+  );
+  const usersWithoutPayPalDetails = userWithoutPayPalRecords.map(({ id, email }) => {
+    const closedOut = usersWithoutPayPal.find(({ userId }) => userId === id)?.closedOut || 0;
+    return {
+      email,
+      closedOut,
+    };
+  });
+
+  // TODO: merge closedOut with each user
+  await Promise.all(
+    usersWithoutPayPalDetails.map(async ({ email, closedOut }) => {
+      const emailDetails = {
+        to: email,
+        from: emailTemplates.completeProfile.from,
+        subject: emailTemplates.completeProfile.subject,
+        templateId: emailTemplates.completeProfile.templateId,
+        dynamicTemplateData: {
+          email,
+          closedOut,
+        },
+      };
+      await sendGrid.send(emailDetails);
+    }),
+  );
+  await Promise.all(
+    PaymentsWithPayPal.map(async ({ paypalAccount, closedOut }) => {
+      const emailDetails = {
+        to: paypalAccount,
+        from: emailTemplates.gotCashCongrats.from,
+        subject: emailTemplates.gotCashCongrats.subject,
+        templateId: emailTemplates.gotCashCongrats.templateId,
+        dynamicTemplateData: {
+          paypalAccount,
+          closedOut,
+        },
+      };
+      await sendGrid.send(emailDetails);
+    }),
+  );
+
+  if (!PaymentsWithPayPal.length) {
     await transaction.rollback();
     logger.info(`sendPayments: no pending payments`);
     return httpResponse.ok(response, {});

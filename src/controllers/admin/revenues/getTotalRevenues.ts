@@ -17,7 +17,7 @@ export const getTotalRevenues = async (
   let day = before30daysCopy;
   while (today >= day) {
     const formatedDate = day.format('YYYY-MM-DD');
-    obj[formatedDate] = 0;
+    obj[formatedDate] = { impactRadius: 0, rakuten: 0, commissionJunction: 0, total: 0 };
     day = before30daysCopy.add(1, 'd');
   }
 
@@ -26,19 +26,26 @@ export const getTotalRevenues = async (
   const cjData = await getCJTotalRevnues(before30days, today, transaction);
 
   cjData.forEach((item: any) => {
-    obj[item.date] += Number(item.revenues / 100);
+    obj[item.date].commissionJunction += Number(item.revenues / 100);
+    obj[item.date].total += Number(item.revenues / 100);
   });
   impactRadiusData.forEach((item: any) => {
-    obj[item.date] += Number(item.revenues);
+    obj[item.date].impactRadius += Number(item.revenues);
+    obj[item.date].total += Number(item.revenues);
   });
   rakutenData.forEach((item: any) => {
-    obj[item.date] += Number(item.revenues);
+    obj[item.date].rakuten += Number(item.revenues);
+    obj[item.date].total += Number(item.revenues);
   });
 
-  const totalRevnuesByDay = Object.entries(obj).reduce((acc: any, [date, revenues]: any) => {
-    acc.push({ date, revenues });
-    return acc;
-  }, []);
+  const totalRevnuesByDay = Object.entries(obj).reduce(
+    (acc: any, [date, { rakuten, impactRadius, commissionJunction, total }]: any) => {
+      acc.push({ date, rakuten, impactRadius, commissionJunction, total });
+      return acc;
+    },
+    [],
+  );
+
   await transaction.commit();
   return httpResponse.ok(response, totalRevnuesByDay);
 };

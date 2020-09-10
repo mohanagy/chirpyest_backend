@@ -19,7 +19,7 @@ export const contactUs = async (
   transaction: Transaction,
 ): Promise<Response> => {
   const { email, name, type, body } = dto.generalDTO.bodyData(request);
-
+  const { emailTemplates } = constants;
   const adminMessage = {
     to: config.emailsConfig.sendGridFrom,
     from: config.emailsConfig.sendGridTo,
@@ -33,9 +33,9 @@ export const contactUs = async (
   const [emailStatus] = await sendGrid.send(adminMessage);
   const userMessage = {
     to: email,
-    from: config.emailsConfig.sendGridTo,
-    subject: `Contact Form`,
-    templateId: constants.emailTemplates.contactForm,
+    from: emailTemplates.contactForm.from,
+    subject: emailTemplates.contactForm.subject,
+    templateId: emailTemplates.contactForm.templateId,
     dynamicTemplateData: {
       email,
     },

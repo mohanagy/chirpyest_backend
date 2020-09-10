@@ -48,7 +48,12 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'production') {
   app.use(expressWinstonLogger);
 }
-
+// updateCognitoAttributes(app, '', [
+//   {
+//     Name: 'custom:user_role',
+//     Value: 'admin',
+//   },
+// ]);
 app.use('/', routes);
 app.use(Sentry.Handlers.errorHandler() as ErrorRequestHandler);
 // catch 404
