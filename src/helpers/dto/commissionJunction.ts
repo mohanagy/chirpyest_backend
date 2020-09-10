@@ -5,7 +5,7 @@ import {
   CommissionJunctionPayloadItem,
   UpdatePendingCashAttributes,
 } from '../../interfaces/Networks';
-import { commissionJunctionTrackingLink } from '../constants';
+import { commissionJunctionTrackingLink, zeroCashBack } from '../constants';
 import convertToCents from '../convertToCents';
 import { removeTrailingZeros } from '../removeTrailingZeros';
 
@@ -53,7 +53,7 @@ const getOrderLevelCommission = (text: string, type: string) => {
   const regex = /\d*.?\d+/;
   const matchedArr = text.match(regex);
   if (!matchedArr) {
-    return 'unknown';
+    return zeroCashBack;
   }
   const commission = matchedArr[0];
   const userCommission = Number(commission) / 2;
@@ -69,7 +69,7 @@ const getCjCommissionPercent = (action: any): string => {
         case 'item-level':
           return getOrderLevelCommission(action.commission.default._, 'item');
         default:
-          return 'unknown';
+          return zeroCashBack;
       }
     }
     return removeTrailingZeros(action.commission.default);
@@ -85,7 +85,7 @@ const getCjCommissionPercent = (action: any): string => {
 
     const commissionsArray: number[] = [...commissionsSet];
     if (!commissionsArray.length) {
-      return 'unknown';
+      return zeroCashBack;
     }
 
     const sorted = commissionsArray.sort((a: number, b: number) => {

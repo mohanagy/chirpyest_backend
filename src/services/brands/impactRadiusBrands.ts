@@ -1,7 +1,9 @@
 import axios from 'axios';
 import _ from 'lodash';
-import { dto } from '../../helpers';
+import { dto, constants } from '../../helpers';
 import { BrandsAttributes } from '../../interfaces';
+
+const { zeroCashBack } = constants;
 
 export const getImpactRadiusBrands = async (
   campaignsEndpoint: string,
@@ -67,12 +69,12 @@ export const getImpactRadiusBrands = async (
       acc.push(cleanBrand);
     } else if (fixed.length && maxFixed.payout) {
       const brandLower = brand.toLowerCase().trim();
-      const brandWithData = { ...campaigns[brandLower], payout: `Fixed ${Number(maxFixed.payout) / 2}$` };
+      const brandWithData = { ...campaigns[brandLower], payout: `Fixed $${Number(maxFixed.payout) / 2}` };
       const cleanBrand = dto.impactRadiusDTO.impactRadiusBrands(brandWithData);
       acc.push(cleanBrand);
     } else {
       const brandLower = brand.toLowerCase().trim();
-      const brandWithData = { ...campaigns[brandLower], payout: 0 };
+      const brandWithData = { ...campaigns[brandLower], payout: zeroCashBack };
       const cleanBrand = dto.impactRadiusDTO.impactRadiusBrands(brandWithData);
       acc.push(cleanBrand);
     }
