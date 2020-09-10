@@ -82,6 +82,8 @@ export const PREPARING = 'preparing';
 export const payPalEndpoint =
   process.env.NODE_ENV === 'production' ? 'https://api.paypal.com' : 'https://api.sandbox.paypal.com';
 
+export const zeroCashBack = '0%';
+
 export const trendingBrands = [
   { id: '59720_2092', name: 'Target' },
   { id: '2423467', name: 'Revolve' },
