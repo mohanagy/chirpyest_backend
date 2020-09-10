@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { Transaction } from 'sequelize/types';
-import { constants, dto, httpResponse } from '../helpers';
+import { Op } from 'sequelize';
+import moment from 'moment';
+import { constants, dto, httpResponse, sendGrid } from '../helpers';
+import * as database from '../database';
 
 import { usersServices } from '../services';
 
@@ -180,4 +183,41 @@ export const getUser = async (
     user && dto.usersDTO.userProfileResponse(user),
     constants.messages.users.userProfile,
   );
+};
+
+export const sendReminderToUseChirpyest = async (
+  _request: Request,
+  response: Response,
+  _next: NextFunction,
+  transaction: Transaction,
+): Promise<Response> => {
+  const { PaymentsTransactions } = database;
+
+  const filter = dto.generalDTO.filterData({
+    createdAt: {
+      [Op.lt]: moment().subtract(1, 'month').format('YYYY-MM-DD HH:mm'),
+    },
+  });
+  const users = await usersServices.getAllUsersWithConditions(
+    {
+      include: [PaymentsTransactions],
+    },
+    filter,
+    transaction,
+  );
+  const usersToRemind = users.filter(({ userId }) => !userId);
+  const { emailTemplates } = constants;
+  const emailDetails = usersToRemind.map(({ email }) => ({
+    to: email,
+    from: emailTemplates.reminder.from,
+    subject: emailTemplates.reminder.subject,
+    templateId: emailTemplates.reminder.templateId,
+    dynamicTemplateData: {
+      email,
+    },
+  }));
+
+  await sendGrid.send(emailDetails);
+  await transaction.commit();
+  return httpResponse.ok(response, {}, '');
 };

@@ -6,6 +6,7 @@ import { usersValidation } from '../validations';
 
 const router = express.Router();
 
+router.get('/users/reminder', asyncHandler(usersControllers.sendReminderToUseChirpyest));
 router.get(
   '/users/:id/profile',
   asyncHandler(verifyToken([UserTypes.Customer])),

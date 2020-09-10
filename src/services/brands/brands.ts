@@ -208,7 +208,7 @@ export const getBrandsTransaction = async (
       },
       attributes: [
         ['advertiser_id', 'brandId'],
-        [database.sequelize.fn('sum', database.sequelize.col('pub_commission_amount_usd')), 'total'],
+        [database.sequelize.fn('sum', database.sequelize.col('pub_commission_amount_usd')), 'revenue'],
       ],
       group: ['advertiser_id'],
     },
@@ -224,7 +224,7 @@ export const getBrandsTransaction = async (
       },
       attributes: [
         ['campaign_id', 'brandId'],
-        [database.sequelize.fn('sum', database.sequelize.col('amount')), 'total'],
+        [database.sequelize.fn('sum', database.sequelize.col('amount')), 'revenue'],
       ],
       group: ['campaign_id'],
     },
@@ -239,7 +239,7 @@ export const getBrandsTransaction = async (
       },
       attributes: [
         ['advertiser_id', 'brandId'],
-        [database.sequelize.fn('sum', database.sequelize.col('commissions')), 'total'],
+        [database.sequelize.fn('sum', database.sequelize.col('commissions')), 'revenue'],
       ],
       group: ['advertiser_id'],
     },
