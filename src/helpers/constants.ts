@@ -208,7 +208,7 @@ export const fashion = ['1237', '43176', '5253058', '42004'];
 export const emailTemplates = {
   contactForm: {
     templateId: 'd-25453c7c6d9a4040b4e5b08834a0a313',
-    subject: 'Contact Us',
+    subject: 'Thanks for contacting us',
     from: config.emailsConfig.sendGridFrom,
   },
   joinChirpyest: {
