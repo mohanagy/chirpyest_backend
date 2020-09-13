@@ -36,7 +36,7 @@ export const sendReminderToUseChirpyestCronJobPattern = '0 6 * * *'; // check ht
 
 export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
 
-export const commissionJunctionTrackingLink = 'https://www.anrdoezrs.net/links/4014745/type/am/sid/defaultvalue';
+export const commissionJunctionTrackingLink = 'https://www.anrdoezrs.net/links/7127090/type/am/sid/defaultvalue';
 
 const { commissionJunctionConfig } = config.affiliateNetworks;
 
