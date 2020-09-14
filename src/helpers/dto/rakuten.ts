@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import { RakutenTransactionsAttributes, UpdatePendingCashAttributes } from '../../interfaces/Networks';
-import { percentageRegx } from '../constants';
+import { percentageRegx, zeroCashBack } from '../constants';
 import convertToCents from '../convertToCents';
 
 export const rakutenData = (data: any): RakutenTransactionsAttributes => ({
@@ -30,7 +30,7 @@ export const rakutenBrandsData = (data: any): any => {
 
   const commissionsNumbers = allCommistionsArr.map((item: any) => {
     if (!item) {
-      return 0;
+      return zeroCashBack;
     }
     return Number(item.split('%')[0]);
   });

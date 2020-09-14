@@ -18,4 +18,5 @@ export const signUpValidation = joi.object({
   password: passwordComplexity(complexityOptions),
   termsCondsAccepted: joi.boolean().valid(true).required(),
   newsletterSubscription: joi.boolean().optional(),
+  extensionDownloaded: joi.boolean().optional(),
 });

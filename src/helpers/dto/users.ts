@@ -9,6 +9,8 @@ export const userData = (data: any): UserData => ({
   name: data.email.split('@')[0],
   newsletterSubscription: data.newsletterSubscription,
   termsCondsAccepted: data.termsCondsAccepted,
+  extensionDownloaded: data.extensionDownloaded,
+  signedInFromExtension: data.signedInFromExtension,
   type: data.type || UserTypes.Customer,
   image: data.image,
 });

@@ -12,6 +12,8 @@ export interface UserAttributes {
   type?: UserTypes;
   newsletterSubscription: boolean;
   termsCondsAccepted: boolean;
+  extensionDownloaded: boolean;
+  signedInFromExtension: boolean;
   paypalAccount?: string;
   username?: string;
   image?: string;
