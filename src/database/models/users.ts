@@ -34,6 +34,14 @@ export function UserFactory(sequelize: Sequelize): UserStatic {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    extensionDownloaded: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    SignedInFromExtension: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
