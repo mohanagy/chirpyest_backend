@@ -31,8 +31,8 @@ export const calculatePaymentsCronJobPattern = '0 3 1,16 * *'; // check https://
 export const syncTransactionsCronJobPattern = '0 4 * * *'; // check https://crontab.guru/ for more information
 export const preparingPaymentsCronJobPattern = '0 3 1,16 * *'; // check https://crontab.guru/ for more information
 export const sendingPaymentsCronJobPattern = '0 5 4,20 * *'; // check https://crontab.guru/ for more information
-export const checkingPaymentsCronJobPattern = '0 6 * * *'; // check https://crontab.guru/ for more information
-export const sendReminderToUseChirpyestCronJobPattern = '0 6 * * *'; // check https://crontab.guru/ for more information
+export const checkingPaymentsCronJobPattern = '0 6 4,20 * *'; // check https://crontab.guru/ for more information
+export const sendReminderToUseChirpyestCronJobPattern = '0 6 1 * *'; // check https://crontab.guru/ for more information
 
 export const commissionJunctionBaseUrl = 'https://commissions.api.cj.com/query';
 
