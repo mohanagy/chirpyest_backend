@@ -27,11 +27,7 @@
     "seed:trending:production": "node ./dist/services/brands/updateTrending.js",
     "seed:trending:dev": "cross-env NODE_ENV=development APP_ENV=development ts-node-dev ./src/services/brands/updateTrending.ts"
   },
-  "husky": {
-    "hooks": {
-      "pre-push": "npm run tsc-lint && lint-staged && npm run test:local"
-    }
-  },
+
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "npm run lint:fix"
